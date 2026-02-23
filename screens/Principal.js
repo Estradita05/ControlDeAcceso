@@ -17,7 +17,7 @@ import Perfil from './Perfil';
 import Ajustes from './Ajustes';
 import AyudaYsoporte from './AyudaYsoporte';
 import EditarPerfil from './EditarPerfil';
-
+import ReporteProblema from './ReporteProblema';
 export default function Principal() {
 
     const [screen, setScreen] = useState('Principal');
@@ -54,7 +54,9 @@ export default function Principal() {
         case 'AyudaYsoporte':
             return <AyudaYsoporte/>;
         case 'EditarPerfil':
-            return <EditarPerfil/>;                                    
+            return <EditarPerfil/>; 
+        case 'ReporteProblema':
+            return <ReporteProblema/>;                                     
         default:
             return (
                 <View style={styles.container}>
@@ -76,6 +78,7 @@ export default function Principal() {
                      <Button color="#0c0c0c" title="Ajustes" onPress={() => setScreen('Ajustes')}/>
                      <Button color="#0c0c0c" title="Ayuda y Soporte" onPress={() => setScreen('AyudaYsoporte')}/>
                      <Button color="#0c0c0c" title="Editar Perfil" onPress={() => setScreen('EditarPerfil')}/>
+                    <Button color="#0c0c0c" title="Reportar Problema" onPress={() => setScreen('ReporteProblema')}/>
                    
                     </View>
                 </View>
