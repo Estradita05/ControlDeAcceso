@@ -20,10 +20,36 @@ export default function HelpScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#EAF4FB', padding: 20 },
-  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 20 },
-  card: { backgroundColor: '#fff', padding: 15, borderRadius: 12, marginBottom: 20 },
-  button: { backgroundColor: '#0A4D8C', padding: 15, borderRadius: 12 },
-  buttonText: { color: '#fff', textAlign: 'center', fontWeight: 'bold' },
-  footer: { textAlign: 'center', marginTop: 30, color: '#555' },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#EAF4FB', 
+    padding: 30 
+  },
+  title: { 
+    fontSize: 20, 
+    fontWeight: 'bold', 
+    marginBottom: 20, 
+    marginTop: 32,
+  },
+  card: { 
+    backgroundColor: '#fff', 
+    padding: 15, 
+    borderRadius: 12, 
+    marginBottom: 20 
+  },
+  button: { 
+    backgroundColor: '#0A4D8C', 
+    padding: 15, 
+    borderRadius: 12 
+  },
+  buttonText: { 
+    color: '#fff', 
+    textAlign: 'center', 
+    fontWeight: 'bold' 
+  },
+  footer: { 
+    textAlign: 'center', 
+    marginTop: 30, 
+    color: '#555' 
+  },
 });
