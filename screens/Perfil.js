@@ -1,25 +1,28 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function ProfileScreen() {
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#7FA2C9" />
 
       <View style={styles.header}>
         <TouchableOpacity>
           <Icon name="chevron-back" size={26} color="#0E2A47" />
         </TouchableOpacity>
+        
         <Text style={styles.headerTitle}>Perfil</Text>
+        
         <View style={{ width: 26 }} />
       </View>
 
       <View style={styles.profileSection}>
         <View style={styles.avatar}>
-          <Icon name="person" size={60} color="#fff" />
+          <Icon name="person" size={65} color="#fff" />
         </View>
 
-        <Text style={styles.name}>Montserrath Martínez</Text>
+        <Text style={styles.name}>Montserrath Estrada</Text>
         <Text style={styles.email}>124050385@edu.mx</Text>
 
         <TouchableOpacity style={styles.editButton}>
@@ -32,12 +35,12 @@ export default function ProfileScreen() {
 
         <View style={styles.row}>
           <Text style={styles.label}>Estudiante</Text>
-          <Text style={styles.value}>124050136</Text>
+          <Text style={styles.value}>124050385</Text>
         </View>
 
         <View style={styles.row}>
           <Text style={styles.label}>Carrera</Text>
-          <Text style={styles.value}>TIID214</Text>
+          <Text style={styles.value}>Tecnologías de la información</Text>
         </View>
 
         <View style={styles.row}>

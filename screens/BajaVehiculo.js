@@ -1,132 +1,130 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, StatusBar } from 'react-native';
 
 export default function BajaVehiculoScreen() {
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.headerTitle}>DAR DE BAJA VEHÍCULO</Text>
+  const [matricula, setMatricula] = useState('');
+  const [placas, setPlacas] = useState('');
 
-      <View style={styles.card}>
-        <View style={styles.logoContainer}>
-          <Image 
-            source={{ uri: 'https://tu-link-del-logo.png' }} 
-            style={styles.logo}
-          />
-          <Text style={styles.subTitle}>Dar de baja vehículo</Text>
-        </View>
+  const handleConfirmar = () => {
+    if (!matricula || !placas) {
+      alert('Completa todos los campos');
+      return;
+    }
+
+    alert('Vehículo dado de baja correctamente');
+    setMatricula('');
+    setPlacas('');
+  };
+
+  const handleCancelar = () => {
+    setMatricula('');
+    setPlacas('');
+  };
+
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#dfe9ef" />
+
+      <ScrollView contentContainerStyle={styles.content}>
+        
+        <Image
+          source={require('../assets/logo.png')} // Ajusta la ruta si es necesario
+          style={styles.logo}
+        />
+
+        <Text style={styles.title}>Dar de baja vehículo</Text>
 
         <Text style={styles.label}>Matrícula del usuario</Text>
-        <TextInput 
+        <TextInput
           style={styles.input}
-          placeholder="Ej. 122043XXX"
-          placeholderTextColor="#A9C2D1"
+          value={matricula}
+          onChangeText={setMatricula}
         />
 
-        
         <Text style={styles.label}>Placas del vehículo</Text>
-        <TextInput 
+        <TextInput
           style={styles.input}
-          placeholder="Ej. UKP-XXX-X"
-          placeholderTextColor="#A9C2D1"
+          value={placas}
+          onChangeText={setPlacas}
         />
 
-        <TouchableOpacity style={styles.cancelButton}>
+        <TouchableOpacity onPress={handleCancelar}>
           <Text style={styles.cancelText}>Cancelar</Text>
         </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Confirmar baja</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.footer}>Versión 1.0.0</Text>
-    </ScrollView>
+        <TouchableOpacity style={styles.button} onPress={handleConfirmar}>
+          <Text style={styles.buttonText}>Confirmar baja</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flexGrow: 1, 
-    backgroundColor: '#EAF4FB', 
-    padding: 30,
+  container: {
+    flex: 1,
+    backgroundColor: '#dfe9ef'
+  },
+  content: {
+    paddingHorizontal: 30,
+    paddingTop: 40,
     alignItems: 'center'
   },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#B22222', 
-    marginTop: 20,
-    marginBottom: 15,
-    textAlign: 'center'
-  },
-  card: { 
-    backgroundColor: '#fff', 
-    padding: 25, 
-    borderRadius: 20, 
-    width: '100%',
-    marginBottom: 25,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-  },
-  logoContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
   logo: {
-    width: 90,
-    height: 90,
+    width: 110,
+    height: 110,
     resizeMode: 'contain',
-    marginBottom: 10,
+    marginBottom: 15
   },
-  subTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    textAlign: 'center'
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#2b2b2b',
+    marginBottom: 25
   },
   label: {
+    alignSelf: 'flex-start',
     fontSize: 14,
-    fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 5,
-    marginTop: 10
+    fontWeight: '600',
+    color: '#1f1f1f',
+    marginBottom: 8,
+    marginTop: 15
   },
   input: {
-    backgroundColor: '#E1EFF7', 
-    borderRadius: 15,
-    padding: 12,
-    marginBottom: 15,
+    width: '100%',
+    backgroundColor: '#cfdbe3',
+    borderRadius: 20,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
     fontSize: 14,
-    borderWidth: 1,
-    borderColor: '#D1E4F0'
-  },
-  cancelButton: {
-    alignSelf: 'flex-end',
-    marginTop: -5,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    marginBottom: 10
   },
   cancelText: {
-    color: '#0A4D8C',
+    alignSelf: 'flex-end',
+    color: '#4a8fc2',
     fontSize: 14,
+    marginTop: 10,
+    marginBottom: 25
   },
-  button: { 
-    backgroundColor: '#0A4D8C', 
-    padding: 18, 
-    borderRadius: 15,
-    width: '100%',
-    elevation: 3
+  button: {
+    backgroundColor: '#0b5e8e',
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    borderRadius: 25,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6
   },
-  buttonText: { 
-    color: '#fff', 
-    textAlign: 'center', 
-    fontWeight: 'bold',
-    fontSize: 16
-  },
-  footer: { 
-    textAlign: 'center', 
-    marginTop: 30, 
-    color: '#555' 
-  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold'
+  }
 });

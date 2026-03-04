@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image} from 'react-native';
+import {View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function EditarPerfil({ setScreen}) {
+export default function EditarPerfil({ setScreen }) {
 
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
@@ -12,30 +12,29 @@ export default function EditarPerfil({ setScreen}) {
 
   return (
     <View style={styles.container}>
-
+      <StatusBar barStyle="dark-content" backgroundColor="#7FA2C9" />
       
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => setScreen('profile')}>
           <Icon name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>EDITAR PERFIL</Text>
+        <View style={{ width: 24 }} />
       </View>
 
-      
       <View style={styles.imageContainer}>
-        <Image
-          source={require('../assets/icon.png')} // Imagen local
-          style={styles.profileImage}
-        />
+        <View style={styles.avatarCircle}>
+          <Icon name="person" size={60} color="#000" />
+        </View>
         <Text style={styles.changePhoto}>Cambiar foto de perfil</Text>
       </View>
 
-      
       <View style={styles.form}>
 
         <Text style={styles.label}>Nombre</Text>
         <TextInput
           placeholder="Usuario Ejemplo"
+          placeholderTextColor="#8c8c8c"
           style={styles.input}
           value={nombre}
           onChangeText={setNombre}
@@ -43,7 +42,8 @@ export default function EditarPerfil({ setScreen}) {
 
         <Text style={styles.label}>Correo electrónico</Text>
         <TextInput
-          placeholder="usuario.ejemplo@gmail.com"
+          placeholder="Usuario.ejemplo@gmail.com"
+          placeholderTextColor="#8c8c8c"
           style={styles.input}
           value={correo}
           onChangeText={setCorreo}
@@ -82,74 +82,83 @@ export default function EditarPerfil({ setScreen}) {
         </TouchableOpacity>
 
       </View>
-
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#dfe7ec',
+    backgroundColor: '#DFE7EC',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#7fa8c9',
-    padding: 15,
+    justifyContent: 'space-between',
+    backgroundColor: '#7FA2C9',
+    paddingTop: 50,
+    paddingBottom: 15,
+    paddingHorizontal: 20,
   },
   headerTitle: {
-    flex: 1,
-    textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#1b3b5f',
+    color: '#1B3B5F',
   },
   imageContainer: {
     alignItems: 'center',
     marginTop: 25,
   },
-  profileImage: {
-    width: 90,
-    height: 90,
+  avatarCircle: {
+    width: 100,
+    height: 100,
     borderRadius: 50,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   changePhoto: {
     marginTop: 10,
     fontWeight: 'bold',
+    fontSize: 16,
   },
   form: {
-    padding: 20,
+    paddingHorizontal: 25,
+    marginTop: 10,
   },
   label: {
-    marginTop: 10,
+    marginTop: 12,
     fontWeight: '600',
+    fontSize: 14,
   },
   input: {
-    backgroundColor: '#e6e6e6',
-    borderRadius: 12,
+    backgroundColor: '#E5E5E5',
+    borderRadius: 18,
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginTop: 5,
+    elevation: 4,
   },
   divider: {
-    height: 1,
-    backgroundColor: 'black',
-    marginVertical: 15,
+    height: 1.5,
+    backgroundColor: '#000',
+    marginVertical: 18,
   },
   sectionTitle: {
     fontWeight: 'bold',
+    fontSize: 15,
   },
   button: {
-    marginTop: 20,
-    backgroundColor: '#1b5e9a',
-    padding: 12,
-    borderRadius: 25,
+    marginTop: 25,
+    backgroundColor: '#0D4D73',
+    padding: 14,
+    borderRadius: 30,
     alignItems: 'center',
-    elevation: 5,
+    elevation: 6,
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+    fontSize: 15,
   },
 });

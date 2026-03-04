@@ -1,5 +1,6 @@
-import { View, Text, Switch, StyleSheet } from 'react-native';
+import { View, Text, Switch, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import { useState } from 'react';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 export default function SettingsScreen() {
@@ -7,14 +8,25 @@ export default function SettingsScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Ajustes</Text>
+      <StatusBar barStyle="dark-content" backgroundColor="#7FA2C9" />
+
+      <View style={styles.header}>
+        <TouchableOpacity>
+          <Icon name="chevron-back" size={24} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Ajustes</Text>
+        <View style={{ width: 24 }} />
+      </View>
 
       <View style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>General</Text>
 
         <View style={styles.row}>
         <Text style={styles.label}>Idioma</Text>
+        <View style={styles.selectBox}>
         <Text style={styles.value}>Español</Text>
+        <Icon name="chevron-down" size={16} color="#333" />
+        </View>
         </View>
       </View>
 
@@ -23,12 +35,17 @@ export default function SettingsScreen() {
 
         <View style={styles.row}>
           <Text style={styles.label}>Estado de la cuenta</Text>
+          <View style={styles.selectBox}>
           <Text style={styles.badge}>Activa</Text>
+        </View>
         </View>
 
         <View style={[styles.row, { marginTop: 15 }]}>
           <Text style={styles.label}>Historial de acceso</Text>
-          <Text style={styles.badge}>Activo</Text>
+          <View style={styles.selectBox}>
+            <Text style={styles.value}>Activo</Text>
+            <Icon name="chevron-down" size={16} color="#333" />
+          </View>
         </View>
       </View>
 
@@ -52,27 +69,28 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#EAF4FB', 
-    padding: 20 
+    backgroundColor: '#E6EEF5', 
   },
-  title: { 
-    fontSize: 24, 
-    fontWeight: 'bold', 
-    textAlign: 'center',
-    marginBottom: 30,
-    marginTop: 40,
-    textAlign: 'center',
-    color: '#1E3A5F'
+  header: {
+    backgroundColor: '#7FA2C9',
+    paddingTop: 50,
+    paddingBottom: 15,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1E3A5F',
   },
   sectionCard: { 
-    backgroundColor: '#aecadc', 
+    backgroundColor: '#B7CADB',
+    marginHorizontal: 20,
+    marginTop: 20, 
     padding: 20, 
-    borderRadius: 18, 
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
+    borderRadius: 20, 
     elevation: 4,
   },
   sectionTitle: {
@@ -88,20 +106,22 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 15,
-    color: '#333',
+    color: '#000',
   },
-  value: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#1E6091',
-  },
-  badge: {
-    backgroundColor: '#1E3A5F',
-    paddingHorizontal: 15,
+  selectBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F4F4F4',
+    paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 10,
-    fontWeight: '600',
-    color: '#fff',
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#999',
+  },
+
+  selectText: {
+    marginRight: 5,
+    fontSize: 14,
+    color: '#333',
   },
 });
