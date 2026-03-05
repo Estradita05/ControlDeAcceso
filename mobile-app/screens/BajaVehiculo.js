@@ -11,7 +11,7 @@ export default function BajaVehiculoScreen() {
       return;
     }
 
-    alert('Vehículo dado de baja correctamente');
+    alert('Vehículo dado de baja correctamente'); // Muestra la alerta de exito
     setMatricula('');
     setPlacas('');
   };
@@ -32,7 +32,7 @@ export default function BajaVehiculoScreen() {
           style={styles.logo}
         />
 
-        <Text style={styles.title}>Dar de baja vehículo</Text>
+        <Text style={styles.title}>Dar de baja vehículo</Text> // Título de la pantalla 
 
         <Text style={styles.label}>Matrícula del usuario</Text>
         <TextInput
@@ -41,7 +41,7 @@ export default function BajaVehiculoScreen() {
           onChangeText={setMatricula}
         />
 
-        <Text style={styles.label}>Placas del vehículo</Text>
+        <Text style={styles.label}>Placas del vehículo</Text>  // Etiqueta para el campo de placas
         <TextInput
           style={styles.input}
           value={placas}
