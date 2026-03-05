@@ -3,16 +3,26 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvo
 
 export default function ReporteProblema() {
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+    <KeyboardAvoidingView 
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+    style={styles.container}>
+
+      <Image
+        source={require('../assets/logo.png')}
+        style={styles.logoTop}
+      />
+
       <View style={styles.headerRibbon}>
-        <TouchableOpacity><Text style={styles.backButton}>{"<"}</Text></TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={styles.backButton}>{"<"}</Text>
+          </TouchableOpacity>
+        
         <Text style={styles.headerTitle}>ENVIAR MENSAJE</Text>
         <View style={{ width: 20 }} />
       </View>
 
       <View style={styles.body}>
-       <Image
-                 source={require('../assets/logo.png')} style={styles.logo} /> 
+       
         <Text style={styles.title}>Reporta un problema</Text>
         <Text style={styles.subtitle}>Ayúdanos a mejorar</Text>
 
@@ -42,11 +52,18 @@ export default function ReporteProblema() {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#FFFFFF' 
+    backgroundColor: '#E3EEF6' 
+  },
+  logoTop:{
+    width:130,
+    height:130,
+    alignSelf:'center',
+    marginTop:80,
+    marginBottom:50
   },
   headerRibbon: {
     backgroundColor: '#89B4E3', 
-    marginTop: 80, 
+    marginTop: 15, 
     width: '100%', 
     paddingVertical: 10, 
     paddingHorizontal: 20, 
@@ -62,15 +79,11 @@ const styles = StyleSheet.create({
   headerTitle: { 
     color: '#003366', 
     fontWeight: 'bold', 
-    fontSize: 16 },
+    fontSize: 16 
+  },
   body: { 
     padding: 30, 
     alignItems: 'center' 
-  },
-  logo: { 
-    width: 80, 
-    height: 80, 
-    marginBottom: 15 
   },
   title: { 
     fontSize: 22, 
@@ -93,7 +106,7 @@ const styles = StyleSheet.create({
     marginBottom: 8 
   },
   input: { 
-    backgroundColor: '#E8F1F8', 
+    backgroundColor: '#E0E0E0', 
     borderRadius: 10, 
     padding: 15, 
     fontSize: 14, 
