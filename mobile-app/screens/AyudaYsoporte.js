@@ -1,122 +1,182 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar,} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar, Image, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function HelpScreen() {
+export default function HelpScreen({ navigation }) {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
+  const handleSend = () => {
+    if (!subject || !message) {
+      alert('Por favor completa todos los campos antes de enviar.');
+      return;
+    }
+    alert('Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.');
+    setSubject('');
+    setMessage('');
+  };
+
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#7FA2C9" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
 
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <Icon name="chevron-back" size={24} color="#000" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>ENVIAR MENSAJE</Text>
-        <View style={{ width: 24 }} />
-      </View>
-
+      {/* 1. SECCIÓN DEL LOGO (FIXED) */}
       <View style={styles.logoContainer}>
-        <Icon name="shield-checkmark" size={90} color="#1E6091" />
+        <Image
+          source={require('../assets/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
       </View>
 
-      <Text style={styles.mainTitle}>Reporta un problema</Text>
-      <Text style={styles.subtitle}>Ayúdanos a mejorar</Text>
+      {/* 2. BARRA DE TÍTULO AZUL */}
+      <View style={styles.titleBar}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => navigation?.goBack()}
+        >
+          <Text style={styles.backArrow}>{'❮'}</Text>
+        </TouchableOpacity>
+        <Text style={styles.titleText}>ENVIAR MENSAJE</Text>
+        <View style={{ width: 30 }} /> 
+      </View>
 
-      <Text style={styles.label}>Asunto</Text>
-      <TextInput
-        style={styles.input}
-        value={subject}
-        onChangeText={setSubject}
-      />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        
+        <Text style={styles.mainTitle}>Reporta un problema</Text>
+        <Text style={styles.subtitle}>Ayúdanos a mejorar</Text>
 
-      <Text style={[styles.label, { marginTop: 15 }]}>Mensaje</Text>
-      <TextInput
-        style={styles.textArea}
-        placeholder="Describe tu problema..."
-        placeholderTextColor="#9E9E9E"
-        value={message}
-        onChangeText={setMessage}
-        multiline
-      />
+        <Text style={styles.label}>Asunto</Text>
+        <TextInput
+          style={styles.input}
+          value={subject}
+          onChangeText={setSubject}
+          placeholder="Ej. Error en mi registro"
+          placeholderTextColor="#7A9EB1"
+        />
 
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Enviar un Mensaje</Text>
-      </TouchableOpacity>
-    </View>
+        <Text style={[styles.label, { marginTop: 20 }]}>Mensaje</Text>
+        <TextInput
+          style={styles.textArea}
+          placeholder="Describe tu problema con detalle..."
+          placeholderTextColor="#7A9EB1"
+          value={message}
+          onChangeText={setMessage}
+          multiline
+        />
+
+        <TouchableOpacity style={styles.primaryButton} onPress={handleSend}>
+          <Text style={styles.buttonText}>Enviar Mensaje</Text>
+        </TouchableOpacity>
+
+        {/* Espacio extra para el teclado */}
+        <View style={{ height: 40 }} />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E6EEF5',
-  },
-  header: {
-    backgroundColor: '#7FA2C9',
-    paddingTop: 50,
-    paddingBottom: 15,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#1E3A5F',
+    backgroundColor: '#F0F6FA',
   },
   logoContainer: {
     alignItems: 'center',
-    marginTop: 25,
+    paddingTop: 30,
+    paddingBottom: 15,
+    backgroundColor: '#F0F6FA',
+  },
+  logo: {
+    width: 120,
+    height: 120,
+  },
+  titleBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#86ABC8',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    marginBottom: 5,
+  },
+  backButton: {
+    padding: 5,
+  },
+  backArrow: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  titleText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#004C8C',
+  },
+  scrollContent: {
+    paddingHorizontal: 25,
+    paddingTop: 20,
   },
   mainTitle: {
     textAlign: 'center',
     fontSize: 22,
     fontWeight: 'bold',
+    color: '#004C8C',
     marginTop: 10,
   },
   subtitle: {
     textAlign: 'center',
     fontSize: 14,
-    color: '#555',
+    color: '#4F7EA8',
     marginBottom: 25,
   },
   label: {
-    marginLeft: 25,
-    marginBottom: 5,
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '700',
+    color: '#004C8C',
+    marginBottom: 8,
   },
   input: {
-    backgroundColor: '#D9E3EC',
-    marginHorizontal: 25,
+    backgroundColor: '#EAF3F8',
     padding: 15,
     borderRadius: 15,
-    elevation: 4,
+    fontSize: 14,
+    color: '#333',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
   },
   textArea: {
-    backgroundColor: '#D9E3EC',
-    marginHorizontal: 25,
+    backgroundColor: '#EAF3F8',
     padding: 15,
     borderRadius: 15,
-    height: 110,
+    height: 120,
     textAlignVertical: 'top',
-    elevation: 4,
+    fontSize: 14,
+    color: '#333',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
   },
-  button: {
-    backgroundColor: '#0D4D73',
-    marginHorizontal: 60,
-    marginTop: 30,
-    padding: 15,
-    borderRadius: 30,
+  primaryButton: {
+    backgroundColor: '#0054A3',
+    marginTop: 35,
+    paddingVertical: 15,
+    borderRadius: 12,
+    alignItems: 'center',
     elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
   },
   buttonText: {
     color: '#fff',
-    textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 16,
   },

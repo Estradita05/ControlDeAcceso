@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function EditarPerfil({ setScreen }) {
-
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [passwordActual, setPasswordActual] = useState('');
@@ -11,103 +10,140 @@ export default function EditarPerfil({ setScreen }) {
   const [confirmarPassword, setConfirmarPassword] = useState('');
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#7FA2C9" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
       
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => setScreen('profile')}>
-          <Icon name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>EDITAR PERFIL</Text>
-        <View style={{ width: 24 }} />
+      {/* 1. SECCIÓN DEL LOGO */}
+      <View style={styles.logoContainer}>
+        <Image
+          source={require('../assets/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
       </View>
 
-      <View style={styles.imageContainer}>
-        <View style={styles.avatarCircle}>
-          <Icon name="person" size={60} color="#000" />
+      {/* 2. BARRA DE TÍTULO AZUL */}
+      <View style={styles.titleBar}>
+        <TouchableOpacity style={styles.backButton} onPress={() => setScreen('profile')}>
+          <Text style={styles.backArrow}>{'❮'}</Text>
+        </TouchableOpacity>
+        <Text style={styles.titleText}>EDITAR PERFIL</Text>
+        <View style={{ width: 30 }} /> 
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
+        
+        {/* 3. IMAGEN DE PERFIL */}
+        <View style={styles.imageContainer}>
+          <View style={styles.avatarCircle}>
+            <Icon name="person" size={60} color="#fff" />
+          </View>
+          <TouchableOpacity>
+            <Text style={styles.changePhoto}>Cambiar foto de perfil</Text>
+          </TouchableOpacity>
         </View>
-        <Text style={styles.changePhoto}>Cambiar foto de perfil</Text>
-      </View>
 
-      <View style={styles.form}>
+        {/* 4. FORMULARIO */}
+        <View style={styles.form}>
+          <Text style={styles.label}>Nombre</Text>
+          <TextInput
+            placeholder="Usuario Ejemplo"
+            placeholderTextColor="#7A9EB1"
+            style={styles.input}
+            value={nombre}
+            onChangeText={setNombre}
+          />
 
-        <Text style={styles.label}>Nombre</Text>
-        <TextInput
-          placeholder="Usuario Ejemplo"
-          placeholderTextColor="#8c8c8c"
-          style={styles.input}
-          value={nombre}
-          onChangeText={setNombre}
-        />
+          <Text style={styles.label}>Correo electrónico</Text>
+          <TextInput
+            placeholder="Usuario.ejemplo@gmail.com"
+            placeholderTextColor="#7A9EB1"
+            style={styles.input}
+            value={correo}
+            onChangeText={setCorreo}
+          />
 
-        <Text style={styles.label}>Correo electrónico</Text>
-        <TextInput
-          placeholder="Usuario.ejemplo@gmail.com"
-          placeholderTextColor="#8c8c8c"
-          style={styles.input}
-          value={correo}
-          onChangeText={setCorreo}
-        />
+          <View style={styles.divider} />
 
-        <View style={styles.divider} />
+          <Text style={styles.sectionTitle}>Cambiar contraseña</Text>
 
-        <Text style={styles.sectionTitle}>Cambiar contraseña</Text>
+          <Text style={styles.label}>Contraseña Actual</Text>
+          <TextInput
+            secureTextEntry
+            style={styles.input}
+            value={passwordActual}
+            onChangeText={setPasswordActual}
+          />
 
-        <Text style={styles.label}>Contraseña Actual</Text>
-        <TextInput
-          secureTextEntry
-          style={styles.input}
-          value={passwordActual}
-          onChangeText={setPasswordActual}
-        />
+          <Text style={styles.label}>Nueva Contraseña</Text>
+          <TextInput
+            secureTextEntry
+            style={styles.input}
+            value={passwordNueva}
+            onChangeText={setPasswordNueva}
+          />
 
-        <Text style={styles.label}>Nueva Contraseña</Text>
-        <TextInput
-          secureTextEntry
-          style={styles.input}
-          value={passwordNueva}
-          onChangeText={setPasswordNueva}
-        />
+          <Text style={styles.label}>Confirmar Contraseña Nueva</Text>
+          <TextInput
+            secureTextEntry
+            style={styles.input}
+            value={confirmarPassword}
+            onChangeText={setConfirmarPassword}
+          />
 
-        <Text style={styles.label}>Confirmar Contraseña Nueva</Text>
-        <TextInput
-          secureTextEntry
-          style={styles.input}
-          value={confirmarPassword}
-          onChangeText={setConfirmarPassword}
-        />
-
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Guardar cambios</Text>
-        </TouchableOpacity>
-
-      </View>
-    </View>
+          <TouchableOpacity style={styles.primaryButton}>
+            <Text style={styles.buttonText}>Guardar cambios</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#DFE7EC',
+    backgroundColor: '#F0F6FA',
   },
-  header: {
+  logoContainer: {
+    alignItems: 'center',
+    paddingTop: 30,
+    paddingBottom: 15,
+    backgroundColor: '#F0F6FA',
+  },
+  logo: {
+    width: 120,
+    height: 120,
+  },
+  titleBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#7FA2C9',
-    paddingTop: 50,
-    paddingBottom: 15,
-    paddingHorizontal: 20,
+    backgroundColor: '#86ABC8',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    marginBottom: 5,
   },
-  headerTitle: {
+  backButton: {
+    padding: 5,
+  },
+  backArrow: {
+    fontSize: 22,
     fontWeight: 'bold',
-    fontSize: 16,
-    color: '#1B3B5F',
+    color: '#000',
+  },
+  titleText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#004C8C',
   },
   imageContainer: {
     alignItems: 'center',
-    marginTop: 25,
+    marginTop: 20,
   },
   avatarCircle: {
     width: 100,
@@ -116,49 +152,67 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
   },
   changePhoto: {
-    marginTop: 10,
-    fontWeight: 'bold',
-    fontSize: 16,
+    marginTop: 12,
+    fontWeight: '700',
+    fontSize: 15,
+    color: '#004C8C',
+    textDecorationLine: 'underline',
   },
   form: {
-    paddingHorizontal: 25,
+    paddingHorizontal: 30,
     marginTop: 10,
   },
   label: {
-    marginTop: 12,
-    fontWeight: '600',
+    marginTop: 15,
+    fontWeight: '700',
     fontSize: 14,
+    color: '#004C8C',
   },
   input: {
-    backgroundColor: '#E5E5E5',
-    borderRadius: 18,
+    backgroundColor: '#EAF3F8',
+    borderRadius: 15,
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: 12,
     marginTop: 5,
-    elevation: 4,
+    fontSize: 14,
+    color: '#333',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
   },
   divider: {
     height: 1.5,
-    backgroundColor: '#000',
-    marginVertical: 18,
+    backgroundColor: '#86ABC8',
+    marginVertical: 25,
+    opacity: 0.5,
   },
   sectionTitle: {
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 16,
+    color: '#004C8C',
+    marginBottom: 5,
   },
-  button: {
-    marginTop: 25,
-    backgroundColor: '#0D4D73',
-    padding: 14,
-    borderRadius: 30,
+  primaryButton: {
+    marginTop: 35,
+    backgroundColor: '#0054A3',
+    padding: 15,
+    borderRadius: 12,
     alignItems: 'center',
-    elevation: 6,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 16,
   },
 });

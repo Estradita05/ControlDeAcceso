@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, StatusBar } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, StatusBar, SafeAreaView } from 'react-native';
 
-export default function BajaVehiculoScreen() {
+export default function BajaVehiculoScreen({ navigation }) {
   const [matricula, setMatricula] = useState('');
   const [placas, setPlacas] = useState('');
 
@@ -11,7 +11,7 @@ export default function BajaVehiculoScreen() {
       return;
     }
 
-    alert('Vehículo dado de baja correctamente'); // Muestra la alerta de exito
+    alert('Vehículo dado de baja correctamente');
     setMatricula('');
     setPlacas('');
   };
@@ -22,105 +22,145 @@ export default function BajaVehiculoScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#dfe9ef" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
 
-      <ScrollView contentContainerStyle={styles.content}>
-        
+      {/* 1. SECCIÓN DEL LOGO (FIXED) */}
+      <View style={styles.logoContainer}>
         <Image
-          source={require('../assets/logo.png')} // Ajusta la ruta si es necesario
+          source={require('../assets/logo.png')}
           style={styles.logo}
         />
+      </View>
 
-        <Text style={styles.title}>Dar de baja vehículo</Text> // Título de la pantalla 
+      {/* 2. BARRA DE TÍTULO AZUL */}
+      <View style={styles.titleBar}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => navigation?.goBack()}
+        >
+          <Text style={styles.backArrow}>{'❮'}</Text>
+        </TouchableOpacity>
+        <Text style={styles.titleText}>DAR DE BAJA VEHÍCULO</Text>
+        <View style={{ width: 30 }} /> 
+      </View>
 
+      {/* 3. CONTENIDO DEL FORMULARIO */}
+      <ScrollView contentContainerStyle={styles.formContainer} showsVerticalScrollIndicator={false}>
+        
         <Text style={styles.label}>Matrícula del usuario</Text>
         <TextInput
           style={styles.input}
           value={matricula}
           onChangeText={setMatricula}
+          placeholder="Ingresa la matrícula"
+          placeholderTextColor="#7A9EB1"
         />
 
-        <Text style={styles.label}>Placas del vehículo</Text>  // Etiqueta para el campo de placas
+        <Text style={styles.label}>Placas del vehículo</Text>
         <TextInput
           style={styles.input}
           value={placas}
           onChangeText={setPlacas}
+          placeholder="Ingresa las placas"
+          placeholderTextColor="#7A9EB1"
         />
 
         <TouchableOpacity onPress={handleCancelar}>
           <Text style={styles.cancelText}>Cancelar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={handleConfirmar}>
+        <TouchableOpacity style={styles.primaryButton} onPress={handleConfirmar}>
           <Text style={styles.buttonText}>Confirmar baja</Text>
         </TouchableOpacity>
+        
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#dfe9ef'
+    backgroundColor: '#F0F6FA',
   },
-  content: {
-    paddingHorizontal: 30,
-    paddingTop: 40,
-    alignItems: 'center'
+  logoContainer: {
+    alignItems: 'center',
+    paddingTop: 30,
+    paddingBottom: 15,
+    backgroundColor: '#F0F6FA',
   },
   logo: {
-    width: 110,
-    height: 110,
+    width: 120,
+    height: 120,
     resizeMode: 'contain',
-    marginBottom: 15
   },
-  title: {
+  titleBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#86ABC8',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    marginBottom: 10,
+  },
+  backButton: {
+    padding: 5,
+  },
+  backArrow: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  titleText: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#2b2b2b',
-    marginBottom: 25
+    fontWeight: 'bold',
+    color: '#004C8C',
+  },
+  formContainer: {
+    paddingHorizontal: 30,
+    paddingBottom: 40,
   },
   label: {
-    alignSelf: 'flex-start',
     fontSize: 14,
-    fontWeight: '600',
-    color: '#1f1f1f',
+    fontWeight: '700',
     marginBottom: 8,
-    marginTop: 15
+    marginTop: 15,
+    color: '#004C8C',
   },
   input: {
-    width: '100%',
-    backgroundColor: '#cfdbe3',
-    borderRadius: 20,
-    paddingVertical: 14,
-    paddingHorizontal: 18,
+    backgroundColor: '#EAF3F8',
+    borderRadius: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
     fontSize: 14,
-    elevation: 6,
+    color: '#333',
+    elevation: 3,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    marginBottom: 10
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
   },
   cancelText: {
-    alignSelf: 'flex-end',
-    color: '#4a8fc2',
-    fontSize: 14,
-    marginTop: 10,
-    marginBottom: 25
+    textAlign: 'right',
+    marginTop: 20,
+    color: '#3d7fb5',
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 20,
   },
-  button: {
-    backgroundColor: '#0b5e8e',
+  primaryButton: {
+    backgroundColor: '#0b5e8e', // Puedes usar el azul oscuro para "acciones fuertes" como dar de baja
     paddingVertical: 14,
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    elevation: 6,
+    borderRadius: 12,
+    alignItems: 'center',
+    elevation: 5,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
   },
   buttonText: {
     color: '#fff',

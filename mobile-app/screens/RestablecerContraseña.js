@@ -17,7 +17,7 @@ export default function ResetPasswordScreen() {
 
 
       <View style={styles.headerBar}>
-        <Text style={styles.headerText}>Restablecer la contraseña</Text>
+        <Text style={styles.headerText}>RESTABLECER CONTRASEÑA</Text>
       </View>
 
       <Text style={styles.description}>

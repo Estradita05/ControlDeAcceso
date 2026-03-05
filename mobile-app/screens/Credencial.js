@@ -16,7 +16,7 @@ export default function DigitalCredential() {
         <TouchableOpacity style={styles.backButtonContainer}>
           <Ionicons name="arrow-back" size={22} color="#000" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Credencial digital</Text>
+        <Text style={styles.headerTitle}>CREDENCIAL DIGITAL</Text>
       </View>
 
       <View style={styles.body}>

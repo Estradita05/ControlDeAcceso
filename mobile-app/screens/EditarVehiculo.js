@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, StatusBar } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, StatusBar, Image, SafeAreaView } from 'react-native';
 
 export default function EditarVehiculoScreen({ navigation }) {
   const [placa, setPlaca] = useState('QRO-4827');
@@ -11,29 +10,43 @@ export default function EditarVehiculoScreen({ navigation }) {
 
   const handleGuardarCambios = () => {
     const vehiculoActualizado = { placa, modelo, color, tipoAcceso, vigencia };
-
     console.log('Vehículo actualizado:', vehiculoActualizado);
     alert('Cambios guardados correctamente');
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#e6edf2" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
 
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation?.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#0b3d63" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>EDITAR VEHICULO</Text>
-        <View style={{ width: 24 }} />
+      {/* 1. SECCIÓN DEL LOGO (NUEVO) */}
+      <View style={styles.logoContainer}>
+        <Image
+          source={require('../assets/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
       </View>
 
-      <ScrollView contentContainerStyle={styles.formContainer}>
+      {/* 2. BARRA DE TÍTULO AZUL (ESTILO UNIFICADO) */}
+      <View style={styles.titleBar}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => navigation?.goBack()}
+        >
+          <Text style={styles.backArrow}>{'❮'}</Text>
+        </TouchableOpacity>
+        <Text style={styles.titleText}>EDITAR VEHÍCULO</Text>
+        <View style={{ width: 30 }} /> 
+      </View>
+
+      {/* 3. FORMULARIO */}
+      <ScrollView contentContainerStyle={styles.formContainer} showsVerticalScrollIndicator={false}>
         <Text style={styles.label}>Placa de vehículo</Text>
         <TextInput
           style={styles.input}
           value={placa}
           onChangeText={setPlaca}
+          placeholderTextColor="#7A9EB1"
         />
 
         <Text style={styles.label}>Modelo</Text>
@@ -41,6 +54,7 @@ export default function EditarVehiculoScreen({ navigation }) {
           style={styles.input}
           value={modelo}
           onChangeText={setModelo}
+          placeholderTextColor="#7A9EB1"
         />
 
         <Text style={styles.label}>Color</Text>
@@ -48,6 +62,7 @@ export default function EditarVehiculoScreen({ navigation }) {
           style={styles.input}
           value={color}
           onChangeText={setColor}
+          placeholderTextColor="#7A9EB1"
         />
 
         <Text style={styles.label}>Tipo de acceso</Text>
@@ -56,6 +71,7 @@ export default function EditarVehiculoScreen({ navigation }) {
           value={tipoAcceso}
           onChangeText={setTipoAcceso}
           placeholder="Permanente / Suspendido"
+          placeholderTextColor="#7A9EB1"
         />
 
         <Text style={styles.label}>Fechas de vigencia</Text>
@@ -64,68 +80,91 @@ export default function EditarVehiculoScreen({ navigation }) {
           value={vigencia}
           onChangeText={setVigencia}
           placeholder="Solo si es provisional"
+          placeholderTextColor="#7A9EB1"
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleGuardarCambios}>
+        <TouchableOpacity style={styles.primaryButton} onPress={handleGuardarCambios}>
           <Text style={styles.buttonText}>Guardar cambios</Text>
         </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e6edf2'
+    backgroundColor: '#F0F6FA',
   },
-  header: {
+  logoContainer: {
+    alignItems: 'center',
+    paddingTop: 30,
+    paddingBottom: 15,
+    backgroundColor: '#F0F6FA',
+  },
+  logo: {
+    width: 120,
+    height: 120,
+  },
+  titleBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#7fa2c4',
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    elevation: 4
+    backgroundColor: '#86ABC8',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    marginBottom: 10,
   },
-  headerTitle: {
+  backButton: {
+    padding: 5,
+  },
+  backArrow: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  titleText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#0b3d63'
+    color: '#004C8C',
   },
   formContainer: {
-    padding: 25
+    paddingHorizontal: 30,
+    paddingBottom: 40,
   },
   label: {
-    fontSize: 15,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: '700',
     marginBottom: 8,
-    marginTop: 18,
-    color: '#333'
+    marginTop: 15,
+    color: '#004C8C',
   },
   input: {
-    backgroundColor: '#e0e0e0',
-    borderRadius: 20,
-    paddingHorizontal: 18,
+    backgroundColor: '#EAF3F8', // Azul muy claro para los inputs
+    borderRadius: 15,
+    paddingHorizontal: 15,
     paddingVertical: 12,
-    fontSize: 15,
+    fontSize: 14,
+    color: '#333',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+  },
+  primaryButton: {
+    backgroundColor: '#0054A3', // Azul fuerte de tu marca
+    marginTop: 35,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4
-  },
-  button: {
-    backgroundColor: '#0b5e8e',
-    marginTop: 40,
-    paddingVertical: 14,
-    borderRadius: 25,
-    alignItems: 'center',
-    elevation: 6,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5
+    shadowOpacity: 0.25,
   },
   buttonText: {
     color: '#fff',

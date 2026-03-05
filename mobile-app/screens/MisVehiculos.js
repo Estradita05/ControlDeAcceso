@@ -13,7 +13,7 @@ const MisVehiculos = () => {
         <TouchableOpacity style={styles.backButton}>
           <Text style={styles.backArrow}>{'❮'}</Text>
         </TouchableOpacity>
-        <Text style={styles.titleText}>Mis Vehículos</Text>
+        <Text style={styles.titleText}>MIS VEHÍCULOS</Text>
         <View style={{ width: 30 }} />
       </View>
 

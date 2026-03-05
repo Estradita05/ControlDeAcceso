@@ -1,103 +1,141 @@
-import { View, Text, Switch, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { View, Text, Switch, StyleSheet, TouchableOpacity, StatusBar, Image, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-
-export default function SettingsScreen() {
+export default function SettingsScreen({ navigation }) {
   const [notifications, setNotifications] = useState(true);
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#7FA2C9" />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
 
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <Icon name="chevron-back" size={24} color="#000" />
+      <View style={styles.logoContainer}>
+        <Image
+          source={require('../assets/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </View>
+
+      <View style={styles.titleBar}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => navigation?.goBack()}
+        >
+          <Text style={styles.backArrow}>{'❮'}</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Ajustes</Text>
-        <View style={{ width: 24 }} />
+        <Text style={styles.titleText}>AJUSTES</Text>
+        <View style={{ width: 30 }} /> 
       </View>
 
-      <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>General</Text>
-
-        <View style={styles.row}>
-        <Text style={styles.label}>Idioma</Text>
-        <View style={styles.selectBox}>
-        <Text style={styles.value}>Español</Text>
-        <Icon name="chevron-down" size={16} color="#333" />
-        </View>
-        </View>
-      </View>
-
-      <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>Datos de la cuenta</Text>
-
-        <View style={styles.row}>
-          <Text style={styles.label}>Estado de la cuenta</Text>
-          <View style={styles.selectBox}>
-          <Text style={styles.badge}>Activa</Text>
-        </View>
-        </View>
-
-        <View style={[styles.row, { marginTop: 15 }]}>
-          <Text style={styles.label}>Historial de acceso</Text>
-          <View style={styles.selectBox}>
-            <Text style={styles.value}>Activo</Text>
-            <Icon name="chevron-down" size={16} color="#333" />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
+        
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>General</Text>
+          <View style={styles.row}>
+            <Text style={styles.label}>Idioma</Text>
+            <View style={styles.selectBox}>
+              <Text style={styles.value}>Español</Text>
+              <Icon name="chevron-down" size={16} color="#004C8C" />
+            </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>Notificaciones</Text>
-        
-        <View style={styles.row}>
-          <Text style={styles.label}>Notificaciones de acceso</Text>
-          <Switch 
-          value={notifications} 
-          onValueChange={setNotifications} 
-          trackColor={{ false: '#ccc', true: '#1E6091' }}
-          thumbColor="#fff"
-          />
-      </View>
-    </View>
-    </View>
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>Datos de la cuenta</Text>
+          
+          <View style={styles.row}>
+            <Text style={styles.label}>Estado de la cuenta</Text>
+            <View style={styles.badgeContainer}>
+              <Text style={styles.badgeText}>Activa</Text>
+            </View>
+          </View>
+
+          <View style={[styles.row, { marginTop: 15 }]}>
+            <Text style={styles.label}>Historial de acceso</Text>
+            <View style={styles.selectBox}>
+              <Text style={styles.value}>Activo</Text>
+              <Icon name="chevron-down" size={16} color="#004C8C" />
+            </View>
+          </View>
+        </View>
+
+        {/* 5. NOTIFICACIONES */}
+        <View style={styles.sectionCard}>
+          <Text style={styles.sectionTitle}>Notificaciones</Text>
+          <View style={styles.row}>
+            <Text style={styles.label}>Notificaciones de acceso</Text>
+            <Switch 
+              value={notifications} 
+              onValueChange={setNotifications} 
+              trackColor={{ false: '#D1D1D1', true: '#86ABC8' }}
+              thumbColor={notifications ? '#004C8C' : '#F4F4F4'}
+            />
+          </View>
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#E6EEF5', 
+    backgroundColor: '#F0F6FA', 
   },
-  header: {
-    backgroundColor: '#7FA2C9',
-    paddingTop: 50,
+  logoContainer: {
+    alignItems: 'center',
+    paddingTop: 30,
     paddingBottom: 15,
-    paddingHorizontal: 20,
+    backgroundColor: '#F0F6FA',
+  },
+  logo: {
+    width: 120,
+    height: 120,
+  },
+  titleBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: '#86ABC8',
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    marginBottom: 5,
   },
-  headerTitle: {
+  backButton: {
+    padding: 5,
+  },
+  backArrow: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  titleText: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#1E3A5F',
+    fontWeight: 'bold',
+    color: '#004C8C',
   },
   sectionCard: { 
-    backgroundColor: '#B7CADB',
+    backgroundColor: '#EAF3F8', 
     marginHorizontal: 20,
     marginTop: 20, 
     padding: 20, 
     borderRadius: 20, 
-    elevation: 4,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 15,
-    color: '#1E3A5F',
+    color: '#004C8C',
   },
   row: {
     flexDirection: 'row',
@@ -106,22 +144,34 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 15,
-    color: '#000',
+    color: '#333',
+    fontWeight: '600',
   },
   selectBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F4F4F4',
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 10,
+    paddingVertical: 8,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#999',
+    borderColor: '#D1E1EB',
   },
-
-  selectText: {
-    marginRight: 5,
+  value: {
+    marginRight: 8,
     fontSize: 14,
-    color: '#333',
+    color: '#004C8C',
+    fontWeight: '500',
+  },
+  badgeContainer: {
+    backgroundColor: '#D1E6C9', 
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    borderRadius: 15,
+  },
+  badgeText: {
+    color: '#558249',
+    fontWeight: 'bold',
+    fontSize: 13,
   },
 });

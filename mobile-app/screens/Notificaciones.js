@@ -1,30 +1,33 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 
 export default function NotificationsScreen() {
   return (
-    <View style={styles.container}>
-
+    <SafeAreaView style={styles.container}>
       
-      <TouchableOpacity style={styles.closeButton}>
-        <Ionicons name="close" size={22} color="#fff" />
-      </TouchableOpacity>
+      <View style={styles.logoContainer}>
+        <Image
+          source={require('../assets/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </View>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={styles.titleBar}>
+        <TouchableOpacity style={styles.backButton}>
+          <Text style={styles.backArrow}>{'❮'}</Text>
+        </TouchableOpacity>
+        <Text style={styles.titleText}>NOTIFICACIONES</Text>
+        <View style={{ width: 30 }} /> 
+      </View>
 
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent} 
+        showsVerticalScrollIndicator={false}
+      >
         
-        <View style={styles.logoContainer}>
-          <Image
-            source={require('../assets/logo.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-        </View>
-
-        <Text style={styles.mainTitle}>Notificaciones</Text>
-
-        
+        {/* Notificación 1 */}
         <View style={styles.notificationItem}>
           <Ionicons name="shield-checkmark" size={32} color="#4CAF50" />
           <View style={styles.textContainer}>
@@ -37,7 +40,7 @@ export default function NotificationsScreen() {
           </View>
         </View>
 
-        
+        {/* Notificación 2 */}
         <View style={styles.notificationItem}>
           <MaterialIcons name="block" size={32} color="#E53935" />
           <View style={styles.textContainer}>
@@ -50,7 +53,7 @@ export default function NotificationsScreen() {
           </View>
         </View>
 
-        
+        {/* Notificación 3 */}
         <View style={styles.notificationItem}>
           <Ionicons name="log-out-outline" size={32} color="#E53935" />
           <View style={styles.textContainer}>
@@ -63,6 +66,7 @@ export default function NotificationsScreen() {
           </View>
         </View>
 
+        {/* Notificación 4 */}
         <View style={styles.notificationItem}>
           <FontAwesome5 name="clock" size={28} color="#C9A227" />
           <View style={styles.textContainer}>
@@ -74,85 +78,84 @@ export default function NotificationsScreen() {
           </View>
         </View>
 
-        <View style={styles.notificationItem}>
-          <MaterialIcons name="lock" size={32} color="#F44336" />
-          <View style={styles.textContainer}>
-            <Text style={styles.notificationTitle}>Cuenta bloqueada</Text>
-            <Text style={styles.description}>
-              <Text style={styles.bold}>Título:</Text> Cuenta bloqueada{"\n"}
-              <Text style={styles.bold}>Mensaje:</Text> Tu cuenta ha sido bloqueada por múltiples intentos fallidos.{"\n"}
-              <Text style={styles.bold}>Acción:</Text> Contacta a soporte.
-            </Text>
-          </View>
-        </View>
-
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E3EEF6',
-    paddingHorizontal: 20,
-    paddingTop: 50,
+    backgroundColor: '#F0F6FA', // Color de fondo uniforme
   },
-
-  closeButton: {
-    position: 'absolute',
-    right: 20,
-    top: 50,
-    backgroundColor: '#E53935',
-    width: 35,
-    height: 35,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
-  },
-
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 10,
+    paddingTop: 30,
+    paddingBottom: 15,
+    backgroundColor: '#F0F6FA',
   },
-
   logo: {
-    width: 90,
-    height: 90,
+    width: 120, // Un poco más grande para que luzca
+    height: 120,
   },
-
-  mainTitle: {
-    textAlign: 'center',
-    fontSize: 20,
+  titleBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#86ABC8', // El azul de tu diseño
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    marginBottom: 5,
+  },
+  backButton: {
+    padding: 5,
+  },
+  backArrow: {
+    fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 25,
     color: '#000',
   },
-
+  titleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#004C8C',
+  },
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 40,
+  },
   notificationItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 25,
+    marginBottom: 30, // Más espacio entre items
+    backgroundColor: '#FFFFFF', // Fondo blanco para que resalten como tarjetas
+    padding: 15,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
   },
-
   textContainer: {
     flex: 1,
-    marginLeft: 12,
+    marginLeft: 15,
   },
-
   notificationTitle: {
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 16,
+    color: '#000',
     marginBottom: 5,
   },
-
   description: {
     fontSize: 13,
     color: '#4F7EA8',
     lineHeight: 18,
   },
-
   bold: {
     fontWeight: 'bold',
     color: '#000',

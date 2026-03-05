@@ -59,7 +59,7 @@ const HistorialAccesos = () => {
         <TouchableOpacity style={styles.backButton}>
           <Text style={styles.backArrow}>{'❮'}</Text>
         </TouchableOpacity>
-        <Text style={styles.titleText}>Historial de Accesos</Text>
+        <Text style={styles.titleText}>HISTORIAL DE ACCESOS</Text>
         <View style={{ width: 30 }} />
       </View>
 
