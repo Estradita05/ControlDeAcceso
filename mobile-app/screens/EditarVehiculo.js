@@ -12,13 +12,14 @@ export default function EditarVehiculoScreen({ navigation }) {
     const vehiculoActualizado = { placa, modelo, color, tipoAcceso, vigencia };
     console.log('Vehículo actualizado:', vehiculoActualizado);
     alert('Cambios guardados correctamente');
+    
+    navigation.goBack();
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
 
-      {/* 1. SECCIÓN DEL LOGO (NUEVO) */}
       <View style={styles.logoContainer}>
         <Image
           source={require('../assets/logo.png')}
@@ -27,7 +28,6 @@ export default function EditarVehiculoScreen({ navigation }) {
         />
       </View>
 
-      {/* 2. BARRA DE TÍTULO AZUL (ESTILO UNIFICADO) */}
       <View style={styles.titleBar}>
         <TouchableOpacity 
           style={styles.backButton} 
@@ -39,7 +39,6 @@ export default function EditarVehiculoScreen({ navigation }) {
         <View style={{ width: 30 }} /> 
       </View>
 
-      {/* 3. FORMULARIO */}
       <ScrollView contentContainerStyle={styles.formContainer} showsVerticalScrollIndicator={false}>
         <Text style={styles.label}>Placa de vehículo</Text>
         <TextInput
@@ -144,7 +143,7 @@ const styles = StyleSheet.create({
     color: '#004C8C',
   },
   input: {
-    backgroundColor: '#EAF3F8', // Azul muy claro para los inputs
+    backgroundColor: '#EAF3F8',
     borderRadius: 15,
     paddingHorizontal: 15,
     paddingVertical: 12,
@@ -156,7 +155,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
   },
   primaryButton: {
-    backgroundColor: '#0054A3', // Azul fuerte de tu marca
+    backgroundColor: '#0054A3',
     marginTop: 35,
     paddingVertical: 14,
     borderRadius: 12,

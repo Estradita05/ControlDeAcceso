@@ -14,18 +14,20 @@ export default function BajaVehiculoScreen({ navigation }) {
     alert('Vehículo dado de baja correctamente');
     setMatricula('');
     setPlacas('');
+    
+    navigation.goBack();
   };
 
   const handleCancelar = () => {
     setMatricula('');
     setPlacas('');
+    navigation.goBack();
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
 
-      {/* 1. SECCIÓN DEL LOGO (FIXED) */}
       <View style={styles.logoContainer}>
         <Image
           source={require('../assets/logo.png')}
@@ -33,11 +35,10 @@ export default function BajaVehiculoScreen({ navigation }) {
         />
       </View>
 
-      {/* 2. BARRA DE TÍTULO AZUL */}
       <View style={styles.titleBar}>
         <TouchableOpacity 
           style={styles.backButton} 
-          onPress={() => navigation?.goBack()}
+          onPress={() => navigation?.goBack()} 
         >
           <Text style={styles.backArrow}>{'❮'}</Text>
         </TouchableOpacity>
@@ -45,7 +46,6 @@ export default function BajaVehiculoScreen({ navigation }) {
         <View style={{ width: 30 }} /> 
       </View>
 
-      {/* 3. CONTENIDO DEL FORMULARIO */}
       <ScrollView contentContainerStyle={styles.formContainer} showsVerticalScrollIndicator={false}>
         
         <Text style={styles.label}>Matrícula del usuario</Text>
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   primaryButton: {
-    backgroundColor: '#0b5e8e', // Puedes usar el azul oscuro para "acciones fuertes" como dar de baja
+    backgroundColor: '#0b5e8e', 
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',

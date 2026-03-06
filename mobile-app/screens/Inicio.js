@@ -1,19 +1,33 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-export default function InicioScreen() {
+export default function InicioScreen({ navigation }) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.navigate('Login');
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
-      
-      <Image
-        source={require('../assets/logo.png')}
-        style={styles.logo}
-        resizeMode="contain"
-      />
-      
-      <Text style={styles.title}>¡Bienvenido!</Text>
-      
-      <Text style={styles.subtitle}>
-        Accesos seguros, comunidad protegida.</Text>
+      <TouchableOpacity 
+        activeOpacity={1} 
+        onPress={() => navigation.navigate('Login')}
+        style={styles.content}
+      >
+        <Image
+          source={require('../assets/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        
+        <Text style={styles.title}>¡Bienvenido!</Text>
+        
+        <Text style={styles.subtitle}>
+          Accesos seguros, comunidad protegida.
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -25,6 +39,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
+  },
+  content: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
   },
   logo: {
     width: 350,

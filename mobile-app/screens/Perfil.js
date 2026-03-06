@@ -2,13 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen({ navigation }) { 
   return (
     <SafeAreaView style={styles.container}>
-      {/* StatusBar consistente con el fondo claro */}
       <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
 
-      {/* 1. SECCIÓN DEL LOGO */}
       <View style={styles.logoContainer}>
         <Image
           source={require('../assets/logo.png')}
@@ -17,11 +15,10 @@ export default function ProfileScreen({ navigation }) {
         />
       </View>
 
-      {/* 2. BARRA DE TÍTULO AZUL */}
       <View style={styles.titleBar}>
         <TouchableOpacity 
           style={styles.backButton} 
-          onPress={() => navigation?.goBack()}
+          onPress={() => navigation?.goBack()} 
         >
           <Text style={styles.backArrow}>{'❮'}</Text>
         </TouchableOpacity>
@@ -30,7 +27,6 @@ export default function ProfileScreen({ navigation }) {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* 3. SECCIÓN DE AVATAR Y NOMBRE */}
         <View style={styles.profileSection}>
           <View style={styles.avatar}>
             <Icon name="person" size={65} color="#fff" />
@@ -39,12 +35,14 @@ export default function ProfileScreen({ navigation }) {
           <Text style={styles.name}>Montserrath Estrada</Text>
           <Text style={styles.email}>124050385@edu.mx</Text>
 
-          <TouchableOpacity style={styles.editButton}>
+          <TouchableOpacity 
+            style={styles.editButton}
+            onPress={() => navigation.navigate('EditarPerfil')} 
+          >
             <Text style={styles.editButtonText}>Editar Perfil</Text>
           </TouchableOpacity>
         </View>
 
-        {/* 4. TARJETA DE DATOS (ESTILO CARD) */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Datos del usuario</Text>
 
@@ -64,7 +62,10 @@ export default function ProfileScreen({ navigation }) {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.logoutButton}>
+        <TouchableOpacity 
+          style={styles.logoutButton}
+          onPress={() => navigation.navigate('Login')} 
+        >
           <Text style={styles.logoutText}>Cerrar sesión</Text>
         </TouchableOpacity>
         

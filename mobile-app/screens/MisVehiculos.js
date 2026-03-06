@@ -1,16 +1,32 @@
 import React from 'react';
-import {StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, Image,} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  StatusBar,
+} from 'react-native';
 
-const MisVehiculos = () => {
+const MisVehiculos = ({ navigation }) => { 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
+      
       <View style={styles.logoContainer}>
         <Image
-          source={require('../assets/logo.png')} style={styles.logo} /> 
+          source={require('../assets/logo.png')} 
+          style={styles.logo} 
+        /> 
       </View>
       
       <View style={styles.titleBar}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => navigation.goBack()} 
+        >
           <Text style={styles.backArrow}>{'❮'}</Text>
         </TouchableOpacity>
         <Text style={styles.titleText}>MIS VEHÍCULOS</Text>
@@ -22,12 +38,10 @@ const MisVehiculos = () => {
         <View style={styles.card}>
           <View style={styles.cardLeftBorder} />
           <View style={styles.cardContent}>
-            
             <View style={styles.cardBody}>
               <View style={styles.iconContainer}>
                 <Text style={styles.carIcon}>🚘</Text>
               </View>
-              
               <View style={styles.infoContainer}>
                 <Text style={styles.vehicleTitle}>Vehículo 1</Text>
                 <Text style={styles.vehicleDetail}>Marca / Modelo: Nissan Versa</Text>
@@ -35,28 +49,24 @@ const MisVehiculos = () => {
                 <Text style={styles.vehicleDetail}>Placa: QRO-4827</Text>
               </View>
             </View>
-
             <View style={styles.cardFooter}>
               <View style={[styles.badge, styles.badgeActivo]}>
                 <Text style={styles.badgeActivoText}>Activo</Text>
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('EditarVehiculo')}>
                 <Text style={styles.linkText}>Ver detalles</Text>
               </TouchableOpacity>
             </View>
-
           </View>
         </View>
 
         <View style={styles.card}>
           <View style={styles.cardLeftBorder} />
           <View style={styles.cardContent}>
-            
             <View style={styles.cardBody}>
               <View style={styles.iconContainer}>
                 <Text style={styles.carIcon}>🚘</Text>
               </View>
-              
               <View style={styles.infoContainer}>
                 <Text style={styles.vehicleTitle}>Vehículo 2</Text>
                 <Text style={styles.vehicleDetail}>Marca / Modelo: Chevrolet Aveo</Text>
@@ -64,25 +74,29 @@ const MisVehiculos = () => {
                 <Text style={styles.vehicleDetail}>Placa: JKP-9301</Text>
               </View>
             </View>
-
             <View style={styles.cardFooter}>
               <View style={[styles.badge, styles.badgeProvisional]}>
                 <Text style={styles.badgeProvisionalText}>Provisional</Text>
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('EditarVehiculo')}>
                 <Text style={styles.linkText}>Ver detalles</Text>
               </TouchableOpacity>
             </View>
-
           </View>
         </View>
 
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity style={styles.primaryButton}>
+          <TouchableOpacity 
+            style={styles.primaryButton} 
+            onPress={() => navigation.navigate('AgregarVehiculo')}
+          >
             <Text style={styles.buttonText}>Agregar vehículo</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.primaryButton}>
+          <TouchableOpacity 
+            style={styles.primaryButton} 
+            onPress={() => navigation.navigate('AccesoProvisional')}
+          >
             <Text style={styles.buttonText}>Solicitar acceso{'\n'}provisional</Text>
           </TouchableOpacity>
         </View>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, StatusBar, Image, SafeAreaView } from 'react-native';
 
-export default function AgregarVehiculoScreen() {
+export default function AgregarVehiculoScreen({ navigation }) {
   const [matricula, setMatricula] = useState('');
   const [placa, setPlaca] = useState('');
   const [marca, setMarca] = useState('');
@@ -16,7 +16,8 @@ export default function AgregarVehiculoScreen() {
     const nuevoVehiculo = { matricula, placa, marca, color, tipoAcceso };
     console.log('Vehículo guardado:', nuevoVehiculo);
     alert('Vehículo guardado correctamente');
-    handleCancelar();
+    
+    navigation.goBack();
   };
 
   const handleCancelar = () => {
@@ -25,13 +26,13 @@ export default function AgregarVehiculoScreen() {
     setMarca('');
     setColor('');
     setTipoAcceso('');
+    navigation.goBack();
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
 
-      {/* 1. SECCIÓN DEL LOGO */}
       <View style={styles.logoContainer}>
         <Image
           source={require('../assets/logo.png')}
@@ -40,16 +41,17 @@ export default function AgregarVehiculoScreen() {
         />
       </View>
 
-      {/* 2. BARRA DE TÍTULO AZUL CON FLECHA */}
       <View style={styles.titleBar}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
           <Text style={styles.backArrow}>{'❮'}</Text>
         </TouchableOpacity>
         <Text style={styles.titleText}>AGREGAR VEHÍCULO</Text>
         <View style={{ width: 30 }} /> 
       </View>
 
-      {/* 3. FORMULARIO */}
       <ScrollView contentContainerStyle={styles.formContainer} showsVerticalScrollIndicator={false}>
         <Text style={styles.label}>Matrícula del usuario</Text>
         <TextInput
@@ -158,7 +160,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 8,
     marginTop: 15,
-    color: '#004C8C', // Azul oscuro para coherencia
+    color: '#004C8C',
   },
   input: {
     backgroundColor: '#EAF3F8',

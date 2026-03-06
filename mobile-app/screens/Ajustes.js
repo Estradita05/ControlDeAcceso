@@ -9,6 +9,7 @@ export default function SettingsScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
 
+      {/* 1. SECCIÓN DEL LOGO */}
       <View style={styles.logoContainer}>
         <Image
           source={require('../assets/logo.png')}
@@ -17,10 +18,11 @@ export default function SettingsScreen({ navigation }) {
         />
       </View>
 
+      {/* 2. BARRA DE TÍTULO CON NAVEGACIÓN SEGURA */}
       <View style={styles.titleBar}>
         <TouchableOpacity 
           style={styles.backButton} 
-          onPress={() => navigation?.goBack()}
+          onPress={() => navigation.navigate('Menu')}
         >
           <Text style={styles.backArrow}>{'❮'}</Text>
         </TouchableOpacity>
@@ -60,14 +62,15 @@ export default function SettingsScreen({ navigation }) {
           </View>
         </View>
 
-        {/* 5. NOTIFICACIONES */}
+        {/* 3. NOTIFICACIONES - CORRECCIÓN DE BOOLEANOS AQUÍ */}
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>Notificaciones</Text>
           <View style={styles.row}>
             <Text style={styles.label}>Notificaciones de acceso</Text>
             <Switch 
+              // CORRECCIÓN: Usar llaves para asegurar el tipo booleano
               value={notifications} 
-              onValueChange={setNotifications} 
+              onValueChange={(val) => setNotifications(val)} 
               trackColor={{ false: '#D1D1D1', true: '#86ABC8' }}
               thumbColor={notifications ? '#004C8C' : '#F4F4F4'}
             />
@@ -80,20 +83,9 @@ export default function SettingsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#F0F6FA', 
-  },
-  logoContainer: {
-    alignItems: 'center',
-    paddingTop: 30,
-    paddingBottom: 15,
-    backgroundColor: '#F0F6FA',
-  },
-  logo: {
-    width: 120,
-    height: 120,
-  },
+  container: { flex: 1, backgroundColor: '#F0F6FA' },
+  logoContainer: { alignItems: 'center', paddingTop: 30, paddingBottom: 15 },
+  logo: { width: 120, height: 120 },
   titleBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -102,24 +94,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 15,
     elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    marginBottom: 5,
   },
-  backButton: {
-    padding: 5,
-  },
-  backArrow: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  titleText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#004C8C',
-  },
+  backButton: { padding: 5 },
+  backArrow: { fontSize: 22, fontWeight: 'bold', color: '#000' },
+  titleText: { fontSize: 20, fontWeight: 'bold', color: '#004C8C' },
   sectionCard: { 
     backgroundColor: '#EAF3F8', 
     marginHorizontal: 20,
@@ -127,26 +105,10 @@ const styles = StyleSheet.create({
     padding: 20, 
     borderRadius: 20, 
     elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    color: '#004C8C',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  label: {
-    fontSize: 15,
-    color: '#333',
-    fontWeight: '600',
-  },
+  sectionTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 15, color: '#004C8C' },
+  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  label: { fontSize: 15, color: '#333', fontWeight: '600' },
   selectBox: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -157,21 +119,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#D1E1EB',
   },
-  value: {
-    marginRight: 8,
-    fontSize: 14,
-    color: '#004C8C',
-    fontWeight: '500',
-  },
-  badgeContainer: {
-    backgroundColor: '#D1E6C9', 
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    borderRadius: 15,
-  },
-  badgeText: {
-    color: '#558249',
-    fontWeight: 'bold',
-    fontSize: 13,
-  },
+  value: { marginRight: 8, fontSize: 14, color: '#004C8C', fontWeight: '500' },
+  badgeContainer: { backgroundColor: '#D1E6C9', paddingHorizontal: 15, paddingVertical: 5, borderRadius: 15 },
+  badgeText: { color: '#558249', fontWeight: 'bold', fontSize: 13 },
 });

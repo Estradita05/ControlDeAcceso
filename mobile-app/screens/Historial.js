@@ -7,9 +7,10 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  StatusBar,
 } from 'react-native';
 
-const HistorialAccesos = () => {
+const HistorialAccesos = ({ navigation }) => { 
   const accesos = [
     { id: '1', tipo: 'Entrada', fecha: '19/02/2026', hora: '07:15 AM.', estado: 'Permitido', color: 'green' },
     { id: '2', tipo: 'Entrada', fecha: '18/02/2026', hora: '06:32 PM.', estado: 'Permitido', color: 'red' },
@@ -24,14 +25,12 @@ const HistorialAccesos = () => {
 
   const renderItem = ({ item }) => (
     <View style={styles.historyItem}>
-      {/* Ícono de entrada/salida simulado */}
       <View style={styles.iconContainer}>
         <Text style={[styles.iconArrow, { color: item.color === 'green' ? '#1D8348' : '#C0392B' }]}>
           {item.color === 'green' ? '➡]' : '➡['}
         </Text>
       </View>
       
-      {/* Textos */}
       <View style={styles.textContainer}>
         <Text style={styles.typeText}>{item.tipo}</Text>
         <Text style={styles.dateTimeText}>
@@ -39,7 +38,6 @@ const HistorialAccesos = () => {
         </Text>
       </View>
       
-      {/* Badge Permitido */}
       <View style={styles.badgeContainer}>
         <Text style={styles.badgeText}>{item.estado}</Text>
       </View>
@@ -48,22 +46,23 @@ const HistorialAccesos = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Encabezado y Logo */}
+      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
+
       <View style={styles.logoContainer}>
-        <Image
-                  source={require('../assets/logo.png')} style={styles.logo} /> 
+        <Image source={require('../assets/logo.png')} style={styles.logo} /> 
       </View>
       
-      {/* Barra Azul de Título */}
       <View style={styles.titleBar}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity 
+          style={styles.backButton} 
+          onPress={() => navigation.goBack()} 
+        >
           <Text style={styles.backArrow}>{'❮'}</Text>
         </TouchableOpacity>
         <Text style={styles.titleText}>HISTORIAL DE ACCESOS</Text>
         <View style={{ width: 30 }} />
       </View>
 
-      {/* Lista */}
       <FlatList
         data={accesos}
         keyExtractor={(item) => item.id}
@@ -78,7 +77,7 @@ const HistorialAccesos = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F6FA', // Fondo azul muy clarito
+    backgroundColor: '#F0F6FA',
   },
   logoContainer: {
     alignItems: 'center',
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#86ABC8', // Azul medio
+    backgroundColor: '#86ABC8',
     paddingVertical: 12,
     paddingHorizontal: 15,
     shadowColor: '#000',
@@ -116,7 +115,7 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#004C8C', // Azul oscuro
+    color: '#004C8C',
   },
   listContainer: {
     paddingHorizontal: 20,
@@ -149,17 +148,17 @@ const styles = StyleSheet.create({
   },
   dateTimeText: {
     fontSize: 14,
-    color: '#296A91', // Azul texto secundario
+    color: '#296A91',
     marginTop: 2,
   },
   badgeContainer: {
-    backgroundColor: '#D1E6C9', // Verde clarito fondo
+    backgroundColor: '#D1E6C9',
     paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 20,
   },
   badgeText: {
-    color: '#558249', // Verde oscuro texto
+    color: '#558249',
     fontWeight: 'bold',
     fontSize: 14,
   },

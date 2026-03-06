@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar, Image, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function HelpScreen({ navigation }) {
+export default function HelpScreen({ navigation }) { // Inyectamos navigation
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
@@ -14,6 +14,9 @@ export default function HelpScreen({ navigation }) {
     alert('Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.');
     setSubject('');
     setMessage('');
+    
+    // Opcional: regresar al menú automáticamente después de enviar
+    // navigation.navigate('Menu'); 
   };
 
   return (
@@ -29,11 +32,11 @@ export default function HelpScreen({ navigation }) {
         />
       </View>
 
-      {/* 2. BARRA DE TÍTULO AZUL */}
+      {/* 2. BARRA DE TÍTULO AZUL CON NAVEGACIÓN */}
       <View style={styles.titleBar}>
         <TouchableOpacity 
           style={styles.backButton} 
-          onPress={() => navigation?.goBack()}
+          onPress={() => navigation?.goBack()} // Acción para regresar a la pantalla anterior
         >
           <Text style={styles.backArrow}>{'❮'}</Text>
         </TouchableOpacity>
@@ -69,7 +72,6 @@ export default function HelpScreen({ navigation }) {
           <Text style={styles.buttonText}>Enviar Mensaje</Text>
         </TouchableOpacity>
 
-        {/* Espacio extra para el teclado */}
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
