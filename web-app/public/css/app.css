@@ -1,0 +1,116 @@
+body{
+margin:0;
+font-family: Arial, Helvetica, sans-serif;
+background:#d6dee6;
+}
+
+/* barra superior */
+
+.topbar{
+background:#6b6767;
+height:40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 25px;
+color:white;
+font-size:14px;
+}
+
+/* contenedor central */
+
+.center-box{
+width:420px;
+margin:auto;
+margin-top:70px;
+text-align:center;
+}
+
+/* logo */
+
+.logo{
+width:90px;
+margin-bottom:20px;
+}
+
+/* tarjetas */
+
+.card{
+background:#e6edf3;
+padding:35px;
+border-radius:4px;
+box-shadow:0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* título grande */
+
+.welcome-title{
+font-size:32px;
+color:#22313f;
+margin-bottom:10px;
+}
+
+/* subtítulo */
+
+.subtitle{
+color:#5d6d7e;
+font-size:15px;
+line-height:1.5;
+}
+
+/* franja azul */
+
+.section-title{
+background:#7fa2c6;
+color:#0d3c60;
+padding:10px;
+font-size:22px;
+margin-bottom:20px;
+}
+
+/* inputs */
+
+input{
+width:100%;
+padding:10px;
+border:none;
+border-radius:5px;
+background:#a9c3e3;
+margin-bottom:12px;
+font-size:14px;
+}
+
+/* botón */
+
+.btn{
+background:#0d4f7b;
+color:white;
+border:none;
+padding:10px 22px;
+border-radius:20px;
+cursor:pointer;
+margin-top:10px;
+}
+
+/* menú */
+
+.menu-box{
+width:460px;
+margin:auto;
+margin-top:60px;
+}
+
+.menu-item{
+background:#dfe8ef;
+padding:15px;
+border-radius:12px;
+margin-bottom:15px;
+display:flex;
+align-items:center;
+font-size:16px;
+}
+
+.menu-icon{
+font-size:22px;
+margin-right:15px;
+}
