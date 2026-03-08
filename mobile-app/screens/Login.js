@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, StatusBar } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, StatusBar, Alert } from 'react-native';
 
 export default function LoginScreen({ navigation }) { 
     const [email, setEmail] = useState('');
@@ -7,7 +7,7 @@ export default function LoginScreen({ navigation }) {
 
     const handleLogin = () => {
         if (!email || !password) {
-            alert('Por favor, ingresa tus credenciales');
+            Alert.alert('Atención', 'Por favor, ingresa tus credenciales');
             return;
         }
         navigation.navigate('Menu'); 
@@ -45,8 +45,8 @@ export default function LoginScreen({ navigation }) {
                 style={styles.input}
                 value={password}
                 onChangeText={setPassword}
-secureTextEntry={true}              
-  placeholder="********"
+                secureTextEntry={true} // Se asegura el valor booleano puro
+                placeholder="********"
                 placeholderTextColor="#7A9EB1"
             />
 

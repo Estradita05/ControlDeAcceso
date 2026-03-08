@@ -2,10 +2,10 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-// Importarpantallas
+// Importar pantallas
 import InicioScreen from './screens/Inicio';
 import LoginScreen from './screens/Login';
-import MenuScreen from './screens/Menu';
+import MenuScreen from './screens/Menu'; // Asegúrate que el archivo sea Menu.js sin acento
 import CredencialScreen from './screens/Credencial';
 import MisVehiculosScreen from './screens/MisVehiculos';
 import AgregarVehiculoScreen from './screens/AgregarVehiculo';
@@ -25,7 +25,8 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator 
         initialRouteName="Inicio" 
-screenOptions={{ headerShown: false }}      >
+        screenOptions={{ headerShown: false }} 
+      >
         <Stack.Screen name="Inicio" component={InicioScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Menu" component={MenuScreen} />
