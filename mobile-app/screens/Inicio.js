@@ -1,71 +1,58 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Image, Animated } from 'react-native';
 
-export default function InicioScreen({ navigation }) {
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            // Verificamos que la navegación exista antes de disparar
-            if (navigation) {
-                navigation.navigate('Login');
-            }
-        }, 3000);
-        return () => clearTimeout(timer);
-    }, [navigation]);
+export default function Inicio({ navigation }) {
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.replace('Menu'); 
+    }, 5000);
 
-    return (
-        <View style={styles.container}>
-            {/* Agregamos StatusBar para evitar saltos visuales al arrancar */}
-            <StatusBar barStyle="dark-content" backgroundColor="#DCEAF3" />
-            
-            <TouchableOpacity 
-                activeOpacity={1} 
-                onPress={() => navigation.navigate('Login')}
-                style={styles.content}
-            >
-                <Image
-                    source={require('../assets/logo.png')}
-                    style={styles.logo}
-                    resizeMode="contain"
-                />
-                
-                <Text style={styles.title}>¡Bienvenido!</Text>
-                
-                <Text style={styles.subtitle}>
-                    Accesos seguros, comunidad protegida.
-                </Text>
-            </TouchableOpacity>
-        </View>
-    );
+    return () => clearTimeout(timer); 
+  }, [navigation]);
+
+  return (
+    <View style={styles.container}>
+      <Image 
+        source={require('../assets/logo.png')} 
+        style={styles.logo}
+        resizeMode="contain"
+      />
+
+      <View style={styles.textContainer}>
+        <Text style={styles.welcomeText}>¡Bienvenido!</Text>
+        <Text style={styles.subText}>Accesos seguros, comunidad protegida.</Text>
+      </View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#DCEAF3',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-    },
-    content: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-    },
-    logo: {
-        width: 350,
-        height: 350,
-        marginBottom: -30,
-    },
-    title: {
-        fontSize: 40,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        color: '#1F2D3D',
-        marginTop: -5,
-    },
-    subtitle: {
-        fontSize: 20,
-        color: '#4A6572',
-        textAlign: 'center',
-    },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#F0F6FA', 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
+  logo: { 
+    width: 250, 
+    height: 250, 
+    marginBottom: 60 
+  },
+  textContainer: {
+    alignItems: 'center',
+    marginTop: 20
+  },
+  welcomeText: { 
+    fontSize: 32, 
+    fontWeight: 'bold', 
+    color: '#1C2B39', 
+    marginBottom: 10 
+  },
+  subText: { 
+    fontSize: 16, 
+    color: '#6B8EAD', 
+    textAlign: 'center',
+    paddingHorizontal: 40
+  }
 });

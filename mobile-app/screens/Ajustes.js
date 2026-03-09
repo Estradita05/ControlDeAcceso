@@ -7,9 +7,8 @@ export default function SettingsScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
+      <StatusBar barStyle="dark-content" translucent={false} />
 
-      {/* 1. SECCIÓN DEL LOGO */}
       <View style={styles.logoContainer}>
         <Image
           source={require('../assets/logo.png')}
@@ -18,7 +17,6 @@ export default function SettingsScreen({ navigation }) {
         />
       </View>
 
-      {/* 2. BARRA DE TÍTULO CON NAVEGACIÓN SEGURA */}
       <View style={styles.titleBar}>
         <TouchableOpacity 
           style={styles.backButton} 
@@ -62,13 +60,11 @@ export default function SettingsScreen({ navigation }) {
           </View>
         </View>
 
-        {/* 3. NOTIFICACIONES - CORRECCIÓN DE BOOLEANOS AQUÍ */}
         <View style={styles.sectionCard}>
           <Text style={styles.sectionTitle}>Notificaciones</Text>
           <View style={styles.row}>
             <Text style={styles.label}>Notificaciones de acceso</Text>
             <Switch 
-              // CORRECCIÓN: Usar llaves para asegurar el tipo booleano
               value={notifications} 
               onValueChange={(val) => setNotifications(val)} 
               trackColor={{ false: '#D1D1D1', true: '#86ABC8' }}

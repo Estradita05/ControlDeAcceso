@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform, ScrollView, SafeAreaView, StatusBar } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 
 export default function ReporteProblema({ navigation }) {
   const [asunto, setAsunto] = useState('');
@@ -20,7 +20,7 @@ export default function ReporteProblema({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
+      <StatusBar barStyle="dark-content" translucent={false} />
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
         style={{ flex: 1 }}
@@ -44,7 +44,10 @@ export default function ReporteProblema({ navigation }) {
           <View style={{ width: 30 }} /> 
         </View>
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false} 
+          contentContainerStyle={styles.scrollContent}
+        >
           <View style={styles.body}>
             <Text style={styles.mainTitle}>Reporta un problema</Text>
             <Text style={styles.subtitle}>Ayúdanos a mejorar</Text>
@@ -68,7 +71,8 @@ export default function ReporteProblema({ navigation }) {
                 onChangeText={setMensaje}
                 placeholder="Describe tu problema..." 
                 placeholderTextColor="#7A9EB1"
-multiline={true}                numberOfLines={4}
+                multiline={true} 
+                numberOfLines={4}
               />
             </View>
 

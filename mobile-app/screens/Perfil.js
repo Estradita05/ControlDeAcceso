@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ScrollView, SafeAreaView } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ProfileScreen({ navigation }) { 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
+      <StatusBar barStyle="dark-content" translucent={false} />
 
       <View style={styles.logoContainer}>
         <Image
@@ -29,7 +29,7 @@ export default function ProfileScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.profileSection}>
           <View style={styles.avatar}>
-            <Icon name="person" size={65} color="#fff" />
+            <Ionicons name="person" size={65} color="#fff" />
           </View>
 
           <Text style={styles.name}>Montserrath Estrada</Text>

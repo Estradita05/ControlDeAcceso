@@ -16,7 +16,7 @@ export default function EditarPerfil({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
+      <StatusBar barStyle="dark-content" translucent={false} />
       
       <View style={styles.logoContainer}>
         <Image
@@ -75,7 +75,6 @@ export default function EditarPerfil({ navigation }) {
 
           <Text style={styles.label}>Contraseña Actual</Text>
           <TextInput
-            // Garantizamos que el valor sea booleano puro
             secureTextEntry={true}
             style={styles.input}
             value={passwordActual}
@@ -110,7 +109,6 @@ export default function EditarPerfil({ navigation }) {
   );
 }
 
-// ... Estilos (se mantienen iguales a tu código original)
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F0F6FA' },
   logoContainer: { alignItems: 'center', paddingTop: 30, paddingBottom: 15, backgroundColor: '#F0F6FA' },

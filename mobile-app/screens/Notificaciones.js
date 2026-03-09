@@ -5,7 +5,7 @@ import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 export default function NotificationsScreen({ navigation }) { 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
+      <StatusBar barStyle="dark-content" translucent={false} />
       
       <View style={styles.logoContainer}>
         <Image

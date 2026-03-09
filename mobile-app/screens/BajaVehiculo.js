@@ -26,7 +26,7 @@ export default function BajaVehiculoScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
+      <StatusBar barStyle="dark-content" translucent={false} />
 
       <View style={styles.logoContainer}>
         <Image

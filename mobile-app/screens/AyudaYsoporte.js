@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar, Image, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default function HelpScreen({ navigation }) { // Inyectamos navigation
+export default function HelpScreen({ navigation }) { 
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
@@ -15,15 +15,13 @@ export default function HelpScreen({ navigation }) { // Inyectamos navigation
     setSubject('');
     setMessage('');
     
-    // Opcional: regresar al menú automáticamente después de enviar
-    // navigation.navigate('Menu'); 
+  
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F0F6FA" />
+      <StatusBar barStyle="dark-content" translucent={false} />
 
-      {/* 1. SECCIÓN DEL LOGO (FIXED) */}
       <View style={styles.logoContainer}>
         <Image
           source={require('../assets/logo.png')}
@@ -32,11 +30,10 @@ export default function HelpScreen({ navigation }) { // Inyectamos navigation
         />
       </View>
 
-      {/* 2. BARRA DE TÍTULO AZUL CON NAVEGACIÓN */}
       <View style={styles.titleBar}>
         <TouchableOpacity 
           style={styles.backButton} 
-          onPress={() => navigation?.goBack()} // Acción para regresar a la pantalla anterior
+          onPress={() => navigation?.goBack()} 
         >
           <Text style={styles.backArrow}>{'❮'}</Text>
         </TouchableOpacity>
