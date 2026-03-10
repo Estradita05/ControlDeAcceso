@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
     alignItems: 'center' 
   },
   logo: { 
-    width: 250, 
-    height: 250, 
+    width: 450, 
+    height: 450, 
     marginBottom: 60 
   },
   textContainer: {
@@ -44,10 +44,10 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   welcomeText: { 
-    fontSize: 32, 
+    fontSize: 52, 
     fontWeight: 'bold', 
     color: '#1C2B39', 
-    marginBottom: 10 
+    marginBottom: 2 
   },
   subText: { 
     fontSize: 16, 
