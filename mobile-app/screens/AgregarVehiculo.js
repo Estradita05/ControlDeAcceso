@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, StatusBar, Image, SafeAreaView } from 'react-native';
+import { crearVehiculo } from "../services/api";
 
 export default function AgregarVehiculoScreen({ navigation }) {
   const [matricula, setMatricula] = useState('');
@@ -8,17 +9,35 @@ export default function AgregarVehiculoScreen({ navigation }) {
   const [color, setColor] = useState('');
   const [tipoAcceso, setTipoAcceso] = useState('');
 
-  const handleGuardar = () => {
-    if (!matricula || !placa || !marca || !color || !tipoAcceso) {
-      alert('Por favor completa todos los campos');
-      return;
-    }
-    const nuevoVehiculo = { matricula, placa, marca, color, tipoAcceso };
-    console.log('Vehículo guardado:', nuevoVehiculo);
-    alert('Vehículo guardado correctamente');
-    
-    navigation.goBack();
+  const handleGuardar = async () => {
+  if (!matricula || !placa || !marca || !color || !tipoAcceso) {
+    alert("Por favor completa todos los campos");
+    return;
+  }
+
+  const nuevoVehiculo = {
+    placa: placa,
+    modelo: marca,
+    tipo_acceso: tipoAcceso
   };
+
+  try {
+
+    const respuesta = await crearVehiculo(nuevoVehiculo);
+
+    console.log("Respuesta API:", respuesta);
+
+    alert("Vehículo guardado correctamente");
+
+    navigation.goBack();
+
+  } catch (error) {
+
+    console.log("Error:", error);
+    alert("Error al guardar vehículo");
+
+  }
+};
 
   const handleCancelar = () => {
     setMatricula('');

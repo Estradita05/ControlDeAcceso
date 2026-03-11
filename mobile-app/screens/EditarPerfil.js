@@ -9,10 +9,44 @@ export default function EditarPerfil({ navigation }) {
   const [passwordNueva, setPasswordNueva] = useState('');
   const [confirmarPassword, setConfirmarPassword] = useState('');
 
-  const handleSave = () => {
-    alert('Cambios guardados exitosamente');
-    navigation.goBack(); 
+  const handleSave = async () => {
+
+  if (!nombre || !correo) {
+    alert("Completa los campos obligatorios");
+    return;
+  }
+
+  const usuario = {
+    nombre: nombre,
+    correo: correo
   };
+
+  try {
+
+    const response = await fetch("http://192.168.0.143:5000/usuarios", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(usuario)
+    });
+
+    const data = await response.json();
+
+    console.log("Respuesta API:", data);
+
+    alert("Cambios guardados exitosamente");
+
+    navigation.goBack();
+
+  } catch (error) {
+
+    console.log("Error:", error);
+    alert("Error al guardar cambios");
+
+  }
+
+};
 
   return (
     <SafeAreaView style={styles.container}>

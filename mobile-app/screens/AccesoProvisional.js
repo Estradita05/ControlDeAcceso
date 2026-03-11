@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, StatusBar, Image, SafeAreaView } from 'react-native';
+import { registrarAcceso } from "../services/api";
 
 export default function AccesoProvisionalScreen({ navigation }) { 
   const [matricula, setMatricula] = useState('');
@@ -8,11 +9,31 @@ export default function AccesoProvisionalScreen({ navigation }) {
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
 
-  const handleEnviar = () => {
-    if (!matricula || !placas || !motivo || !fechaInicio || !fechaFin) {
-      alert('Completa todos los campos');
-      return;
-    }
+  const handleEnviar = async () => {
+  if (!matricula || !placas || !motivo || !fechaInicio || !fechaFin) {
+    alert("Completa todos los campos");
+    return;
+  }
+
+  const solicitud = {
+    usuario_id: parseInt(matricula),
+    tipo_movimiento: "entrada"
+  };
+
+  try {
+    const respuesta = await registrarAcceso(solicitud);
+
+    console.log("Respuesta API:", respuesta);
+
+    alert("Solicitud enviada correctamente");
+
+    navigation.navigate("Menu");
+
+  } catch (error) {
+    console.log("Error:", error);
+    alert("Error al enviar la solicitud");
+  }
+};
 
    const solicitud = {
       matricula,
@@ -36,7 +57,7 @@ export default function AccesoProvisionalScreen({ navigation }) {
     setFechaInicio('');
     setFechaFin('');
     navigation.goBack(); 
-  };
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -123,7 +144,7 @@ export default function AccesoProvisionalScreen({ navigation }) {
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

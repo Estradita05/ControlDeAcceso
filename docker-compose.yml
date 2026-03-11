@@ -1,23 +1,20 @@
-version: "3.9"
-
 services:
 
-  app:
-    build:
-      context: ./web-app
-      dockerfile: Dockerfile
-    container_name: laravel_app
-    working_dir: /var/www
-    volumes:
-      - ./web-app:/var/www
-
-  nginx:
-    image: nginx:latest
-    container_name: laravel_nginx
+  api:
+    build: ./docker/API
+    container_name: fastapi_server
     ports:
-      - "8000:80"
-    volumes:
-      - ./web-app:/var/www
-      - ./docker/nginx:/etc/nginx/conf.d
+      - "5000:5000"
     depends_on:
-      - app
+      - db
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: control_acceso
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"

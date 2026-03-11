@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   View, 
   Text, 
@@ -10,7 +10,54 @@ import {
   SafeAreaView 
 } from 'react-native';
 
-export default function Registro({ navigation }) { 
+export default function Registro({ navigation }) {
+  
+  const [nombre, setNombre] = useState("");
+const [matricula, setMatricula] = useState("");
+const [correo, setCorreo] = useState("");
+const [password, setPassword] = useState("");
+
+const registrarUsuario = async () => {
+
+  if (!nombre || !matricula || !correo || !password) {
+    alert("Completa todos los campos");
+    return;
+  }
+
+  const usuario = {
+    nombre: nombre,
+    matricula: matricula,
+    correo: correo,
+    password: password
+  };
+
+  try {
+
+    const response = await fetch("http://192.168.0.143:5000/usuarios", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(usuario)
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+
+    alert("Usuario registrado correctamente");
+
+    navigation.navigate("Login");
+
+  } catch (error) {
+
+    console.log(error);
+    alert("Error al registrar usuario");
+
+  }
+
+};
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoContainer}>

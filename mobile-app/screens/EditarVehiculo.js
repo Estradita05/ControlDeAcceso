@@ -8,13 +8,40 @@ export default function EditarVehiculoScreen({ navigation }) {
   const [tipoAcceso, setTipoAcceso] = useState('Permanente');
   const [vigencia, setVigencia] = useState('');
 
-  const handleGuardarCambios = () => {
-    const vehiculoActualizado = { placa, modelo, color, tipoAcceso, vigencia };
-    console.log('Vehículo actualizado:', vehiculoActualizado);
-    alert('Cambios guardados correctamente');
-    
-    navigation.goBack();
+  const handleGuardarCambios = async () => {
+
+  const vehiculoActualizado = {
+    placa: placa,
+    modelo: modelo,
+    tipo_acceso: tipoAcceso
   };
+
+  try {
+
+    const response = await fetch(`http://192.168.0.143:5000/vehiculos/${placa}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(vehiculoActualizado)
+    });
+
+    const data = await response.json();
+
+    console.log("Respuesta API:", data);
+
+    alert("Cambios guardados correctamente");
+
+    navigation.goBack();
+
+  } catch (error) {
+
+    console.log("Error:", error);
+    alert("Error al actualizar vehículo");
+
+  }
+
+};
 
   return (
     <SafeAreaView style={styles.container}>

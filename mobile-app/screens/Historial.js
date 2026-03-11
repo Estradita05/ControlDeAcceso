@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,18 +10,41 @@ import {
   StatusBar,
 } from 'react-native';
 
+
 const HistorialAccesos = ({ navigation }) => { 
-  const accesos = [
-    { id: '1', tipo: 'Entrada', fecha: '19/02/2026', hora: '07:15 AM.', estado: 'Permitido', color: 'green' },
-    { id: '2', tipo: 'Entrada', fecha: '18/02/2026', hora: '06:32 PM.', estado: 'Permitido', color: 'red' },
-    { id: '3', tipo: 'Entrada', fecha: '18/02/2026', hora: '07:08 AM.', estado: 'Permitido', color: 'green' },
-    { id: '4', tipo: 'Entrada', fecha: '18/02/2026', hora: '06:32 PM.', estado: 'Permitido', color: 'red' },
-    { id: '5', tipo: 'Entrada', fecha: '19/02/2026', hora: '07:15 AM.', estado: 'Permitido', color: 'green' },
-    { id: '6', tipo: 'Entrada', fecha: '18/02/2026', hora: '06:32 PM.', estado: 'Permitido', color: 'red' },
-    { id: '7', tipo: 'Entrada', fecha: '18/02/2026', hora: '07:08 AM.', estado: 'Permitido', color: 'green' },
-    { id: '8', tipo: 'Entrada', fecha: '18/02/2026', hora: '06:32 PM.', estado: 'Permitido', color: 'red' },
-    { id: '9', tipo: 'Entrada', fecha: '19/02/2026', hora: '07:15 AM.', estado: 'Permitido', color: 'green' },
-  ];
+  const [accesos, setAccesos] = useState([]);
+
+  useEffect(() => {
+
+  const obtenerAccesos = async () => {
+
+    try {
+
+      const response = await fetch("http://192.168.0.143:5000/accesos");
+      const data = await response.json();
+
+      const accesosFormateados = data.map((item, index) => ({
+        id: index.toString(),
+        tipo: item.tipo_movimiento,
+        fecha: "Hoy",
+        hora: "",
+        estado: "Permitido",
+        color: item.tipo_movimiento === "entrada" ? "green" : "red"
+      }));
+
+      setAccesos(accesosFormateados);
+
+    } catch (error) {
+
+      console.log("Error:", error);
+
+    }
+
+  };
+
+  obtenerAccesos();
+
+}, []);
 
   const renderItem = ({ item }) => (
     <View style={styles.historyItem}>

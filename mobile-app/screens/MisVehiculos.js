@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,16 +10,42 @@ import {
   StatusBar,
 } from 'react-native';
 
-const MisVehiculos = ({ navigation }) => { 
+const MisVehiculos = ({ navigation }) => {
+
+  const [vehiculos, setVehiculos] = useState([]);
+
+  useEffect(() => {
+
+    const obtenerVehiculos = async () => {
+
+      try {
+
+        const response = await fetch("http://192.168.0.143:5000/vehiculos");
+        const data = await response.json();
+
+        setVehiculos(data);
+
+      } catch (error) {
+
+        console.log("Error obteniendo vehículos:", error);
+
+      }
+
+    };
+
+    obtenerVehiculos();
+
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={false} />
       
       <View style={styles.logoContainer}>
         <Image
-          source={require('../assets/logo.png')} 
-          style={styles.logo} 
-        /> 
+          source={require('../assets/logo.png')}
+          style={styles.logo}
+        />
       </View>
       
       <View style={styles.titleBar}>
@@ -34,82 +60,79 @@ const MisVehiculos = ({ navigation }) => {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
-        <View style={styles.card}>
-          <View style={styles.cardLeftBorder} />
-          <View style={styles.cardContent}>
-            <View style={styles.cardBody}>
-              <View style={styles.iconContainer}>
-                <Text style={styles.carIcon}>🚘</Text>
-              </View>
-              <View style={styles.infoContainer}>
-                <Text style={styles.vehicleTitle}>Vehículo 1</Text>
-                <Text style={styles.vehicleDetail}>Marca / Modelo: Nissan Versa</Text>
-                <Text style={styles.vehicleDetail}>Color: Blanco</Text>
-                <Text style={styles.vehicleDetail}>Placa: QRO-4827</Text>
-              </View>
-            </View>
-            <View style={styles.cardFooter}>
-              <View style={[styles.badge, styles.badgeActivo]}>
-                <Text style={styles.badgeActivoText}>Activo</Text>
-              </View>
-              <TouchableOpacity onPress={() => navigation.navigate('EditarVehiculo')}>
-                <Text style={styles.linkText}>Ver detalles</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
 
-        <View style={styles.card}>
-          <View style={styles.cardLeftBorder} />
-          <View style={styles.cardContent}>
-            <View style={styles.cardBody}>
-              <View style={styles.iconContainer}>
-                <Text style={styles.carIcon}>🚘</Text>
+        {vehiculos.map((vehiculo, index) => (
+
+          <View key={index} style={styles.card}>
+
+            <View style={styles.cardLeftBorder} />
+
+            <View style={styles.cardContent}>
+
+              <View style={styles.cardBody}>
+
+                <View style={styles.iconContainer}>
+                  <Text style={styles.carIcon}>🚘</Text>
+                </View>
+
+                <View style={styles.infoContainer}>
+                  <Text style={styles.vehicleTitle}>Vehículo</Text>
+                  <Text style={styles.vehicleDetail}>Marca / Modelo: {vehiculo.modelo}</Text>
+                  <Text style={styles.vehicleDetail}>Placa: {vehiculo.placa}</Text>
+                </View>
+
               </View>
-              <View style={styles.infoContainer}>
-                <Text style={styles.vehicleTitle}>Vehículo 2</Text>
-                <Text style={styles.vehicleDetail}>Marca / Modelo: Chevrolet Aveo</Text>
-                <Text style={styles.vehicleDetail}>Color: Gris</Text>
-                <Text style={styles.vehicleDetail}>Placa: JKP-9301</Text>
+
+              <View style={styles.cardFooter}>
+
+                <View style={[styles.badge, styles.badgeActivo]}>
+                  <Text style={styles.badgeActivoText}>Activo</Text>
+                </View>
+
+                <TouchableOpacity onPress={() => navigation.navigate('EditarVehiculo')}>
+                  <Text style={styles.linkText}>Ver detalles</Text>
+                </TouchableOpacity>
+
               </View>
+
             </View>
-            <View style={styles.cardFooter}>
-              <View style={[styles.badge, styles.badgeProvisional]}>
-                <Text style={styles.badgeProvisionalText}>Provisional</Text>
-              </View>
-              <TouchableOpacity onPress={() => navigation.navigate('EditarVehiculo')}>
-                <Text style={styles.linkText}>Ver detalles</Text>
-              </TouchableOpacity>
-            </View>
+
           </View>
-        </View>
+
+        ))}
 
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity 
-            style={styles.primaryButton} 
+
+          <TouchableOpacity
+            style={styles.primaryButton}
             onPress={() => navigation.navigate('AgregarVehiculo')}
           >
             <Text style={styles.buttonText}>Agregar vehículo</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={styles.primaryButton} 
+          <TouchableOpacity
+            style={styles.primaryButton}
             onPress={() => navigation.navigate('AccesoProvisional')}
           >
-            <Text style={styles.buttonText}>Solicitar acceso{'\n'}provisional</Text>
+            <Text style={styles.buttonText}>
+              Solicitar acceso{'\n'}provisional
+            </Text>
           </TouchableOpacity>
+
         </View>
 
       </ScrollView>
+
     </SafeAreaView>
   );
 };
 
+export default MisVehiculos;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F6FA', 
+    backgroundColor: '#F0F6FA',
   },
   logoContainer: {
     alignItems: 'center',
@@ -126,13 +149,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#86ABC8', 
+    backgroundColor: '#86ABC8',
     paddingVertical: 12,
     paddingHorizontal: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
     elevation: 4,
     marginBottom: 10,
   },
@@ -160,15 +179,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 20,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.15,
-    shadowRadius: 5,
     elevation: 5,
   },
   cardLeftBorder: {
     width: 10,
-    backgroundColor: '#0054A3', 
+    backgroundColor: '#0054A3',
   },
   cardContent: {
     flex: 1,
@@ -196,7 +211,7 @@ const styles = StyleSheet.create({
   },
   vehicleDetail: {
     fontSize: 13,
-    color: '#296A91', 
+    color: '#296A91',
     marginBottom: 3,
   },
   cardFooter: {
@@ -211,23 +226,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   badgeActivo: {
-    backgroundColor: '#D1E6C9', 
+    backgroundColor: '#D1E6C9',
   },
   badgeActivoText: {
-    color: '#558249', 
-    fontWeight: 'bold',
-    fontSize: 14,
-  },
-  badgeProvisional: {
-    backgroundColor: '#F7D667', 
-  },
-  badgeProvisionalText: {
-    color: '#966D00', 
+    color: '#558249',
     fontWeight: 'bold',
     fontSize: 14,
   },
   linkText: {
-    color: '#002C4E', 
+    color: '#002C4E',
     fontWeight: '800',
     fontSize: 14,
   },
@@ -236,15 +243,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   primaryButton: {
-    backgroundColor: '#0054A3', 
-    width: '70%', 
+    backgroundColor: '#0054A3',
+    width: '70%',
     paddingVertical: 12,
     borderRadius: 10,
     marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
     elevation: 5,
   },
   buttonText: {
@@ -252,8 +255,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     textAlign: 'center',
-    lineHeight: 22, 
+    lineHeight: 22,
   },
 });
-
-export default MisVehiculos;

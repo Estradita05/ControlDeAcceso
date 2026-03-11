@@ -5,24 +5,36 @@ export default function BajaVehiculoScreen({ navigation }) {
   const [matricula, setMatricula] = useState('');
   const [placas, setPlacas] = useState('');
 
-  const handleConfirmar = () => {
-    if (!matricula || !placas) {
-      alert('Completa todos los campos');
-      return;
-    }
+  const handleConfirmar = async () => {
+  if (!matricula || !placas) {
+    alert("Completa todos los campos");
+    return;
+  }
 
-    alert('Vehículo dado de baja correctamente');
-    setMatricula('');
-    setPlacas('');
-    
-    navigation.goBack();
-  };
+  try {
 
-  const handleCancelar = () => {
-    setMatricula('');
-    setPlacas('');
+    const response = await fetch(`http://192.168.0.143:5000/vehiculos/${placas}`, {
+      method: "DELETE"
+    });
+
+    const data = await response.json();
+
+    console.log("Respuesta API:", data);
+
+    alert("Vehículo dado de baja correctamente");
+
+    setMatricula("");
+    setPlacas("");
+
     navigation.goBack();
-  };
+
+  } catch (error) {
+
+    console.log("Error:", error);
+    alert("Error al dar de baja el vehículo");
+
+  }
+};
 
   return (
     <SafeAreaView style={styles.container}>
