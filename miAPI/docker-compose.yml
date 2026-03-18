@@ -1,9 +1,0 @@
-version: '3.8'
-services:
-  api_vehiculos:
-    build: .
-    container_name: server_vehiculos
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./App:/app/App

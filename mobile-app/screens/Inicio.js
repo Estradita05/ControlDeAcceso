@@ -6,7 +6,7 @@ export default function Inicio({ navigation }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('Menu'); 
-    }, 5000);
+    }, 2000);
 
     return () => clearTimeout(timer); 
   }, [navigation]);
