@@ -6,17 +6,43 @@ export default function HelpScreen({ navigation }) {
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSend = () => {
-    if (!subject || !message) {
-      alert('Por favor completa todos los campos antes de enviar.');
-      return;
-    }
-    alert('Mensaje enviado correctamente. Nos pondremos en contacto contigo pronto.');
-    setSubject('');
-    setMessage('');
-    
-  
+const handleSend = async () => {
+  if (!subject || !message) {
+    alert("Por favor completa todos los campos antes de enviar.");
+    return;
+  }
+
+  const mensaje = {
+    usuario_id: 1,
+    mensaje: `${subject}: ${message}`
   };
+
+  try {
+
+    const response = await fetch("http://192.168.0.143:5000/notificaciones", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(mensaje)
+    });
+
+    const data = await response.json();
+
+    console.log("Respuesta API:", data);
+
+    alert("Mensaje enviado correctamente");
+
+    setSubject("");
+    setMessage("");
+
+  } catch (error) {
+
+    console.log("Error:", error);
+    alert("Error al enviar el mensaje");
+
+  }
+};
 
   return (
     <SafeAreaView style={styles.container}>

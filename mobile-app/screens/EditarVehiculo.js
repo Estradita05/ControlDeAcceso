@@ -5,39 +5,38 @@ import {
 } from 'react-native';
 
 export default function EditarVehiculo({ route, navigation }) {
-  // 1. Recibimos los datos exactos del vehículo que elegiste en la pantalla anterior
+  // Recibimos los datos del vehículo desde la pantalla de la lista
   const { vehiculo } = route.params;
 
-  // 2. Llenamos los inputs automáticamente con esa información
+  // Estados para los campos del formulario
   const [placas, setPlacas] = useState(vehiculo.placas);
   const [modelo, setModelo] = useState(vehiculo.modelo);
   const [color, setColor] = useState(vehiculo.color);
 
-  // 3. Apuntamos a la IP apuntando al ID específico del vehículo
+  // URL apuntando al ID específico del vehículo en Docker
   const API_URL = `http://10.16.35.204:8000/vehiculos/${vehiculo.id}`;
 
   const handleActualizar = async () => {
     if (!placas || !modelo || !color) {
-      Alert.alert('Error', 'No puedes dejar campos vacíos');
+      Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
 
     try {
-      // Usamos el método PUT que creamos en FastAPI
       const response = await fetch(API_URL, {
-        method: 'PUT',
+        method: 'PUT', // Método para actualizar
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ placas, modelo, color })
       });
 
       if (response.ok) {
         Alert.alert('Éxito', 'Vehículo actualizado correctamente');
-        navigation.goBack(); // Te regresa a la lista automáticamente
+        navigation.goBack(); // Regresa a la lista
       } else {
         Alert.alert('Error', 'No se pudo actualizar en el servidor');
       }
     } catch (error) {
-      Alert.alert('Error', 'Fallo de conexión con Docker');
+      Alert.alert('Error', 'Fallo de conexión con el servidor');
     }
   };
 
@@ -60,19 +59,33 @@ export default function EditarVehiculo({ route, navigation }) {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.formContainer}>
         
         <Text style={styles.label}>Placa del vehículo</Text>
-        <TextInput style={styles.input} value={placas} onChangeText={setPlacas} />
+        <TextInput 
+          style={styles.input} 
+          value={placas} 
+          onChangeText={setPlacas} 
+          placeholder="Ej: ABC-1234"
+        />
 
-        <Text style={styles.label}>Marca</Text>
-        <TextInput style={styles.input} value={modelo} onChangeText={setModelo} />
+        <Text style={styles.label}>Marca / Modelo</Text>
+        <TextInput 
+          style={styles.input} 
+          value={modelo} 
+          onChangeText={setModelo} 
+          placeholder="Ej: Nissan Sentra"
+        />
 
         <Text style={styles.label}>Color</Text>
-        <TextInput style={styles.input} value={color} onChangeText={setColor} />
+        <TextInput 
+          style={styles.input} 
+          value={color} 
+          onChangeText={setColor} 
+          placeholder="Ej: Rojo"
+        />
 
         <TouchableOpacity style={styles.cancelarButton} onPress={() => navigation.goBack()}>
           <Text style={styles.cancelarText}>Cancelar</Text>
         </TouchableOpacity>
 
-        {/* Botón en tono contrastante para diferenciarlo del de "Agregar" */}
         <TouchableOpacity style={styles.primaryButton} onPress={handleActualizar}>
           <Text style={styles.primaryButtonText}>Actualizar vehículo</Text>
         </TouchableOpacity>
@@ -95,6 +108,6 @@ const styles = StyleSheet.create({
   input: { backgroundColor: '#EAF3F8', paddingVertical: 14, paddingHorizontal: 20, borderRadius: 30, marginBottom: 15 },
   cancelarButton: { alignItems: 'flex-end', marginBottom: 15, marginRight: 10 },
   cancelarText: { color: '#005696', fontWeight: 'bold', fontSize: 15 },
-  primaryButton: { backgroundColor: '#E5A900', paddingVertical: 16, borderRadius: 30, alignItems: 'center' }, // Color mostaza/dorado para la acción de editar
+  primaryButton: { backgroundColor: '#E5A900', paddingVertical: 16, borderRadius: 30, alignItems: 'center' }, 
   primaryButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' }
 });

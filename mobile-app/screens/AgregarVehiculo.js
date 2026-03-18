@@ -5,16 +5,18 @@ import {
 } from 'react-native';
 
 export default function AgregarVehiculo({ navigation }) {
+  // Estados para capturar los datos del nuevo vehículo
   const [placas, setPlacas] = useState('');
   const [modelo, setModelo] = useState('');
   const [color, setColor] = useState('');
 
-  // Tu IP conectada a Docker (Intacta)
-  const API_URL = 'http://10.16.35.204:8000/vehiculos'; 
+  // Tu IP conectada a Docker (Asegúrate de que sea la misma que en MisVehiculos)
+  const API_URL = 'http://10.16.35.204:8000/vehiculos';
 
   const handleGuardar = async () => {
+    // Validación básica
     if (!placas || !modelo || !color) {
-      Alert.alert('Error', 'Llena los campos principales (Placa, Marca y Color)');
+      Alert.alert('Error', 'Por favor, llena todos los campos');
       return;
     }
 
@@ -22,15 +24,22 @@ export default function AgregarVehiculo({ navigation }) {
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ placas, modelo, color })
+        body: JSON.stringify({
+          id: Math.floor(Math.random() * 1000), // Generamos un ID temporal
+          placas,
+          modelo,
+          color
+        })
       });
 
       if (response.ok) {
         Alert.alert('Éxito', 'Vehículo registrado correctamente');
-        navigation.goBack();
+        navigation.goBack(); // Regresa a la lista para ver el nuevo carro
+      } else {
+        Alert.alert('Error', 'No se pudo guardar en el servidor');
       }
     } catch (error) {
-      Alert.alert('Error', 'No se pudo conectar al servidor Docker');
+      Alert.alert('Error', 'No hay conexión con el servidor (Docker)');
     }
   };
 
@@ -52,25 +61,35 @@ export default function AgregarVehiculo({ navigation }) {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.formContainer}>
         
-        <Text style={styles.label}>Matrícula del usuario</Text>
-        <TextInput style={styles.input} placeholder="Ingresa la matrícula" keyboardType="numeric" />
-
         <Text style={styles.label}>Placa del vehículo</Text>
-        <TextInput style={styles.input} placeholder="Ingresa la placa" value={placas} onChangeText={setPlacas} />
+        <TextInput 
+          style={styles.input} 
+          placeholder="Ej: ABC-123-A" 
+          value={placas} 
+          onChangeText={setPlacas} 
+        />
 
-        <Text style={styles.label}>Marca</Text>
-        <TextInput style={styles.input} placeholder="Ingresa la marca" value={modelo} onChangeText={setModelo} />
+        <Text style={styles.label}>Marca / Modelo</Text>
+        <TextInput 
+          style={styles.input} 
+          placeholder="Ej: Nissan Sentra" 
+          value={modelo} 
+          onChangeText={setModelo} 
+        />
 
         <Text style={styles.label}>Color</Text>
-        <TextInput style={styles.input} placeholder="Ingresa el color" value={color} onChangeText={setColor} />
-
-        <Text style={styles.label}>Tipo de acceso</Text>
-        <TextInput style={styles.input} placeholder="Ej. Residente / Visitante" />
+        <TextInput 
+          style={styles.input} 
+          placeholder="Ej: Blanco" 
+          value={color} 
+          onChangeText={setColor} 
+        />
 
         <TouchableOpacity style={styles.cancelarButton} onPress={() => navigation.goBack()}>
           <Text style={styles.cancelarText}>Cancelar</Text>
         </TouchableOpacity>
 
+        {/* Botón Principal Azul UPQ */}
         <TouchableOpacity style={styles.primaryButton} onPress={handleGuardar}>
           <Text style={styles.primaryButtonText}>Guardar vehículo</Text>
         </TouchableOpacity>
@@ -93,6 +112,6 @@ const styles = StyleSheet.create({
   input: { backgroundColor: '#EAF3F8', paddingVertical: 14, paddingHorizontal: 20, borderRadius: 30, marginBottom: 15 },
   cancelarButton: { alignItems: 'flex-end', marginBottom: 15, marginRight: 10 },
   cancelarText: { color: '#005696', fontWeight: 'bold', fontSize: 15 },
-  primaryButton: { backgroundColor: '#005696', paddingVertical: 16, borderRadius: 30, alignItems: 'center' },
+  primaryButton: { backgroundColor: '#005696', paddingVertical: 16, borderRadius: 30, alignItems: 'center' }, 
   primaryButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' }
 });

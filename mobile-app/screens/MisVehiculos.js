@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   View, Text, TouchableOpacity, StyleSheet, FlatList, 
-  Alert, Image, SafeAreaView 
+  Alert, Image, SafeAreaView, StatusBar 
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -56,10 +56,12 @@ export default function MisVehiculos({ navigation }) {
             <Text style={styles.badgeTextActivo}>Activo</Text>
           </View>
           
-          {/* Fila de acciones: Editar y Eliminar */}
-          <View style={{ flexDirection: 'row', gap: 15 }}>
-            <TouchableOpacity onPress={() => navigation.navigate('EditarVehiculo', { vehiculo: item })}>
-              <Text style={{ color: '#E5A900', fontWeight: 'bold', fontSize: 14 }}>Editar</Text>
+          <View style={styles.actionButtons}>
+            <TouchableOpacity 
+              onPress={() => navigation.navigate('EditarVehiculo', { vehiculo: item })}
+              style={styles.editButton}
+            >
+              <Text style={styles.editText}>Editar</Text>
             </TouchableOpacity>
             
             <TouchableOpacity onPress={() => handleEliminar(item.id)}>
@@ -73,6 +75,7 @@ export default function MisVehiculos({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       {/* Logotipo Superior */}
       <View style={styles.logoContainer}>
         <Image source={require('../assets/logo.png')} style={styles.logo} resizeMode="contain" />
@@ -132,6 +135,8 @@ const styles = StyleSheet.create({
   cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 },
   badgeActivo: { backgroundColor: '#D5E8D4', paddingHorizontal: 12, paddingVertical: 5, borderRadius: 15 },
   badgeTextActivo: { color: '#4B8A4B', fontWeight: 'bold', fontSize: 12 },
+  actionButtons: { flexDirection: 'row', alignItems: 'center', gap: 15 },
+  editText: { color: '#E5A900', fontWeight: 'bold', fontSize: 14 },
   deleteText: { color: '#C83232', fontWeight: 'bold', fontSize: 14 },
   bottomButtons: { paddingHorizontal: 20, paddingBottom: 30 },
   primaryButton: { backgroundColor: '#005696', paddingVertical: 16, borderRadius: 10, alignItems: 'center', marginBottom: 10 },
