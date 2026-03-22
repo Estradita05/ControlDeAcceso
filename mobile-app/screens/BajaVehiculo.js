@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, StatusBar, SafeAreaView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config';
 
 export default function BajaVehiculoScreen({ navigation }) {
   const [matricula, setMatricula] = useState('');
@@ -12,9 +14,12 @@ export default function BajaVehiculoScreen({ navigation }) {
   }
 
   try {
-
-    const response = await fetch(`http://192.168.0.143:5000/vehiculos/${placas}`, {
-      method: "DELETE"
+    const token = await AsyncStorage.getItem("token");
+    const response = await fetch(`${API_URL}/vehiculos/${placas}`, {
+      method: "DELETE",
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
     });
 
     const data = await response.json();

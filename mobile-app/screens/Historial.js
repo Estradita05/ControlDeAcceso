@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  StatusBar,
-} from 'react-native';
+import {StyleSheet,Text,View,SafeAreaView,FlatList,TouchableOpacity,Image, StatusBar,} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config';
 
 
 const HistorialAccesos = ({ navigation }) => { 
@@ -20,7 +13,12 @@ const HistorialAccesos = ({ navigation }) => {
 
     try {
 
-      const response = await fetch("http://192.168.0.143:5000/accesos");
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(`${API_URL}/accesos/historial`, {
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      });
       const data = await response.json();
 
       const accesosFormateados = data.map((item, index) => ({

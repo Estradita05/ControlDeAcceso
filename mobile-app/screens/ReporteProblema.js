@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView, SafeAreaView, StatusBar } from 'react-native';
+import { API_URL } from '../config';
 
 export default function ReporteProblema({ navigation }) {
 
@@ -20,7 +21,7 @@ export default function ReporteProblema({ navigation }) {
 
     try {
 
-      const response = await fetch("http://192.168.0.143:5000/reportes", {
+      const response = await fetch(`${API_URL}/reportes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

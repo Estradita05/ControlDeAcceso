@@ -1,8 +1,11 @@
+version: "3.9"
+
 services:
   api:
     build: .
-    container_name: server_fastapi
-    ports: 
+    container_name: control_acceso_api
+    ports:
       - "5050:5050"
-    volumes: 
-      - ./app:/app/app
+    volumes:
+      - .:/app
+    restart: always

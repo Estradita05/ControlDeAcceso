@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
-import { 
-  View, Text, TouchableOpacity, StyleSheet, FlatList, 
-  Alert, Image, SafeAreaView, StatusBar 
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Alert, Image, SafeAreaView, StatusBar } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config';
 
 export default function MisVehiculos({ navigation }) {
   const [vehiculos, setVehiculos] = useState([]);
 
-  // Tu IP conectada a Docker (Intacta)
-  const API_URL = 'http://10.16.35.204:8000/vehiculos';
+  // Usando API_URL de config.js
 
   const fetchVehiculos = async () => {
     try {
-      const response = await fetch(API_URL);
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(`${API_URL}/vehiculos`, {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      });
+
       const data = await response.json();
+      console.log("TOKEN:", token);
+      console.log("VEHÍCULOS:", data);
       setVehiculos(data);
     } catch (error) {
       console.log('Error fetch:', error);
@@ -29,7 +36,14 @@ export default function MisVehiculos({ navigation }) {
 
   const handleEliminar = async (id) => {
     try {
-      const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(`${API_URL}/vehiculos/${id}`, {
+        method: 'DELETE',
+        headers: {
+          "Authorization": "Bearer " + token
+        }
+      });
+
       if (response.ok) {
         Alert.alert('Eliminado', 'Vehículo dado de baja');
         fetchVehiculos(); 
@@ -49,7 +63,7 @@ export default function MisVehiculos({ navigation }) {
         <Text style={styles.cardTitle}>Vehículo {index + 1}</Text>
         <Text style={styles.cardText}>Marca / Modelo: {item.modelo}</Text>
         <Text style={styles.cardText}>Color: {item.color}</Text>
-        <Text style={styles.cardText}>Placa: {item.placas}</Text>
+        <Text style={styles.cardText}>Placa: {item.placa}</Text>
         
         <View style={styles.cardFooter}>
           <View style={styles.badgeActivo}>
@@ -76,12 +90,12 @@ export default function MisVehiculos({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      {/* Logotipo Superior */}
+      
       <View style={styles.logoContainer}>
         <Image source={require('../assets/logo.png')} style={styles.logo} resizeMode="contain" />
       </View>
 
-      {/* Franja de Título */}
+     
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Text style={styles.backIcon}>❮</Text>
@@ -90,7 +104,7 @@ export default function MisVehiculos({ navigation }) {
         <View style={{ width: 30 }} />
       </View>
 
-      {/* Lista de Tarjetas */}
+      
       <FlatList 
         data={vehiculos}
         keyExtractor={item => item.id.toString()}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { API_URL } from '../config';
 
 export default function EditarPerfil({ navigation }) {
   const [nombre, setNombre] = useState('');
@@ -23,7 +24,7 @@ export default function EditarPerfil({ navigation }) {
 
   try {
 
-    const response = await fetch("http://192.168.0.143:5000/usuarios", {
+    const response = await fetch(`${API_URL}/usuarios`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

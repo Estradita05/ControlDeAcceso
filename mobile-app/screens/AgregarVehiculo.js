@@ -3,6 +3,8 @@ import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, 
   Alert, Image, ScrollView, SafeAreaView 
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config';
 
 export default function AgregarVehiculo({ navigation }) {
   // Estados para capturar los datos del nuevo vehículo
@@ -10,8 +12,7 @@ export default function AgregarVehiculo({ navigation }) {
   const [modelo, setModelo] = useState('');
   const [color, setColor] = useState('');
 
-  // Tu IP conectada a Docker (Asegúrate de que sea la misma que en MisVehiculos)
-  const API_URL = 'http://10.16.35.204:8000/vehiculos';
+  // Utilizando API_URL global
 
   const handleGuardar = async () => {
     // Validación básica
@@ -21,14 +22,17 @@ export default function AgregarVehiculo({ navigation }) {
     }
 
     try {
-      const response = await fetch(API_URL, {
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(`${API_URL}/vehiculos`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
         body: JSON.stringify({
-          id: Math.floor(Math.random() * 1000), // Generamos un ID temporal
-          placas,
-          modelo,
-          color
+          placa: placas,
+          modelo: modelo,
+          color: color
         })
       });
 

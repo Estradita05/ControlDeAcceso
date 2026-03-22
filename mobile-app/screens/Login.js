@@ -1,17 +1,48 @@
-import React from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
-  Image, 
-  KeyboardAvoidingView, 
-  Platform, 
-  ScrollView 
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config';
 
 export default function Login({ navigation }) {
+  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      });
+
+      console.log("STATUS:", response.status);
+
+      const data = await response.json();
+
+      console.log ("DATA:", data);
+
+       if (response.ok) {
+        await AsyncStorage.setItem("token", data.access_token);
+
+        console.log("TOKEN GUARDADO");
+
+        navigation.navigate('Inicio'); 
+      } else {
+        Alert.alert("Error", data.detail || "Credenciales incorrectas");
+      }
+
+    } catch (error) {
+      console.log("ERROR GENERAL:", error);
+      Alert.alert("Error", "No se pudo conectar con el servidor");
+    }
+  };
+
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
@@ -37,6 +68,8 @@ export default function Login({ navigation }) {
             placeholder="ejemplo@edu.mx" 
             placeholderTextColor="#A9C1D1"
             keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
           />
 
           <Text style={styles.label}>Contraseña</Text>
@@ -44,7 +77,9 @@ export default function Login({ navigation }) {
             style={styles.input} 
             placeholder="********" 
             placeholderTextColor="#A9C1D1"
-            secureTextEntry={true} 
+            secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword} 
           />
 
           <TouchableOpacity onPress={() => navigation.navigate('RecuperarContrasena')}>
@@ -53,7 +88,7 @@ export default function Login({ navigation }) {
 
           <TouchableOpacity 
             style={styles.button} 
-            onPress={() => navigation.navigate('Inicio')}
+             onPress={handleLogin}
           >
             <Text style={styles.buttonText}>Iniciar Sesión</Text>
           </TouchableOpacity>

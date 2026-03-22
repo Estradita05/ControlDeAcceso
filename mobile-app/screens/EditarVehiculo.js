@@ -3,6 +3,8 @@ import {
   View, Text, TextInput, TouchableOpacity, StyleSheet, 
   Alert, Image, ScrollView, SafeAreaView 
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config';
 
 export default function EditarVehiculo({ route, navigation }) {
   // Recibimos los datos del vehículo desde la pantalla de la lista
@@ -13,8 +15,7 @@ export default function EditarVehiculo({ route, navigation }) {
   const [modelo, setModelo] = useState(vehiculo.modelo);
   const [color, setColor] = useState(vehiculo.color);
 
-  // URL apuntando al ID específico del vehículo en Docker
-  const API_URL = `http://10.16.35.204:8000/vehiculos/${vehiculo.id}`;
+  // Usando API_URL centralizado
 
   const handleActualizar = async () => {
     if (!placas || !modelo || !color) {
@@ -23,10 +24,14 @@ export default function EditarVehiculo({ route, navigation }) {
     }
 
     try {
-      const response = await fetch(API_URL, {
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(`${API_URL}/vehiculos/${vehiculo.id}`, {
         method: 'PUT', // Método para actualizar
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ placas, modelo, color })
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
+        body: JSON.stringify({ placa: placas, modelo, color })
       });
 
       if (response.ok) {

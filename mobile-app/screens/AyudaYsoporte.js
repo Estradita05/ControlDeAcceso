@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar, Image, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { API_URL } from '../config';
 
 export default function HelpScreen({ navigation }) { 
   const [subject, setSubject] = useState('');
@@ -19,7 +20,7 @@ const handleSend = async () => {
 
   try {
 
-    const response = await fetch("http://192.168.0.143:5000/notificaciones", {
+    const response = await fetch(`${API_URL}/notificaciones`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
