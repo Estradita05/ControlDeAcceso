@@ -79,9 +79,19 @@ export default function SettingsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F0F6FA' },
-  logoContainer: { alignItems: 'center', paddingTop: 30, paddingBottom: 15 },
-  logo: { width: 120, height: 120 },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#F0F6FA' 
+  },
+  logoContainer: { 
+    alignItems: 'center', 
+    paddingTop: 30, 
+    paddingBottom: 15 
+  },
+  logo: { 
+    width: 120, 
+    height: 120 
+  },
   titleBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -91,9 +101,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     elevation: 4,
   },
-  backButton: { padding: 5 },
-  backArrow: { fontSize: 22, fontWeight: 'bold', color: '#000' },
-  titleText: { fontSize: 20, fontWeight: 'bold', color: '#004C8C' },
+  backButton: { 
+    padding: 5 
+  },
+  backArrow: { 
+    fontSize: 22, 
+    fontWeight: 'bold', 
+    color: '#000' 
+  },
+  titleText: { 
+    fontSize: 20, 
+    fontWeight: 'bold', 
+    color: '#004C8C' 
+  },
   sectionCard: { 
     backgroundColor: '#EAF3F8', 
     marginHorizontal: 20,
@@ -102,9 +122,22 @@ const styles = StyleSheet.create({
     borderRadius: 20, 
     elevation: 3,
   },
-  sectionTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 15, color: '#004C8C' },
-  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  label: { fontSize: 15, color: '#333', fontWeight: '600' },
+  sectionTitle: { 
+    fontSize: 16, 
+    fontWeight: 'bold', 
+    marginBottom: 15, 
+    color: '#004C8C' 
+  },
+  row: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center' 
+  },
+  label: { 
+    fontSize: 15, 
+    color: '#333', 
+    fontWeight: '600'
+  },
   selectBox: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -115,7 +148,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#D1E1EB',
   },
-  value: { marginRight: 8, fontSize: 14, color: '#004C8C', fontWeight: '500' },
-  badgeContainer: { backgroundColor: '#D1E6C9', paddingHorizontal: 15, paddingVertical: 5, borderRadius: 15 },
-  badgeText: { color: '#558249', fontWeight: 'bold', fontSize: 13 },
+  value: { 
+    marginRight: 8, 
+    fontSize: 14, 
+    color: '#004C8C', 
+    fontWeight: '500' 
+  },
+  badgeContainer: { 
+    backgroundColor: '#D1E6C9', 
+    paddingHorizontal: 15, 
+    paddingVertical: 5, 
+    borderRadius: 15 
+  },
+  badgeText: { 
+    color: '#558249', 
+    fontWeight: 'bold', 
+    fontSize: 13 
+  },
 });

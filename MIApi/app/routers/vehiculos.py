@@ -22,7 +22,7 @@ def agregar(data: dict, user=Depends(verificar_token)):
         "placa": data["placa"],
         "modelo": data["modelo"],
         "color": data["color"],
-        "usuario": user["sub"]  # 🔥 esto lo liga al usuario
+        "usuario": user["sub"]  
     }
 
     vehiculos.append(nuevo)
@@ -52,4 +52,3 @@ def eliminar(id: int, user=Depends(verificar_token)):
             return {"mensaje": "Vehículo eliminado"}
     return {"error": "Vehículo no encontrado"}
 
-    #Apilista

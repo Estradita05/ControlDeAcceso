@@ -1,21 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  View, Text, TextInput, TouchableOpacity, StyleSheet, 
-  Alert, Image, ScrollView, SafeAreaView 
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, ScrollView, SafeAreaView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
 
 export default function AgregarVehiculo({ navigation }) {
-  // Estados para capturar los datos del nuevo vehículo
   const [placas, setPlacas] = useState('');
   const [modelo, setModelo] = useState('');
   const [color, setColor] = useState('');
-
-  // Utilizando API_URL global
-
   const handleGuardar = async () => {
-    // Validación básica
     if (!placas || !modelo || !color) {
       Alert.alert('Error', 'Por favor, llena todos los campos');
       return;
@@ -38,7 +30,7 @@ export default function AgregarVehiculo({ navigation }) {
 
       if (response.ok) {
         Alert.alert('Éxito', 'Vehículo registrado correctamente');
-        navigation.goBack(); // Regresa a la lista para ver el nuevo carro
+        navigation.goBack(); 
       } else {
         Alert.alert('Error', 'No se pudo guardar en el servidor');
       }
@@ -49,14 +41,14 @@ export default function AgregarVehiculo({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Logotipo Superior */}
       <View style={styles.logoContainer}>
-        <Image source={require('../assets/logo.png')} style={styles.logo} resizeMode="contain" />
+        <Image source={require('../assets/logo.png')} 
+        style={styles.logo} resizeMode="contain" />
       </View>
 
-      {/* Franja de Título */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity onPress={() => navigation.goBack()} 
+        style={styles.backButton}>
           <Text style={styles.backIcon}>❮</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>AGREGAR VEHÍCULO</Text>
@@ -93,7 +85,6 @@ export default function AgregarVehiculo({ navigation }) {
           <Text style={styles.cancelarText}>Cancelar</Text>
         </TouchableOpacity>
 
-        {/* Botón Principal Azul UPQ */}
         <TouchableOpacity style={styles.primaryButton} onPress={handleGuardar}>
           <Text style={styles.primaryButtonText}>Guardar vehículo</Text>
         </TouchableOpacity>
@@ -104,18 +95,78 @@ export default function AgregarVehiculo({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F0F6FA' },
-  logoContainer: { alignItems: 'center', paddingVertical: 15 },
-  logo: { width: 80, height: 80 },
-  header: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#86ABC8', paddingVertical: 12, paddingHorizontal: 15 },
-  backButton: { padding: 5 },
-  backIcon: { fontSize: 22, fontWeight: 'bold', color: '#003B7C' },
-  headerTitle: { flex: 1, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: '#003B7C' },
-  formContainer: { paddingHorizontal: 25, paddingTop: 20, paddingBottom: 40 },
-  label: { color: '#003B7C', fontWeight: 'bold', marginBottom: 5, marginLeft: 5, fontSize: 15 },
-  input: { backgroundColor: '#EAF3F8', paddingVertical: 14, paddingHorizontal: 20, borderRadius: 30, marginBottom: 15 },
-  cancelarButton: { alignItems: 'flex-end', marginBottom: 15, marginRight: 10 },
-  cancelarText: { color: '#005696', fontWeight: 'bold', fontSize: 15 },
-  primaryButton: { backgroundColor: '#005696', paddingVertical: 16, borderRadius: 30, alignItems: 'center' }, 
-  primaryButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' }
+  container: { 
+    flex: 1, 
+    backgroundColor: '#F0F6FA' 
+  },
+  logoContainer: 
+  { alignItems: 'center', 
+    paddingVertical: 15 
+  },
+  logo: { 
+    width: 80, 
+    height: 80 
+  },
+  header: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    backgroundColor: '#86ABC8', 
+    paddingVertical: 12, 
+    paddingHorizontal: 15 
+  },
+  backButton: { 
+    padding: 5 
+  },
+  backIcon: { 
+    fontSize: 22, 
+    fontWeight: 'bold', 
+    color: '#003B7C' 
+  },
+  headerTitle: { 
+    flex: 1, 
+    textAlign: 'center', 
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    color: '#003B7C' 
+  },
+  formContainer: { 
+    paddingHorizontal: 25, 
+    paddingTop: 20, 
+    paddingBottom: 40 
+  },
+  label: { 
+    color: '#003B7C', 
+    fontWeight: 'bold', 
+    marginBottom: 5, 
+    marginLeft: 5, 
+    fontSize: 15 
+  },
+  input: { 
+    backgroundColor: '#EAF3F8', 
+    paddingVertical: 14, 
+    paddingHorizontal: 20, 
+    borderRadius: 30, 
+    marginBottom: 15 
+  },
+  cancelarButton: { 
+    alignItems: 'flex-end', 
+    marginBottom: 15, 
+    marginRight: 10 
+  },
+  cancelarText: { 
+    color: '#005696', 
+    fontWeight: 'bold', 
+    fontSize: 15 
+  },
+  primaryButton: { 
+    backgroundColor: '#005696', 
+    paddingVertical: 16, 
+    borderRadius: 30, 
+    alignItems: 'center' 
+  }, 
+  primaryButtonText: { 
+    color: '#fff', 
+    fontSize: 16, 
+    fontWeight: 'bold' 
+  }
 });

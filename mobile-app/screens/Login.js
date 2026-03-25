@@ -107,9 +107,20 @@ export default function Login({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F0F6FA' }, 
-  scrollContainer: { flexGrow: 1, alignItems: 'center', paddingTop: 60 },
-  logo: { width: 120, height: 120, marginBottom: 30 },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#F0F6FA' 
+  }, 
+  scrollContainer: { 
+    flexGrow: 1, 
+    alignItems: 'center', 
+    paddingTop: 60 
+  },
+  logo: { 
+    width: 120, 
+    height: 120, 
+    marginBottom: 30 
+  },
   headerBanner: { 
     backgroundColor: '#86ABC8', 
     width: '100%', 
@@ -117,10 +128,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20 
   },
-  headerText: { color: '#003B7C', fontWeight: 'bold', fontSize: 20, letterSpacing: 1 },
-  formContent: { width: '100%', paddingHorizontal: 35 },
-  instructionText: { color: '#6B8EAD', textAlign: 'center', marginBottom: 25, fontSize: 16 },
-  label: { color: '#003B7C', fontWeight: 'bold', marginBottom: 8, fontSize: 14 },
+  headerText: { 
+    color: '#003B7C', 
+    fontWeight: 'bold', 
+    fontSize: 20, 
+    letterSpacing: 1 
+  },
+  formContent: { 
+    width: '100%', 
+    paddingHorizontal: 35 
+  },
+  instructionText: { 
+    color: '#6B8EAD', 
+    textAlign: 'center', 
+    marginBottom: 25, 
+    fontSize: 16 
+  },
+  label: { 
+    color: '#003B7C', 
+    fontWeight: 'bold', 
+    marginBottom: 8, 
+    fontSize: 14 
+  },
   input: { 
     backgroundColor: '#E9F1F7', 
     padding: 15, 
@@ -143,8 +172,24 @@ const styles = StyleSheet.create({
     borderRadius: 30, 
     alignItems: 'center',
   },
-  buttonText: { color: '#fff', fontWeight: 'bold', fontSize: 18 },
-  registerContainer: { flexDirection: 'row', justifyContent: 'center', marginTop: 25, marginBottom: 20 },
-  registerText: { color: '#6B8EAD', fontSize: 15 },
-  registerLink: { color: '#005696', fontWeight: 'bold', fontSize: 15, textDecorationLine: 'underline' }
+  buttonText: { 
+    color: '#fff', 
+    fontWeight: 'bold', 
+    fontSize: 18 
+  },
+  registerContainer: { 
+    flexDirection: 'row', 
+    justifyContent: 'center',
+    marginTop: 25, 
+    marginBottom: 20 
+  },
+  registerText: { 
+    color: '#6B8EAD', 
+    fontSize: 15 },
+  registerLink: { 
+    color: '#005696', 
+    fontWeight: 'bold', 
+    fontSize: 15, 
+    textDecorationLine: 'underline' 
+  }
 });

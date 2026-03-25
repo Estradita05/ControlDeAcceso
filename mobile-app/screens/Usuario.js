@@ -1,11 +1,6 @@
 import React, {useEffect} from "react";
 import {View, Button} from "react-native";
-
-import {
-  obtenerUsuarios,
-  crearUsuario,
-  eliminarUsuario
-} from "../services/usuariosService";
+import {obtenerUsuarios,crearUsuario,eliminarUsuario} from "../services/usuariosService";
 
 export default function Usuarios(){
 

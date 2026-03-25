@@ -7,15 +7,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
 
 export default function EditarVehiculo({ route, navigation }) {
-  // Recibimos los datos del vehículo desde la pantalla de la lista
   const { vehiculo } = route.params;
 
-  // Estados para los campos del formulario
   const [placas, setPlacas] = useState(vehiculo.placas);
   const [modelo, setModelo] = useState(vehiculo.modelo);
   const [color, setColor] = useState(vehiculo.color);
-
-  // Usando API_URL centralizado
 
   const handleActualizar = async () => {
     if (!placas || !modelo || !color) {
@@ -36,7 +32,7 @@ export default function EditarVehiculo({ route, navigation }) {
 
       if (response.ok) {
         Alert.alert('Éxito', 'Vehículo actualizado correctamente');
-        navigation.goBack(); // Regresa a la lista
+        navigation.goBack(); 
       } else {
         Alert.alert('Error', 'No se pudo actualizar en el servidor');
       }
@@ -47,12 +43,10 @@ export default function EditarVehiculo({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Logotipo Superior */}
       <View style={styles.logoContainer}>
         <Image source={require('../assets/logo.png')} style={styles.logo} resizeMode="contain" />
       </View>
 
-      {/* Franja de Título */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Text style={styles.backIcon}>❮</Text>
@@ -101,18 +95,77 @@ export default function EditarVehiculo({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F0F6FA' },
-  logoContainer: { alignItems: 'center', paddingVertical: 15 },
-  logo: { width: 80, height: 80 },
-  header: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#86ABC8', paddingVertical: 12, paddingHorizontal: 15 },
-  backButton: { padding: 5 },
-  backIcon: { fontSize: 22, fontWeight: 'bold', color: '#003B7C' },
-  headerTitle: { flex: 1, textAlign: 'center', fontSize: 18, fontWeight: 'bold', color: '#003B7C' },
-  formContainer: { paddingHorizontal: 25, paddingTop: 20, paddingBottom: 40 },
-  label: { color: '#003B7C', fontWeight: 'bold', marginBottom: 5, marginLeft: 5, fontSize: 15 },
-  input: { backgroundColor: '#EAF3F8', paddingVertical: 14, paddingHorizontal: 20, borderRadius: 30, marginBottom: 15 },
-  cancelarButton: { alignItems: 'flex-end', marginBottom: 15, marginRight: 10 },
-  cancelarText: { color: '#005696', fontWeight: 'bold', fontSize: 15 },
-  primaryButton: { backgroundColor: '#E5A900', paddingVertical: 16, borderRadius: 30, alignItems: 'center' }, 
-  primaryButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' }
+  container: { 
+    flex: 1, 
+    backgroundColor: '#F0F6FA' 
+  },
+  logoContainer: { 
+    alignItems: 'center', 
+    paddingVertical: 15 
+  },
+  logo: { 
+    width: 80, 
+    height: 80 
+  },
+  header: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    backgroundColor: '#86ABC8', 
+    paddingVertical: 12, 
+    paddingHorizontal: 15 
+  },
+  backButton: { 
+    padding: 5 
+  },
+  backIcon: { 
+    fontSize: 22, 
+    fontWeight: 'bold', 
+    color: '#003B7C' 
+  },
+  headerTitle: { 
+    flex: 1, 
+    textAlign: 'center', 
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    color: '#003B7C' 
+  },
+  formContainer: { 
+    paddingHorizontal: 25, 
+    paddingTop: 20, 
+    paddingBottom: 40 
+  },
+  label: { 
+    color: '#003B7C', 
+    fontWeight: 'bold', 
+    marginBottom: 5, 
+    marginLeft: 5, 
+    fontSize: 15 
+  },
+  input: { 
+    backgroundColor: '#EAF3F8', 
+    paddingVertical: 14,
+    paddingHorizontal: 20, 
+    borderRadius: 30,
+    marginBottom: 15 
+  },
+  cancelarButton: { 
+    alignItems: 'flex-end', 
+    marginBottom: 15, 
+    marginRight: 10 },
+  cancelarText: { 
+    color: '#005696', 
+    fontWeight: 'bold', 
+    fontSize: 15 
+  },
+  primaryButton: { 
+    backgroundColor: '#E5A900', 
+    paddingVertical: 16,
+     borderRadius: 30, 
+     alignItems: 'center' 
+    }, 
+  primaryButtonText: { 
+    color: '#fff', 
+    fontSize: 16, 
+    fontWeight: 'bold' 
+  }
 });

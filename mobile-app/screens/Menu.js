@@ -1,13 +1,5 @@
 import React from 'react';
-import { 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  StyleSheet, 
-  ScrollView, 
-  SafeAreaView, 
-  Image 
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Image } from 'react-native';
 
 const menuItems = [
   { id: '1', title: 'Historial de Accesos', sub: 'Entradas y Salidas', route: 'Historial', icon: '🕒' },

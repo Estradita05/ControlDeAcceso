@@ -19,4 +19,4 @@ app.include_router(accesos.router)
 
 @app.get("/")
 def inicio():
-    return {"mensaje": "API funcionando"}
+    return {"mensaje": "API Control de Acceso funcionando"}
