@@ -1,7 +1,45 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, SafeAreaView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, SafeAreaView, Alert } from 'react-native';
+import { API_URL } from '../config';
 
 export default function Registro({ navigation }) { 
+  const [nombre, setNombre] = useState('');
+  const [matricula, setMatricula] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleRegister = async () => {
+    if (!nombre || !matricula || !email || !password) {
+      Alert.alert("Error", "Por favor completa todos los campos (incluyendo la matrícula)");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/usuarios/registro`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          matricula: matricula,
+          nombre: nombre,
+          email: email,
+          password: password
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.status === 201) {
+        Alert.alert("¡Éxito!", "Usuario registrado correctamente. Ahora inicia sesión.");
+        navigation.navigate('Login');
+      } else {
+        Alert.alert("Error", data.detail || "No se pudo registrar el usuario");
+      }
+    } catch (error) {
+      console.log("ERROR REGISTER:", error);
+      Alert.alert("Error", "No se pudo conectar con el servidor");
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       
@@ -35,6 +73,8 @@ export default function Registro({ navigation }) {
           <TextInput 
             style={styles.input} 
             placeholder="Ej. Alexis Hernández" 
+            value={nombre}
+            onChangeText={setNombre}
           />
 
           <Text style={styles.label}>Matrícula / ID</Text>
@@ -42,6 +82,8 @@ export default function Registro({ navigation }) {
             style={styles.input} 
             placeholder="1240XXXXX" 
             keyboardType="numeric" 
+            value={matricula}
+            onChangeText={setMatricula}
           />
 
           <Text style={styles.label}>Correo Institucional</Text>
@@ -49,6 +91,9 @@ export default function Registro({ navigation }) {
             style={styles.input} 
             placeholder="usuario@edu.mx" 
             keyboardType="email-address" 
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
           />
 
           <Text style={styles.label}>Contraseña</Text>
@@ -56,13 +101,15 @@ export default function Registro({ navigation }) {
             style={styles.input} 
             placeholder="********" 
             secureTextEntry={true} 
+            value={password}
+            onChangeText={setPassword}
           />
 
         </View>
 
         <TouchableOpacity 
           style={styles.registerButton} 
-          onPress={() => navigation.navigate('Login')}
+          onPress={handleRegister}
         >
           <Text style={styles.registerText}>Crear Cuenta</Text>
         </TouchableOpacity>

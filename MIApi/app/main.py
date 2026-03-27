@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import auth, usuarios, vehiculos, accesos
+from app.database import engine, Base
+from app.models import usuario, vehiculo, acceso, acceso_provisional
+
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 

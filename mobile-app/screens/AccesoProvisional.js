@@ -8,7 +8,7 @@ export default function AccesoProvisionalScreen({ navigation }) {
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFin, setFechaFin] = useState('');
 
-  const handleEnviar = () => {
+  const handleEnviar = async () => {
     if (!matricula || !placas || !motivo || !fechaInicio || !fechaFin) {
       alert("Completa todos los campos");
       return;
@@ -19,14 +19,31 @@ export default function AccesoProvisionalScreen({ navigation }) {
       placas,
       motivo,
       fechaInicio,
-      fechaFin,
-      estado: 'Pendiente'
+      fechaFin
     };
 
-    console.log('Solicitud enviada:', solicitud);
-    alert('Solicitud enviada correctamente');
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(`${API_URL}/accesos/provisional`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(solicitud)
+      });
 
-    navigation.navigate('Menu');
+      if (response.ok) {
+        alert('Solicitud enviada correctamente');
+        navigation.navigate('Menu');
+      } else {
+        const errorData = await response.json();
+        alert(errorData.detail || 'Error al enviar la solicitud');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error de conexión');
+    }
   };
 
   const handleCancelar = () => {
