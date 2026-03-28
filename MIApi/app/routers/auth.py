@@ -5,6 +5,9 @@ from app.models.usuario import Usuario
 from app.security.auth import crear_token
 from app.security.hashing import verify_password
 from pydantic import BaseModel
+from app.security.auth import verificar_token
+from app.security.hashing import get_password_hash
+
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -55,3 +58,53 @@ def recuperar_contrasena(data: RecuperarData, db: Session = Depends(get_db)):
     return {
         "mensaje": "Si el usuario existe, se enviarán instrucciones a su correo."
     }
+
+class RegisterData(BaseModel):
+    nombre: str
+    email: str
+    password: str
+
+@router.post("/register")
+def register(data: RegisterData, db: Session = Depends(get_db)):
+
+    existe = db.query(Usuario).filter(Usuario.email == data.email).first()
+
+    if existe:
+        raise HTTPException(status_code=400, detail="Correo ya registrado")
+
+    nuevo = Usuario(
+        nombre=data.nombre,
+        email=data.email,
+        password=get_password_hash(data.password)
+    )
+
+    db.add(nuevo)
+    db.commit()
+
+    return {"mensaje": "Usuario registrado"}
+
+@router.get("/perfil")
+def perfil(user_data: dict = Depends(verificar_token)):
+    return user_data
+
+class UpdateData(BaseModel):
+    nombre: str
+    email: str
+
+@router.put("/perfil")
+def editar_perfil(
+    data: UpdateData,
+    db: Session = Depends(get_db),
+    user_data: dict = Depends(verificar_token)
+):
+
+    user = db.query(Usuario).filter(
+        Usuario.email == user_data["sub"]
+    ).first()
+
+    user.nombre = data.nombre
+    user.email = data.email
+
+    db.commit()
+
+    return {"mensaje": "Perfil actualizado"}
