@@ -1,11 +1,53 @@
-@import 'tailwindcss';
-
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
-
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* Tokens y utilidades globales */
+:root{
+  --color-primary: #0d6efd;
+  --color-accent: #00a3ff;
+  --color-bg: #ffffff;
+  --color-surface: #f8f9fa;
+  --text-default: #212529;
+  --radius: 8px;
+  --transition-fast: 150ms;
 }
+
+/* Tipografías (mantén tu @font-face si lo necesitas) */
+body {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: var(--text-default);
+  background: var(--color-bg);
+}
+
+/* Integración con Tailwind: deja el @tailwind si usas Tailwind */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* Estilos de componentes (Bootstrap o propios) */
+.btn-primary{
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+.btn-primary:focus, .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(13,110,253,0.12);
+}
+
+.card {
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px rgba(33,37,41,0.04);
+}
+
+/* Focus visible accesible */
+:focus {
+  outline: 3px solid rgba(0,123,255,0.16);
+  outline-offset: 2px;
+}
+
+/* Nav activo */
+.nav-link.active {
+  font-weight: 600;
+  color: var(--color-primary) !important;
+}
+
+/* Helpers */
+.kicker { font-size: .85rem; color: #6c757d; }
