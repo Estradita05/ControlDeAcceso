@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar, ScrollView, SafeAreaView, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
 
 export default function EditarPerfil({ navigation }) {
@@ -12,42 +13,50 @@ export default function EditarPerfil({ navigation }) {
 
   const handleSave = async () => {
 
-  if (!nombre || !correo) {
-    alert("Completa los campos obligatorios");
-    return;
-  }
+    if (!nombre) {
+      alert("El nombre es obligatorio");
+      return;
+    }
 
-  const usuario = {
-    nombre: nombre,
-    correo: correo
+    if (passwordNueva && passwordNueva !== confirmarPassword) {
+      alert("Las nuevas contraseñas no coinciden");
+      return;
+    }
+
+    const payload = {
+      nombre: nombre,
+    };
+
+    if (passwordNueva) {
+      payload.password = passwordNueva;
+    }
+
+    try {
+      const token = await AsyncStorage.getItem("token");
+      
+      const response = await fetch(`${API_URL}/usuarios/perfil`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Éxito", "Cambios guardados exitosamente");
+        navigation.goBack();
+      } else {
+        alert(data.detail || "Error al actualizar");
+      }
+
+    } catch (error) {
+      console.log("Error:", error);
+      alert("Error de conexión al servidor");
+    }
   };
-
-  try {
-
-    const response = await fetch(`${API_URL}/usuarios`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(usuario)
-    });
-
-    const data = await response.json();
-
-    console.log("Respuesta API:", data);
-
-    alert("Cambios guardados exitosamente");
-
-    navigation.goBack();
-
-  } catch (error) {
-
-    console.log("Error:", error);
-    alert("Error al guardar cambios");
-
-  }
-
-};
 
   return (
     <SafeAreaView style={styles.container}>
