@@ -1,15 +1,15 @@
 version: "3.9"
 
 services:
-  db:
+  postgres:
     image: postgres:15
     container_name: control_acceso_db
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: controldeacceso
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: DB_miapi
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data_v2:/var/lib/postgresql/data
     restart: always
@@ -18,11 +18,13 @@ services:
     build: .
     container_name: control_acceso_api
     depends_on:
-      - db
+      - postgres
     ports:
       - "5050:5050"
     volumes:
       - .:/app
+    environment:
+      DATABASE_URL: postgresql://admin:123456@postgres:5432/DB_miapi
     restart: always
 
 volumes:

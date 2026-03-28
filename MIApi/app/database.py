@@ -1,13 +1,27 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
+import os
 
-SQLALCHEMY_DATABASE_URL = "postgresql://user:password@db:5432/controldeacceso"
+# 1. Definimos la URL de la BD
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://admin:123456@postgress:5432/DB_miapi"
+)
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# 2. Creamos el motor de la conexión
+engine = create_engine(DATABASE_URL)
 
+# 3. Creamos gestionador de sesiones
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
+
+# 4. Base declarativa para modelos
 Base = declarative_base()
 
+# 5. Función para la sesión en cada petición
 def get_db():
     db = SessionLocal()
     try:
