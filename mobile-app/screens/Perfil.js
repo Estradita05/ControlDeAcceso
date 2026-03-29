@@ -1,8 +1,43 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ScrollView, SafeAreaView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config';
 
 export default function ProfileScreen({ navigation }) { 
+  const [usuario, setUsuario] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPerfil = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        const response = await fetch(`${API_URL}/usuarios/perfil`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUsuario(data.usuario);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPerfil();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#005696" />
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={false} />
@@ -32,8 +67,8 @@ export default function ProfileScreen({ navigation }) {
             <Ionicons name="person" size={65} color="#fff" />
           </View>
 
-          <Text style={styles.name}>Montserrath Estrada</Text>
-          <Text style={styles.email}>124050385@edu.mx</Text>
+          <Text style={styles.name}>{usuario?.nombre || 'Cargando...'}</Text>
+          <Text style={styles.email}>{usuario?.email || 'Cargando...'}</Text>
 
           <TouchableOpacity 
             style={styles.editButton}
@@ -48,7 +83,7 @@ export default function ProfileScreen({ navigation }) {
 
           <View style={styles.row}>
             <Text style={styles.label}>Estudiante</Text>
-            <Text style={styles.value}>124050385</Text>
+            <Text style={styles.value}>{usuario?.id || '--'}</Text>
           </View>
 
           <View style={styles.row}>
@@ -64,7 +99,10 @@ export default function ProfileScreen({ navigation }) {
 
         <TouchableOpacity 
           style={styles.logoutButton}
-          onPress={() => navigation.navigate('Login')} 
+          onPress={async () => {
+            await AsyncStorage.removeItem('token');
+            navigation.navigate('Login');
+          }} 
         >
           <Text style={styles.logoutText}>Cerrar sesión</Text>
         </TouchableOpacity>

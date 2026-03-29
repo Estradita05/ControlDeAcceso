@@ -1,18 +1,39 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, StatusBar, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { API_URL } from '../config';
 
 export default function ResetPasswordScreen({ navigation }) { 
   
   const [search, setSearch] = useState('');
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (!search) {
       alert('Por favor ingresa tu correo o matrícula');
       return;
     }
-    alert('Si el usuario existe, se enviarán instrucciones a su correo institucional.');
-    navigation.goBack();
+    
+    try {
+      const response = await fetch(`${API_URL}/auth/recuperar_contrasena`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ busqueda: search })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Si el usuario existe, se enviarán instrucciones a su correo.');
+        navigation.goBack();
+      } else {
+        alert(data.detail || "Hubo un error al procesar tu solicitud.");
+      }
+    } catch (error) {
+      console.log("Error:", error);
+      alert("Error al conectar con el servidor.");
+    }
   };
 
   return (

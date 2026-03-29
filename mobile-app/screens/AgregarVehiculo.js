@@ -32,7 +32,12 @@ export default function AgregarVehiculo({ navigation }) {
         Alert.alert('Éxito', 'Vehículo registrado correctamente');
         navigation.goBack(); 
       } else {
-        Alert.alert('Error', 'No se pudo guardar en el servidor');
+        let errorMsg = 'No se pudo guardar en el servidor';
+        try {
+          const errorData = await response.json();
+          if (errorData.detail) errorMsg = errorData.detail;
+        } catch (e) {}
+        Alert.alert('Error', errorMsg);
       }
     } catch (error) {
       Alert.alert('Error', 'No hay conexión con el servidor (Docker)');
