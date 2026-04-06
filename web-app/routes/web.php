@@ -1,26 +1,28 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AccessController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\AuthController;
 
-Route::get('/', fn() => view('pages.inicio'));
-Route::get('/login', fn() => view('pages.login'));
-Route::get('/menu', fn() => view('pages.menu'));
-Route::get('/reset', fn() => view('pages.reset'));
-Route::view('/historial','pages.historial');
-Route::view('/perfil','pages.perfil');
-Route::view('/ajustes','pages.ajustes');
-Route::view('/soporte','pages.soporte');
-Route::view('/editar-perfil','pages.editar-perfil');
-Route::view('/menu','pages.menu');
+// Rutas de autenticación
+Route::get('/', function () {
+    return view('pages.login');
+})->name('login');
 
-Route::view('/historial','pages.historial');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // ← Esta es la ruta que falta
 
-Route::view('/vehiculos','pages.vehiculos');
-
-Route::view('/perfil','pages.perfil');
-
-Route::view('/soporte','pages.soporte');
-
-Route::view('/ajustes','pages.ajustes');
-
-Route::view('/editar-perfil','pages.editar-perfil');
+// Rutas protegidas (requieren autenticación)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('pages.inicio');
+    })->name('dashboard');
+    
+    Route::resource('access', AccessController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('reports', ReportController::class);
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
+});
