@@ -1,0 +1,39 @@
+﻿laravel_web  | 
+laravel_web  |    Illuminate\Database\QueryException 
+laravel_web  | 
+laravel_web  |   SQLSTATE[08006] [7] connection to server at "db" (172.19.0.2), port 5432 failed: Connection refused
+laravel_web  | 	Is the server running on that host and accepting TCP/IP connections? (Connection: pgsql, Host: db, Port: 5432, Database: control_acceso, SQL: select exists (select 1 from pg_class c, pg_namespace n where n.nspname = current_schema() and c.relname = 'migrations' and c.relkind in ('r', 'p') and n.oid = c.relnamespace))
+laravel_web  | 
+laravel_web  |   at vendor/laravel/framework/src/Illuminate/Database/Connection.php:838
+laravel_web  |     834Ôûò             $exceptionType = $this->isUniqueConstraintError($e)
+laravel_web  |     835Ôûò                 ? UniqueConstraintViolationException::class
+laravel_web  |     836Ôûò                 : QueryException::class;
+laravel_web  |     837Ôûò 
+laravel_web  |   Ô×£ 838Ôûò             throw new $exceptionType(
+laravel_web  |     839Ôûò                 $this->getNameWithReadWriteType(),
+laravel_web  |     840Ôûò                 $query,
+laravel_web  |     841Ôûò                 $this->prepareBindings($bindings),
+laravel_web  |     842Ôûò                 $e,
+laravel_web  | 
+laravel_web  |       [2m+39 vendor frames [22m
+laravel_web  | 
+laravel_web  |   40  artisan:16
+laravel_web  |       Illuminate\Foundation\Application::handleCommand(Object(Symfony\Component\Console\Input\ArgvInput))
+laravel_web  | 
+laravel_web  | 
+laravel_web  |    INFO  Preparing database.  
+laravel_web  | 
+laravel_web  |   Creating migration table ...................................... 61.60ms DONE
+laravel_web  | 
+laravel_web  |    INFO  Running migrations.  
+laravel_web  | 
+laravel_web  |   0001_01_01_000000_create_users_table ......................... 148.17ms DONE
+laravel_web  |   0001_01_01_000001_create_cache_table ......................... 174.94ms DONE
+laravel_web  |   0001_01_01_000002_create_jobs_table .......................... 256.47ms DONE
+laravel_web  | 
+laravel_web  | 
+laravel_web  |    INFO  Server running on [http://0.0.0.0:8000].  
+laravel_web  | 
+laravel_web  |   Press Ctrl+C to stop the server
+laravel_web  | 
+laravel_web  |   2026-04-02 23:51:52 / ................................................ ~ 2s

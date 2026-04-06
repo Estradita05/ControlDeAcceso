@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar, 
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function EditarPerfil({ navigation }) {
   const [nombre, setNombre] = useState('');
@@ -10,6 +11,55 @@ export default function EditarPerfil({ navigation }) {
   const [passwordActual, setPasswordActual] = useState('');
   const [passwordNueva, setPasswordNueva] = useState('');
   const [confirmarPassword, setConfirmarPassword] = useState('');
+  const [fotoPerfil, setFotoPerfil] = useState(null);
+
+  const seleccionarImagen = () => {
+    Alert.alert(
+      "Foto de perfil",
+      "Elige una opción",
+      [
+        { text: "Cámara", onPress: tomarFoto },
+        { text: "Galería", onPress: escogerGaleria },
+        { text: "Cancelar", style: "cancel" }
+      ]
+    );
+  };
+
+  const tomarFoto = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert("Se requieren permisos de cámara para continuar");
+      return;
+    }
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.4,
+      base64: true,
+    });
+    if (!result.canceled) {
+      setFotoPerfil(result.assets[0].base64);
+    }
+  };
+
+  const escogerGaleria = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert("Se requieren permisos de galería para continuar");
+      return;
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.4,
+      base64: true,
+    });
+    if (!result.canceled) {
+      setFotoPerfil(result.assets[0].base64);
+    }
+  };
 
   const handleSave = async () => {
 
@@ -18,17 +68,40 @@ export default function EditarPerfil({ navigation }) {
       return;
     }
 
-    if (passwordNueva && passwordNueva !== confirmarPassword) {
-      alert("Las nuevas contraseñas no coinciden");
-      return;
+    if (correo) {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.edu\.mx$/i;
+      if (!emailRegex.test(correo)) {
+        alert("El correo debe ser institucional (ej. usuario@institucion.edu.mx)");
+        return;
+      }
+    }
+
+    if (passwordNueva) {
+      const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%\^&*_\-\+=]).+$/;
+      if (!passwordRegex.test(passwordNueva)) {
+        alert("La contraseña debe incluir al menos una mayúscula y un carácter especial (ej. *, _)");
+        return;
+      }
+      if (passwordNueva !== confirmarPassword) {
+        alert("Las nuevas contraseñas no coinciden");
+        return;
+      }
     }
 
     const payload = {
       nombre: nombre,
     };
 
+    if (correo) {
+      payload.email = correo;
+    }
+
     if (passwordNueva) {
       payload.password = passwordNueva;
+    }
+
+    if (fotoPerfil) {
+      payload.foto_perfil = fotoPerfil;
     }
 
     try {
@@ -46,8 +119,17 @@ export default function EditarPerfil({ navigation }) {
       const data = await response.json();
 
       if (response.ok) {
-        Alert.alert("Éxito", "Cambios guardados exitosamente");
-        navigation.goBack();
+        if (correo) {
+          Alert.alert("Éxito", "Cambios guardados. Por favor inicia sesión nuevamente con tu nuevo correo.");
+          await AsyncStorage.removeItem("token");
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          });
+        } else {
+          Alert.alert("Éxito", "Cambios guardados exitosamente");
+          navigation.goBack();
+        }
       } else {
         alert(data.detail || "Error al actualizar");
       }
@@ -85,10 +167,17 @@ export default function EditarPerfil({ navigation }) {
       contentContainerStyle={{ paddingBottom: 30 }}>
         
         <View style={styles.imageContainer}>
-          <View style={styles.avatarCircle}>
-            <Icon name="person" size={60} color="#fff" />
-          </View>
-          <TouchableOpacity>
+          <TouchableOpacity style={styles.avatarCircle} onPress={seleccionarImagen}>
+            {fotoPerfil ? (
+              <Image 
+                source={{ uri: `data:image/jpeg;base64,${fotoPerfil}` }} 
+                style={{ width: 100, height: 100, borderRadius: 50 }} 
+              />
+            ) : (
+              <Icon name="person" size={60} color="#fff" />
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity onPress={seleccionarImagen}>
             <Text style={styles.changePhoto}>Cambiar foto de perfil</Text>
           </TouchableOpacity>
         </View>
