@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from app.database import get_db
-from app.security.auth import verificar_token
+from app.security.auth import verificar_rol_alumno, verificar_rol_guardia
 from app.models.usuario import Usuario
 from app.models.vehiculo import Vehiculo
 from pydantic import BaseModel
@@ -22,14 +22,14 @@ def get_current_user_id(db: Session, email: str):
 
 # Ver Vehículos Del Usuario
 @router.get("")
-def listar(user=Depends(verificar_token), db: Session = Depends(get_db)):
+def listar(user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
     user_id = get_current_user_id(db, user["sub"])
     vehiculos = db.query(Vehiculo).filter(Vehiculo.usuario_id == user_id).all()
     return vehiculos
 
 # Agregar Vehículo
 @router.post("")
-def agregar(data: VehiculoData, user=Depends(verificar_token), db: Session = Depends(get_db)):
+def agregar(data: VehiculoData, user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
     user_id = get_current_user_id(db, user["sub"])
     
     try:
@@ -53,7 +53,7 @@ def agregar(data: VehiculoData, user=Depends(verificar_token), db: Session = Dep
 
 # Editar Vehículo
 @router.put("/{id}")
-def editar(id: int, data: VehiculoData, user=Depends(verificar_token), db: Session = Depends(get_db)):
+def editar(id: int, data: VehiculoData, user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
     user_id = get_current_user_id(db, user["sub"])
     vehiculo = db.query(Vehiculo).filter(Vehiculo.id == id, Vehiculo.usuario_id == user_id).first()
     
@@ -71,7 +71,7 @@ def editar(id: int, data: VehiculoData, user=Depends(verificar_token), db: Sessi
 
 # Eliminar Vehículo
 @router.delete("/{id}")
-def eliminar(id: int, user=Depends(verificar_token), db: Session = Depends(get_db)):
+def eliminar(id: int, user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
     user_id = get_current_user_id(db, user["sub"])
     vehiculo = db.query(Vehiculo).filter(Vehiculo.id == id, Vehiculo.usuario_id == user_id).first()
     
@@ -83,3 +83,14 @@ def eliminar(id: int, user=Depends(verificar_token), db: Session = Depends(get_d
     
     return {"mensaje": "Vehículo eliminado"}
 
+# ==========================================
+# RUTAS PARA GUARDIAS / ADMINISTRADORES
+# ==========================================
+
+# Ver todos los vehículos (Global)
+@router.get("/web/todos")
+def ver_todos_vehiculos(user=Depends(verificar_rol_guardia), db: Session = Depends(get_db)):
+    # Traemos todos los vehículos, opcionalmente con los datos del usuario si hay back-populates,
+    # pero como mínimo, devolvemos la lista completa:
+    vehiculos = db.query(Vehiculo).all()
+    return vehiculos

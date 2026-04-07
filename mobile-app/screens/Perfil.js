@@ -64,7 +64,14 @@ export default function ProfileScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.profileSection}>
           <View style={styles.avatar}>
-            <Ionicons name="person" size={65} color="#fff" />
+            {usuario?.foto_perfil ? (
+              <Image 
+                source={{ uri: `data:image/jpeg;base64,${usuario.foto_perfil}` }} 
+                style={{ width: 110, height: 110, borderRadius: 55 }} 
+              />
+            ) : (
+              <Ionicons name="person" size={65} color="#fff" />
+            )}
           </View>
 
           <Text style={styles.name}>{usuario?.nombre || 'Cargando...'}</Text>

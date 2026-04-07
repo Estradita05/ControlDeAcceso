@@ -14,6 +14,18 @@ export default function Registro({ navigation }) {
       return;
     }
 
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.edu\.mx$/i;
+    if (!emailRegex.test(email)) {
+      Alert.alert("Error", "El correo debe ser institucional (ej. usuario@institucion.edu.mx)");
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%\^&*_\-\+=]).+$/;
+    if (!passwordRegex.test(password)) {
+      Alert.alert("Error", "La contraseña debe incluir al menos una mayúscula y un carácter especial (ej. *, _)");
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/usuarios/registro`, {
         method: "POST",

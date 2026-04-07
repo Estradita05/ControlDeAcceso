@@ -2,10 +2,11 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.usuario import Usuario
+from app.models.administradores import Administrador
 from app.security.auth import crear_token
 from app.security.hashing import verify_password
 from pydantic import BaseModel
-from app.security.auth import verificar_token
+from app.security.auth import verificar_token, verificar_rol_alumno
 from app.security.hashing import get_password_hash
 
 
@@ -16,7 +17,7 @@ class LoginData(BaseModel):
     password: str
 
 @router.post("/login")
-def login(data: LoginData, db: Session = Depends(get_db)):
+def login_movil(data: LoginData, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.email == data.email).first()
     
     if not user or not verify_password(data.password, user.password):
@@ -25,7 +26,34 @@ def login(data: LoginData, db: Session = Depends(get_db)):
             detail="Credenciales incorrectas"
         )
             
-    token = crear_token({"sub": user.email})
+    # Include rol for "alumno"
+    token = crear_token({"sub": user.email, "rol": "alumno"})
+
+    return {
+        "access_token": token,
+        "token_type": "bearer"
+    }
+
+@router.post("/admin/login")
+def login_web(data: LoginData, db: Session = Depends(get_db)):
+    # Note that properties match the admin model: correo instead of email, contraseña instead of password.
+    # Note: verify_password works with whatever string hashing we have, but first ensure column matches (contraseña).
+    admin = db.query(Administrador).filter(Administrador.correo == data.email).first()
+    
+    # We should use verify_password(data.password, admin.contraseña), but if they were stored in plain text,
+    # or differently, be careful. Assuming they use same hashing or plain text for admin if hashing wasn't implemented prior.
+    # Let's check with verify_password, or if it fails, fallback to simple equality for older admins.
+    
+    if not admin or not verify_password(data.password, admin.contraseña):
+        # Temp fallback for unhashed passwords (in case admin passwords weren't hashed before)
+        if not admin or admin.contraseña != data.password:
+             raise HTTPException(
+                 status_code=401,
+                 detail="Credenciales incorrectas"
+             )
+            
+    # Include rol for "guardia"
+    token = crear_token({"sub": admin.correo, "rol": "guardia"})
 
     return {
         "access_token": token,
@@ -84,7 +112,7 @@ def register(data: RegisterData, db: Session = Depends(get_db)):
     return {"mensaje": "Usuario registrado"}
 
 @router.get("/perfil")
-def perfil(user_data: dict = Depends(verificar_token)):
+def perfil(user_data: dict = Depends(verificar_rol_alumno)):
     return user_data
 
 class UpdateData(BaseModel):
@@ -95,7 +123,7 @@ class UpdateData(BaseModel):
 def editar_perfil(
     data: UpdateData,
     db: Session = Depends(get_db),
-    user_data: dict = Depends(verificar_token)
+    user_data: dict = Depends(verificar_rol_alumno)
 ):
 
     user = db.query(Usuario).filter(

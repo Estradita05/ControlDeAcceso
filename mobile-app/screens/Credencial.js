@@ -74,7 +74,15 @@ export default function DigitalCredential({ navigation }) {
               </View>
               <View style={styles.cardBody}>
                 <View style={styles.cardPhotoContainer}>
-                  <Ionicons name="person" size={70} color="#004C8C" />
+                  {usuario?.foto_perfil ? (
+                    <Image 
+                      source={{ uri: `data:image/jpeg;base64,${usuario.foto_perfil}` }} 
+                      style={{ width: '100%', height: '100%', borderRadius: 8 }} 
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <Ionicons name="person" size={70} color="#004C8C" />
+                  )}
                 </View>
                 <View style={styles.cardInfoContainer}>
                   <Text style={styles.cardName}>{usuario?.nombre || 'CARGANDO...'}</Text>
