@@ -2,47 +2,42 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'administradores';
+    protected $primaryKey = 'id_admin';
+    public $timestamps = false; // El modelo Administradores en FastAPI no tiene timestamps
+
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'nombre',
+        'correo',
+        'contraseña',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
-        'password',
+        'contraseña',
         'remember_token',
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Override the password name so Auth::attempt knows which column to verify.
      */
-    protected function casts(): array
+    public function getAuthPasswordName()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return 'contraseña';
+    }
+
+    /**
+     * Get the password for the user.
+     */
+    public function getAuthPassword()
+    {
+        return $this->contraseña;
     }
 }

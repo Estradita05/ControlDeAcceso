@@ -18,8 +18,32 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // â†
 // Rutas protegidas (requieren autenticaciÃ³n)
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('pages.inicio');
+        return view('pages.menu');
     })->name('dashboard');
+
+    Route::get('/menu', function () {
+        return view('pages.menu');
+    })->name('menu');
+    
+    Route::get('/historial', function () {
+        return view('pages.historial');
+    })->name('historial');
+
+    Route::get('/vehiculos', function () {
+        return view('pages.vehiculos');
+    })->name('vehiculos');
+
+    Route::get('/perfil', function () {
+        return view('pages.perfil');
+    })->name('perfil');
+
+    Route::get('/ajustes', function () {
+        return view('pages.ajustes');
+    })->name('ajustes');
+
+    Route::get('/soporte', function () {
+        return view('pages.soporte');
+    })->name('soporte');
     
     Route::resource('access', AccessController::class);
     Route::resource('users', UserController::class);

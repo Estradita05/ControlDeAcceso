@@ -14,7 +14,8 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        // Mapeamos 'email' del formulario a la columna 'correo' de la tabla 'administradores'
+        if (Auth::attempt(['correo' => $credentials['email'], 'password' => $credentials['password']])) {
             $request->session()->regenerate();
             return redirect()->intended('dashboard');
         }
