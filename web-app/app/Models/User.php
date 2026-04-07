@@ -38,6 +38,8 @@ class User extends Authenticatable
      */
     public function getAuthPassword()
     {
-        return $this->contraseña;
+        // Python's passlib uses $2b$ which is incompatible with PHP's default bcrypt $2y$.
+        // By replacing the prefix before verification, Laravel can successfully check the hash.
+        return str_replace('$2b$', '$2y$', $this->contraseña);
     }
 }

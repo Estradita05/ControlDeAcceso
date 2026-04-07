@@ -74,7 +74,7 @@
         <div class="h-20 flex items-center px-6 border-b border-darkborder relative">
             <div class="absolute inset-0 bg-brand-500/10 blur-xl rounded-t-3xl"></div>
             <img src="{{ asset('images/logo.png') }}" class="h-9 w-auto mr-3 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] relative z-10" alt="Logo">
-            <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-wider relative z-10">TIID</span>
+            <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-wider relative z-10">Control De Acceso</span>
         </div>
 
         <!-- Navigation Links -->
