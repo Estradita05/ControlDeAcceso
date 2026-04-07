@@ -25,3 +25,16 @@ app.include_router(accesos.router)
 @app.get("/")
 def inicio():
     return {"mensaje": "API Control de Acceso funcionando"}
+
+from app.websockets_manager import manager
+from fastapi import WebSocket, WebSocketDisconnect
+
+@app.websocket("/ws/dashboard")
+async def websocket_dashboard(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
+        while True:
+            # Mantener la conexión abierta
+            data = await websocket.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)

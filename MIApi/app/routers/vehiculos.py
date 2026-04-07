@@ -6,7 +6,7 @@ from app.security.auth import verificar_rol_alumno, verificar_rol_guardia
 from app.models.usuario import Usuario
 from app.models.vehiculo import Vehiculo
 from pydantic import BaseModel
-
+from app.websockets_manager import manager
 router = APIRouter(prefix="/vehiculos", tags=["Vehículos"])
 
 class VehiculoData(BaseModel):
@@ -29,7 +29,7 @@ def listar(user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
 
 # Agregar Vehículo
 @router.post("")
-def agregar(data: VehiculoData, user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
+async def agregar(data: VehiculoData, user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
     user_id = get_current_user_id(db, user["sub"])
     
     try:
@@ -42,6 +42,16 @@ def agregar(data: VehiculoData, user=Depends(verificar_rol_alumno), db: Session 
         db.add(nuevo_vehiculo)
         db.commit()
         db.refresh(nuevo_vehiculo)
+        
+        await manager.broadcast({
+            "event": "nuevo_vehiculo",
+            "data": {
+                "id": nuevo_vehiculo.id,
+                "placa": nuevo_vehiculo.placa,
+                "modelo": nuevo_vehiculo.modelo,
+                "color": nuevo_vehiculo.color
+            }
+        })
     except IntegrityError:
         db.rollback()
         raise HTTPException(status_code=400, detail="El vehículo con esta placa ya está registrado")

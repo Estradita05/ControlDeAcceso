@@ -138,7 +138,7 @@
 
         <!-- Bottom Logout Area -->
         <div class="p-4 border-t border-darkborder">
-            <a href="/login" class="group flex items-center gap-3 px-4 py-3 text-red-500 font-bold hover:bg-red-500/10 hover:text-red-400 transition-colors">
+            <a href="/logout" onclick="localStorage.removeItem('token')" class="group flex items-center gap-3 px-4 py-3 text-red-500 font-bold hover:bg-red-500/10 hover:text-red-400 transition-colors">
                 <svg class="h-5 w-5 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                 </svg>

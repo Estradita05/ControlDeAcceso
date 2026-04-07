@@ -95,4 +95,36 @@
     </div>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault(); // Detenemos el envío original momentaneamente
+        const email = form.querySelector('input[name="email"]').value;
+        const password = form.querySelector('input[name="password"]').value;
+        
+        try {
+            // Obtenemos el token JWT del backend de FastAPI
+            const response = await fetch("http://127.0.0.1:5050/auth/admin/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("token", data.access_token);
+            } else {
+                console.error("No se pudo obtener el token de FastAPI");
+            }
+        } catch (err) {
+            console.error("Error conectando con la API al hacer login:", err);
+        }
+        
+        // Continuamos con el envío normal hacia el controlador de Laravel
+        form.submit();
+    });
+});
+</script>
+
 @endsection

@@ -7,7 +7,7 @@ from app.models.acceso import Acceso
 from app.models.vehiculo import Vehiculo
 from pydantic import BaseModel
 from datetime import datetime
-
+from app.websockets_manager import manager
 router = APIRouter(prefix="/accesos", tags=["Accesos"])
 
 class AccesoData(BaseModel):
@@ -21,7 +21,7 @@ def get_current_user_id(db: Session, email: str):
 
 # Registrar Entrada Salida (Mobile App)
 @router.post("/registro")
-def registrar(data: AccesoData, user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
+async def registrar(data: AccesoData, user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
     user_id = get_current_user_id(db, user["sub"])
 
     nuevo_acceso = Acceso(
@@ -35,6 +35,18 @@ def registrar(data: AccesoData, user=Depends(verificar_rol_alumno), db: Session 
     db.add(nuevo_acceso)
     db.commit()
     db.refresh(nuevo_acceso)
+    
+    await manager.broadcast({
+        "event": "nuevo_acceso",
+        "data": {
+            "id": nuevo_acceso.id,
+            "usuario_id": user_id,
+            "tipo": nuevo_acceso.tipo,
+            "fecha": nuevo_acceso.fecha,
+            "hora": nuevo_acceso.hora,
+            "estado": nuevo_acceso.estado
+        }
+    })
 
     return {
         "mensaje": "Acceso registrado",

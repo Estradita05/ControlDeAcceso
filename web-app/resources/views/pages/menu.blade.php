@@ -169,6 +169,31 @@
             } else {
                 console.error("Error al cargar estadisticas");
             }
+            // Conexión WebSockets para actualizaciones en tiempo real
+            const ws = new WebSocket("ws://127.0.0.1:5050/ws/dashboard");
+            
+            ws.onopen = () => {
+                console.log("Conectado a FastAPI WebSockets (Dashboard)");
+            };
+
+            ws.onmessage = (event) => {
+                const payload = JSON.parse(event.data);
+                
+                if (payload.event === "nuevo_vehiculo") {
+                    const el = document.getElementById('stat-vehiculos');
+                    if (el) el.innerText = parseInt(el.innerText || 0) + 1;
+                }
+                else if (payload.event === "nuevo_acceso") {
+                    if (payload.data.estado === "Permitido") {
+                        const el = document.getElementById('stat-permitidos');
+                        if (el) el.innerText = parseInt(el.innerText || 0) + 1;
+                    } else if (payload.data.estado === "Denegado") {
+                        const el = document.getElementById('stat-denegados');
+                        if (el) el.innerText = parseInt(el.innerText || 0) + 1;
+                    }
+                }
+            };
+            
         } catch (error) {
             console.error("Error de conexion con la API:", error);
         }

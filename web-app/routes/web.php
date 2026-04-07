@@ -13,7 +13,7 @@ Route::get('/', function () {
 })->name('login');
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout'); // ← Esta es la ruta que falta
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout'); // Ahora permite GET para cerrar sesión
 
 // Rutas protegidas (requieren autenticación)
 Route::middleware(['auth'])->group(function () {
