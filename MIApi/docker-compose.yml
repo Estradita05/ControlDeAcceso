@@ -15,7 +15,9 @@ services:
     restart: always
 
   api:
-    build: .
+    build:
+      context: ./MIApi
+      dockerfile: Dockerfile
     container_name: control_acceso_api
     depends_on:
       - postgres
