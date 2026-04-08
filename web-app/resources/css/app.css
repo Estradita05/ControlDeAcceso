@@ -17,6 +17,30 @@
 }
 
 @layer base {
+    html {
+        -webkit-tap-highlight-color: transparent;
+        scroll-behavior: smooth;
+    }
+    
+    /* Font Sizing */
+    html.text-large { font-size: 110%; }
+    html.text-extralarge { font-size: 120%; }
+
+    /* High Contrast */
+    body.high-contrast {
+        background-color: black !important;
+    }
+    .high-contrast .bg-darksurface {
+        background-color: #000 !important;
+        border-color: #fff !important;
+    }
+    .high-contrast .text-slate-400, .high-contrast .text-slate-500 {
+        color: #ddd !important;
+    }
+    .high-contrast .border-white\/10, .high-contrast .border-darkborder {
+        border-color: rgba(255,255,255,0.4) !important;
+    }
+
   body {
     background-color: var(--color-dark-bg);
     color: #e2e8f0;

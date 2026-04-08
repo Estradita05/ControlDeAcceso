@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
+from typing import Optional
 from app.database import get_db
 from app.models.usuario import Usuario
 from app.models.administradores import Administrador
@@ -112,27 +113,79 @@ def register(data: RegisterData, db: Session = Depends(get_db)):
     return {"mensaje": "Usuario registrado"}
 
 @router.get("/perfil")
-def perfil(user_data: dict = Depends(verificar_rol_alumno)):
-    return user_data
+def perfil(db: Session = Depends(get_db), token_data: dict = Depends(verificar_token)):
+    rol = token_data.get("rol")
+    email = token_data.get("sub")
+    
+    if rol == "guardia":
+        admin = db.query(Administrador).filter(Administrador.correo == email).first()
+        if not admin:
+            raise HTTPException(status_code=404, detail="Administrador no encontrado")
+        return {
+            "mensaje": "Perfil de administrador",
+            "usuario": {
+                "id": admin.id_admin,
+                "nombre": admin.nombre,
+                "email": admin.correo,
+                "matricula": "ADMIN",  # Placeholder for frontend consistency
+                "foto_perfil": None # Admins don't have this in model yet, but we avoid error
+            }
+        }
+    
+    # Default to alumno
+    user = db.query(Usuario).filter(Usuario.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+    return {
+        "mensaje": "Perfil de alumno",
+        "usuario": {
+            "id": user.id,
+            "matricula": user.matricula,
+            "nombre": user.nombre,
+            "email": user.email,
+            "foto_perfil": user.foto_perfil
+        }
+    }
 
 class UpdateData(BaseModel):
     nombre: str
     email: str
+    foto_perfil: Optional[str] = None
+    password: Optional[str] = None
 
 @router.put("/perfil")
 def editar_perfil(
     data: UpdateData,
     db: Session = Depends(get_db),
-    user_data: dict = Depends(verificar_rol_alumno)
+    token_data: dict = Depends(verificar_token)
 ):
+    rol = token_data.get("rol")
+    email = token_data.get("sub")
 
-    user = db.query(Usuario).filter(
-        Usuario.email == user_data["sub"]
-    ).first()
+    if rol == "guardia":
+        admin = db.query(Administrador).filter(Administrador.correo == email).first()
+        if not admin:
+            raise HTTPException(status_code=404, detail="Administrador no encontrado")
+        
+        admin.nombre = data.nombre
+        admin.correo = data.email
+        if data.password:
+            admin.contraseña = get_password_hash(data.password)
+        db.commit()
+        return {"mensaje": "Perfil de administrador actualizado"}
+
+    # Alumno
+    user = db.query(Usuario).filter(Usuario.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
     user.nombre = data.nombre
     user.email = data.email
+    if data.foto_perfil is not None:
+        user.foto_perfil = data.foto_perfil
+    if data.password:
+        user.password = get_password_hash(data.password)
 
     db.commit()
-
-    return {"mensaje": "Perfil actualizado"}
+    return {"mensaje": "Perfil actualizado"}

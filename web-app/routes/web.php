@@ -6,9 +6,15 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SupportController;
+
 
 // Rutas de autenticación
 Route::get('/', function () {
+    return view('pages.splash');
+})->name('splash');
+
+Route::get('/login', function () {
     return view('pages.login');
 })->name('login');
 
@@ -44,6 +50,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/soporte', function () {
         return view('pages.soporte');
     })->name('soporte');
+
+    Route::post('/soporte/enviar', [SupportController::class, 'sendTicket'])->name('soporte.enviar');
+
     
     Route::resource('access', AccessController::class);
     Route::resource('users', UserController::class);

@@ -159,16 +159,16 @@
             </div>
             
             <div class="flex items-center gap-5">
-                <button class="relative p-2 text-slate-400 hover:text-white transition-colors bg-darksurface/50 backdrop-blur-md rounded-full border border-darkborder hover:border-brand-500/50 hover:shadow-[0_0_15px_rgba(79,70,229,0.3)]">
+                <a href="/historial" class="relative p-2 text-slate-400 hover:text-white transition-colors bg-darksurface/50 backdrop-blur-md rounded-full border border-darkborder hover:border-brand-500/50 hover:shadow-[0_0_15px_rgba(79,70,229,0.3)]">
                     <div class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#090e1f]"></div>
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                     </svg>
-                </button>
+                </a>
                 <div class="flex items-center gap-3 pl-3 border-l border-darkborder">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-400 to-indigo-600 flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border border-white/20">
+                    <a href="/perfil" class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-400 to-indigo-600 flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border border-white/20 hover:scale-110 transition-transform">
                         A
-                    </div>
+                    </a>
                 </div>
             </div>
         </header>
@@ -180,5 +180,28 @@
         
     </main>
 
+    <script>
+        // Accessibility Applier
+        const applyAccessibility = () => {
+            const fontSize = localStorage.getItem('pref-font-size') || 'normal';
+            const highContrast = localStorage.getItem('pref-high-contrast') === 'true';
+            
+            // Apply Font Size
+            const html = document.documentElement;
+            html.classList.remove('text-large', 'text-extralarge');
+            if (fontSize === 'grande') html.classList.add('text-large');
+            if (fontSize === 'extragrande') html.classList.add('text-extralarge');
+            
+            // Apply High Contrast
+            if (highContrast) {
+                document.body.classList.add('high-contrast');
+            } else {
+                document.body.classList.remove('high-contrast');
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', applyAccessibility);
+        window.addEventListener('storage', applyAccessibility); // Sync between tabs
+    </script>
 </body>
 </html>

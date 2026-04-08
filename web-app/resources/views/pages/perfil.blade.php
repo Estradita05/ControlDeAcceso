@@ -3,34 +3,26 @@
 @section('title', 'Mi Perfil')
 
 @section('content')
-<div class="max-w-4xl mx-auto">
+<div class="max-w-4xl mx-auto" id="profile-container">
 
     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden mt-8">
         
         <!-- Cover Photo area -->
-        <div class="h-32 bg-gradient-to-r from-brand-500 to-brand-700 w-full relative">
-            <button class="absolute top-4 right-4 bg-white/20 hover:bg-white/30 backdrop-blur-md px-3 py-1.5 rounded-lg text-white text-sm font-medium transition flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Cambiar Portada
-            </button>
-        </div>
+        <div class="h-32 bg-gradient-to-r from-brand-500 to-brand-700 w-full relative"></div>
 
         <div class="px-8 pb-8">
             <!-- Avatar Header -->
             <div class="relative flex justify-between items-end -mt-12 mb-8">
                 <div class="flex items-end gap-6">
                     <div class="w-28 h-28 rounded-2xl bg-white p-1.5 shadow-lg relative">
-                        <div class="w-full h-full bg-brand-100 rounded-xl flex items-center justify-center text-4xl text-brand-600 font-bold">
-                            CH
+                        <div id="p-avatar" class="w-full h-full bg-brand-100 rounded-xl flex items-center justify-center text-4xl text-brand-600 font-bold overflow-hidden">
+                            <!-- Injected -->
                         </div>
                         <div class="absolute bottom-2 right-2 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white shadow-sm"></div>
                     </div>
                     <div class="pb-2">
-                        <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Carlos Hernández</h2>
-                        <p class="text-brand-600 font-medium">Vigilante / Administrador</p>
+                        <h2 id="p-nombre" class="text-2xl font-bold text-slate-800 tracking-tight">Cargando...</h2>
+                        <p id="p-rol" class="text-brand-600 font-medium">Personal Autorizado</p>
                     </div>
                 </div>
 
@@ -47,40 +39,66 @@
             <!-- User Info Grid -->
             <h3 class="text-lg font-bold text-slate-800 mb-4">Información Personal</h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-2xl border border-slate-100 font-medium">
                 
                 <div>
-                    <span class="block text-sm font-medium text-slate-500 mb-1">ID de Usuario</span>
-                    <span class="block text-slate-800 font-semibold font-mono">124050136</span>
+                    <span class="block text-sm font-medium text-slate-500 mb-1">Matrícula</span>
+                    <span id="p-matricula" class="block text-slate-800 font-bold font-mono">--</span>
                 </div>
 
                 <div>
                     <span class="block text-sm font-medium text-slate-500 mb-1">Correo Electrónico</span>
-                    <span class="block text-slate-800 font-medium">124050109@edu.mx</span>
+                    <span id="p-email" class="block text-slate-800">--</span>
                 </div>
 
                 <div>
-                    <span class="block text-sm font-medium text-slate-500 mb-1">Teléfono Móvil</span>
-                    <span class="block text-slate-800 font-medium">+52 442 541 4521</span>
-                </div>
-
-                <div>
-                    <span class="block text-sm font-medium text-slate-500 mb-1">Departamento</span>
-                    <span class="block text-slate-800 font-medium">Seguridad y Accesos</span>
+                    <span class="block text-sm font-medium text-slate-500 mb-1">Estatus</span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">Activo</span>
                 </div>
 
                 <div class="md:col-span-2 pt-4 border-t border-slate-200/60 flex justify-between items-center">
                     <div>
-                        <span class="block text-sm font-medium text-slate-500">Última conexión</span>
-                        <span class="block text-sm text-slate-700">Hoy, a las 08:30 AM (IP: 192.168.1.45)</span>
+                        <span class="block text-sm font-medium text-slate-500">Acceso al Sistema</span>
+                        <span class="block text-sm text-slate-700">Autenticación mediante Token JWT</span>
                     </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            // Note: Since this is the Web Dashboard, we might need a dedicated endpoint for guard profile 
+            // but the usuarios/perfil works for the current user session.
+            const response = await fetch("http://127.0.0.1:5050/auth/perfil", {
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+
+            if (response.ok) {
+                const data = await response.json();
+                const u = data.usuario;
+                
+                document.getElementById('p-nombre').innerText = u.nombre;
+                document.getElementById('p-matricula').innerText = u.matricula;
+                document.getElementById('p-email').innerText = u.email;
+                
+                const avatar = document.getElementById('p-avatar');
+                if (u.foto_perfil) {
+                    avatar.innerHTML = `<img src="${u.foto_perfil}" class="w-full h-full object-cover">`;
+                } else {
+                    avatar.innerText = u.nombre.charAt(0).toUpperCase();
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching profile:", error);
+        }
+    });
+</script>
 @endsection

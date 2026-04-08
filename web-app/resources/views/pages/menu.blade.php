@@ -8,9 +8,9 @@
     <!-- Welcome Section -->
     <div class="bg-gradient-to-r from-brand-900 to-indigo-950 rounded-[2rem] p-10 text-white shadow-lg border border-brand-500/30 relative overflow-hidden group">
         <div class="relative z-10">
-            <h2 class="text-4xl font-extrabold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white to-brand-200 tracking-tight">Bienvenido de nuevo 👋</h2>
+            <h2 class="text-4xl font-extrabold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white to-brand-200 tracking-tight">Bienvenido al Panel de Gestión</h2>
             <p class="text-brand-100/80 max-w-2xl text-lg font-light leading-relaxed">
-                Sistema de Control de Acceso avanzado. Desde aquí puedes monitorear el flujo en tiempo real, revisar historiales y administrar autorizaciones.
+                Sistema de Control de Acceso institucional. Supervise flujos de entrada, gestione registros vehiculares y monitoree la seguridad desde una interfaz centralizada.
             </p>
         </div>
         <!-- Decorative bg elements -->
