@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Animated } from 'react-native';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
 
 export default function Inicio({ navigation }) {
   
@@ -13,11 +15,9 @@ export default function Inicio({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image 
-        source={require('../assets/logo.png')} 
-        style={styles.logo}
-        resizeMode="contain"
-      />
+      <StatusBar barStyle="dark-content" translucent={false} />
+      
+      <Logo size="large" style={styles.logo} />
 
       <View style={styles.textContainer}>
         <Text style={styles.welcomeText}>¡Bienvenido!</Text>
@@ -30,13 +30,11 @@ export default function Inicio({ navigation }) {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#F0F6FA', 
+    backgroundColor: COLORS.background, 
     justifyContent: 'center', 
     alignItems: 'center' 
   },
   logo: { 
-    width: 450, 
-    height: 450, 
     marginBottom: 60 
   },
   textContainer: {
@@ -46,13 +44,13 @@ const styles = StyleSheet.create({
   welcomeText: { 
     fontSize: 52, 
     fontWeight: 'bold', 
-    color: '#1C2B39', 
+    color: COLORS.accent, 
     marginBottom: 2 
   },
   subText: { 
     fontSize: 16, 
-    color: '#6B8EAD', 
+    color: COLORS.textSecondary, 
     textAlign: 'center',
     paddingHorizontal: 40
   }
-});
+});

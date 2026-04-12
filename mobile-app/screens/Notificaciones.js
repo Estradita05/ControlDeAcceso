@@ -1,29 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
 export default function NotificationsScreen({ navigation }) { 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={false} />
       
-      <View style={styles.logoContainer}>
-        <Image
-          source={require('../assets/logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View>
+      <Logo size="small" style={styles.logoContainer} />
 
-      <View style={styles.titleBar}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-        >
-          <Text style={styles.backArrow}>{'❮'}</Text>
-        </TouchableOpacity>
-        <Text style={styles.titleText}>NOTIFICACIONES</Text>
-        <View style={{ width: 30 }} /> 
-      </View>
+      <Header title="NOTIFICACIONES" navigation={navigation} />
 
       <ScrollView 
         contentContainerStyle={styles.scrollContent} 
@@ -43,7 +32,7 @@ export default function NotificationsScreen({ navigation }) {
         </View>
 
         <View style={styles.notificationItem}>
-          <MaterialIcons name="block" size={32} color="#E53935" />
+          <MaterialIcons name="block" size={32} color={COLORS.error} />
           <View style={styles.textContainer}>
             <Text style={styles.notificationTitle}>Acceso denegado</Text>
             <Text style={styles.description}>
@@ -55,7 +44,7 @@ export default function NotificationsScreen({ navigation }) {
         </View>
 
         <View style={styles.notificationItem}>
-          <Ionicons name="log-out-outline" size={32} color="#E53935" />
+          <Ionicons name="log-out-outline" size={32} color={COLORS.error} />
           <View style={styles.textContainer}>
             <Text style={styles.notificationTitle}>Salida registrada</Text>
             <Text style={styles.description}>
@@ -85,43 +74,11 @@ export default function NotificationsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F6FA',
+    backgroundColor: COLORS.background,
   },
   logoContainer: {
-    alignItems: 'center',
     paddingTop: 30,
     paddingBottom: 15,
-    backgroundColor: '#F0F6FA',
-  },
-  logo: {
-    width: 120,
-    height: 120,
-  },
-  titleBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#86ABC8',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    marginBottom: 5,
-  },
-  backButton: {
-    padding: 5,
-  },
-  backArrow: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  titleText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#004C8C',
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -132,9 +89,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     marginBottom: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.cardBg,
     padding: 15,
-    borderRadius: 12,
+    borderRadius: 15,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -147,16 +104,16 @@ const styles = StyleSheet.create({
   notificationTitle: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#000',
+    color: COLORS.accent,
     marginBottom: 5,
   },
   description: {
     fontSize: 13,
-    color: '#4F7EA8',
+    color: COLORS.text,
     lineHeight: 18,
   },
   bold: {
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.accent,
   },
-});
+});

@@ -1,5 +1,8 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, StatusBar } from 'react-native';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
 const menuItems = [
   { id: '1', title: 'Historial de Accesos', sub: 'Entradas y Salidas', route: 'Historial', icon: '🕒' },
@@ -12,20 +15,11 @@ const menuItems = [
 export default function Menu({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Image 
-          source={require('../assets/logo.png')} 
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View>
+      <StatusBar barStyle="dark-content" translucent={false} />
+      
+      <Logo size="small" style={styles.logoContainer} />
 
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backIcon}>❮</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>MENÚ PRINCIPAL</Text>
-      </View>
+      <Header title="MENÚ PRINCIPAL" navigation={navigation} showBack={true} />
 
       <ScrollView contentContainerStyle={styles.scroll}>
         {menuItems.map((item) => (
@@ -58,49 +52,22 @@ export default function Menu({ navigation }) {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#F0F6FA' 
+    backgroundColor: COLORS.background 
   },
   logoContainer: { 
-    alignItems: 'center', 
-    paddingVertical: 25 
-  },
-  logo: { 
-    width: 90, 
-    height: 90 
-  },
-  header: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    backgroundColor: '#86ABC8', 
-    paddingVertical: 12,
-    paddingHorizontal: 15
-  },
-  backButton: { 
-    paddingRight: 10 
-  },
-  backIcon: { 
-    fontSize: 20, 
-    fontWeight: 'bold', 
-    color: '#003B7C' 
-  },
-  headerTitle: { 
-    flex: 1, 
-    textAlign: 'center', 
-    fontSize: 18, 
-    fontWeight: 'bold', 
-    color: '#003B7C', 
-    marginRight: 30 
+    paddingTop: 30, 
+    paddingBottom: 15 
   },
   scroll: { 
     padding: 25 
   },
   item: { 
-    backgroundColor: '#EAF3F8', 
+    backgroundColor: COLORS.cardBg, 
     padding: 18, 
     borderRadius: 18, 
     marginBottom: 15, 
     borderLeftWidth: 6, 
-    borderLeftColor: '#0054A3', 
+    borderLeftColor: COLORS.primary, 
     elevation: 2 
   },
   itemContent: { 
@@ -114,23 +81,23 @@ const styles = StyleSheet.create({
   itemText: { 
     fontSize: 17, 
     fontWeight: 'bold', 
-    color: '#003B7C' 
+    color: COLORS.accent 
   },
   itemSubText: { 
     fontSize: 13, 
-    color: '#86ABC8', 
+    color: COLORS.secondary, 
     marginTop: 2 
   },
   logoutButton: { 
-    backgroundColor: '#005696', 
+    backgroundColor: COLORS.primary, 
     padding: 18, 
     borderRadius: 15, 
     marginTop: 10, 
     alignItems: 'center' 
   },
   logoutText: { 
-    color: '#fff', 
+    color: COLORS.white, 
     fontSize: 18, 
     fontWeight: 'bold' 
   }
-});
+});

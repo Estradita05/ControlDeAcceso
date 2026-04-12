@@ -17,7 +17,7 @@ class ConnectionManager:
             try:
                 await connection.send_json(message)
             except Exception as e:
-                # Handle disconnected clients that haven't been removed yet
+                
                 pass
 
 manager = ConnectionManager()

@@ -1,7 +1,7 @@
 /* Integración con Tailwind v4.0 */
 @import "tailwindcss";
 
-@theme {
+:root {
   --color-brand-50: #eff6ff;
   --color-brand-100: #dbeafe;
   --color-brand-500: #3b82f6;
@@ -77,7 +77,12 @@
 
   /* Modern Primary Button */
   .btn-primary {
-    @apply relative overflow-hidden font-semibold rounded-lg px-5 py-3 transition-all duration-300;
+    position: relative;
+    overflow: hidden;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.3s;
     background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
     color: white;
     box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);
@@ -94,7 +99,19 @@
 
   /* Form Inputs */
   .input-modern {
-    @apply w-full bg-[#111827] border border-gray-700 text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-300;
+    width: 100%;
+    background-color: #111827;
+    border: 1px solid #374151;
+    color: white;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s;
+  }
+  
+  .input-modern:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-brand-500);
+    border-color: transparent;
   }
 }
 

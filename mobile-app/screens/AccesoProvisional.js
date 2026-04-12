@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, StatusBar, Image, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, StatusBar, SafeAreaView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
 export default function AccesoProvisionalScreen({ navigation }) { 
   const [matricula, setMatricula] = useState('');
@@ -12,7 +15,7 @@ export default function AccesoProvisionalScreen({ navigation }) {
 
   const handleEnviar = async () => {
     if (!matricula || !placas || !motivo || !fechaInicio || !fechaFin) {
-      alert("Completa todos los campos");
+      Alert.alert("Error", "Completa todos los campos");
       return;
     }
 
@@ -36,15 +39,14 @@ export default function AccesoProvisionalScreen({ navigation }) {
       });
 
       if (response.ok) {
-        alert('Solicitud enviada correctamente');
+        Alert.alert('Éxito', 'Solicitud enviada correctamente');
         navigation.navigate('Menu');
       } else {
         const errorData = await response.json();
-        alert(errorData.detail || 'Error al enviar la solicitud');
+        Alert.alert('Error', errorData.detail || 'Error al enviar la solicitud');
       }
     } catch (error) {
-      console.error(error);
-      alert('Error de conexión');
+      Alert.alert('Error', 'Error de conexión');
     }
   };
 
@@ -59,36 +61,20 @@ export default function AccesoProvisionalScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" translucent={false} />
 
-      <View style={styles.logoContainer}>
-        <Image
-          source={require('../assets/logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View>
+      <Logo size="small" style={styles.logoContainer} />
 
-      <View style={styles.titleBar}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation.goBack()} 
-        >
-          <Text style={styles.backArrow}>{'❮'}</Text>
-        </TouchableOpacity>
+      <Header title="ACCESO PROVISIONAL" navigation={navigation} />
 
-        <Text style={styles.titleText}>Acceso Provisional</Text>
-
-        <View style={{ width: 30 }} /> 
-      </View>
-
-      <ScrollView contentContainerStyle={styles.formContainer}>
+      <ScrollView contentContainerStyle={styles.formContainer} showsVerticalScrollIndicator={false}>
         <Text style={styles.label}>Matrícula del usuario</Text>
         <TextInput
           style={styles.input}
           value={matricula}
           onChangeText={setMatricula}
           placeholder="Ingresa la matrícula"
+          placeholderTextColor={COLORS.textSecondary}
         />
 
         <Text style={styles.label}>Placas del vehículo</Text>
@@ -97,6 +83,7 @@ export default function AccesoProvisionalScreen({ navigation }) {
           value={placas}
           onChangeText={setPlacas}
           placeholder="Ingresa las placas"
+          placeholderTextColor={COLORS.textSecondary}
         />
 
         <Text style={styles.label}>Motivo del acceso</Text>
@@ -105,6 +92,7 @@ export default function AccesoProvisionalScreen({ navigation }) {
           value={motivo}
           onChangeText={setMotivo}
           placeholder="Escribe el motivo"
+          placeholderTextColor={COLORS.textSecondary}
         />
 
         <Text style={styles.label}>Fecha de inicio</Text>
@@ -113,6 +101,7 @@ export default function AccesoProvisionalScreen({ navigation }) {
           value={fechaInicio}
           onChangeText={setFechaInicio}
           placeholder="DD/MM/AAAA"
+          placeholderTextColor={COLORS.textSecondary}
         />
 
         <Text style={styles.label}>Fecha de fin</Text>
@@ -121,20 +110,21 @@ export default function AccesoProvisionalScreen({ navigation }) {
           value={fechaFin}
           onChangeText={setFechaFin}
           placeholder="DD/MM/AAAA"
+          placeholderTextColor={COLORS.textSecondary}
         />
 
         <View style={styles.statusRow}>
           <View style={styles.statusBadge}>
-            <Text style={styles.statusText}>Pendiente</Text>
+            <Text style={styles.statusText}>Estado: Pendiente</Text>
           </View>
-
-          <TouchableOpacity onPress={handleCancelar}>
-            <Text style={styles.cancelText}>Cancelar</Text>
-          </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.primaryButton} onPress={handleEnviar}>
           <Text style={styles.buttonText}>Enviar solicitud</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.secondaryButton} onPress={handleCancelar}>
+          <Text style={styles.secondaryButtonText}>Cancelar</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -144,54 +134,36 @@ export default function AccesoProvisionalScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F6FA',
+    backgroundColor: COLORS.background,
   },
   logoContainer: {
-    alignItems: 'center',
     paddingTop: 30,
     paddingBottom: 15,
-  },
-  logo: {
-    width: 120,
-    height: 120,
-  },
-  titleBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#86ABC8',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-  },
-  backArrow: {
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  titleText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#004C8C',
   },
   formContainer: {
     paddingHorizontal: 30,
     paddingBottom: 40,
+    paddingTop: 10,
   },
   label: {
     fontSize: 14,
     fontWeight: '700',
     marginTop: 15,
-    color: '#004C8C',
+    color: COLORS.accent,
   },
   input: {
-    backgroundColor: '#EAF3F8',
+    backgroundColor: COLORS.cardBg,
     borderRadius: 15,
     paddingHorizontal: 15,
     paddingVertical: 12,
     marginTop: 5,
+    color: COLORS.text,
+    borderWidth: 1,
+    borderColor: COLORS.inputBorder,
   },
   statusRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginTop: 25,
   },
   statusBadge: {
@@ -202,20 +174,31 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontWeight: 'bold',
-  },
-  cancelText: {
-    color: '#3d7fb5',
-    fontWeight: '600',
+    color: COLORS.accent,
   },
   primaryButton: {
-    backgroundColor: '#0054A3',
+    backgroundColor: COLORS.primary,
     marginTop: 25,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: 30,
     alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
   },
   buttonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontWeight: 'bold',
+    fontSize: 16,
   },
-});
+  secondaryButton: {
+    alignItems: 'center',
+    paddingVertical: 15,
+  },
+  secondaryButtonText: {
+    color: COLORS.textSecondary,
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+});

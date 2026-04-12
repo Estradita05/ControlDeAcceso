@@ -61,7 +61,7 @@
     <div class="space-y-6">
         <h2 class="text-xl font-bold text-slate-800">Contacto</h2>
         
-        <div class="bg-gradient-to-br from-brand-600 to-brand-800 rounded-3xl p-8 text-white shadow-md text-center">
+        <div class="bg-linear-to-br from-brand-600 to-brand-800 rounded-3xl p-8 text-white shadow-md text-center">
             <div class="mx-auto w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md mb-6 border border-white/20">
                 <svg class="w-8 h-8 text-brand-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -87,7 +87,7 @@
 </div>
 
 <!-- Support Ticket Modal -->
-<div id="support-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+<div id="support-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm hidden-modal">
     <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl p-10 transform transition-all border border-slate-100">
         <div class="flex justify-between items-center mb-8">
             <div class="flex items-center gap-4">
@@ -187,4 +187,9 @@
         if (e.target === modal) closeSupportModal();
     });
 </script>
+<style>
+    .hidden-modal {
+        display: none;
+    }
+</style>
 @endsection

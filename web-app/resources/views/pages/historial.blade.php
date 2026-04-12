@@ -41,7 +41,7 @@
             </table>
         </div>
         
-        <div class="px-6 py-5 border-t border-white/5 flex items-center justify-between text-sm font-medium text-slate-400 bg-white/[0.02]">
+        <div class="px-6 py-5 border-t border-white/5 flex items-center justify-between text-sm font-medium text-slate-400 bg-white/2">
             <p id="historial-pagination-text">Cargando registros...</p>
             <div class="flex gap-2">
                 <button id="prev-page" class="px-4 py-2 rounded-xl bg-[#090e1f] border border-white/10 hover:bg-white/10 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed" disabled>Anterior</button>

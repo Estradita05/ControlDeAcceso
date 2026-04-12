@@ -1,67 +1,66 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, StatusBar, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, StatusBar, SafeAreaView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
 export default function BajaVehiculoScreen({ navigation }) {
   const [matricula, setMatricula] = useState('');
   const [placas, setPlacas] = useState('');
 
-  const handleConfirmar = async () => {
-  if (!matricula || !placas) {
-    alert("Completa todos los campos");
-    return;
-  }
+  const handleConfirmar = () => {
+    if (!matricula || !placas) {
+      Alert.alert("Error", "Completa todos los campos");
+      return;
+    }
 
-  try {
-    const token = await AsyncStorage.getItem("token");
-    const response = await fetch(`${API_URL}/vehiculos/${placas}`, {
-      method: "DELETE",
-      headers: {
-        'Authorization': `Bearer ${token}`
+    Alert.alert(
+      "Confirmación de Baja",
+      "¿Estás seguro de que deseas eliminar este vehículo?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { 
+          text: "Confirmar eliminación", 
+          onPress: procesarBaja,
+          style: "destructive"
+        }
+      ]
+    );
+  };
+
+  const procesarBaja = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      const response = await fetch(`${API_URL}/vehiculos/${placas}`, {
+        method: "DELETE",
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        Alert.alert("Éxito", "Vehículo dado de baja correctamente");
+        setMatricula("");
+        setPlacas("");
+        navigation.goBack();
+      } else {
+        const data = await response.json();
+        Alert.alert("Error", data.detail || "No se pudo dar de baja el vehículo");
       }
-    });
-
-    const data = await response.json();
-
-    console.log("Respuesta API:", data);
-
-    alert("Vehículo dado de baja correctamente");
-
-    setMatricula("");
-    setPlacas("");
-
-    navigation.goBack();
-
-  } catch (error) {
-
-    console.log("Error:", error);
-    alert("Error al dar de baja el vehículo");
-
-  }
-};
+    } catch (error) {
+      Alert.alert("Error", "Error al dar de baja el vehículo");
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={false} />
 
-      <View style={styles.logoContainer}>
-        <Image
-          source={require('../assets/logo.png')}
-          style={styles.logo}
-        />
-      </View>
+      <Logo size="small" style={styles.logoContainer} />
 
-      <View style={styles.titleBar}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation?.goBack()} 
-        >
-          <Text style={styles.backArrow}>{'❮'}</Text>
-        </TouchableOpacity>
-        <Text style={styles.titleText}>DAR DE BAJA VEHÍCULO</Text>
-        <View style={{ width: 30 }} /> 
-      </View>
+      <Header title="DAR DE BAJA VEHÍCULO" navigation={navigation} />
 
       <ScrollView contentContainerStyle={styles.formContainer} showsVerticalScrollIndicator={false}>
         
@@ -71,7 +70,7 @@ export default function BajaVehiculoScreen({ navigation }) {
           value={matricula}
           onChangeText={setMatricula}
           placeholder="Ingresa la matrícula"
-          placeholderTextColor="#7A9EB1"
+          placeholderTextColor={COLORS.textSecondary}
         />
 
         <Text style={styles.label}>Placas del vehículo</Text>
@@ -80,15 +79,17 @@ export default function BajaVehiculoScreen({ navigation }) {
           value={placas}
           onChangeText={setPlacas}
           placeholder="Ingresa las placas"
-          placeholderTextColor="#7A9EB1"
+          placeholderTextColor={COLORS.textSecondary}
         />
 
-        <TouchableOpacity onPress={handleCancelar}>
-          <Text style={styles.cancelText}>Cancelar</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonSpacer} />
 
         <TouchableOpacity style={styles.primaryButton} onPress={handleConfirmar}>
           <Text style={styles.buttonText}>Confirmar baja</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.secondaryButtonText}>Cancelar</Text>
         </TouchableOpacity>
         
       </ScrollView>
@@ -99,89 +100,64 @@ export default function BajaVehiculoScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F6FA',
+    backgroundColor: COLORS.background,
   },
   logoContainer: {
-    alignItems: 'center',
     paddingTop: 30,
     paddingBottom: 15,
-    backgroundColor: '#F0F6FA',
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    resizeMode: 'contain',
-  },
-  titleBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#86ABC8',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    marginBottom: 10,
-  },
-  backButton: {
-    padding: 5,
-  },
-  backArrow: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  titleText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#004C8C',
   },
   formContainer: {
     paddingHorizontal: 30,
     paddingBottom: 40,
+    paddingTop: 20,
   },
   label: {
     fontSize: 14,
     fontWeight: '700',
     marginBottom: 8,
     marginTop: 15,
-    color: '#004C8C',
+    color: COLORS.accent,
   },
   input: {
-    backgroundColor: '#EAF3F8',
+    backgroundColor: COLORS.cardBg,
     borderRadius: 15,
     paddingHorizontal: 15,
     paddingVertical: 12,
     fontSize: 14,
-    color: '#333',
+    color: COLORS.text,
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
+    borderWidth: 1,
+    borderColor: COLORS.inputBorder,
   },
-  cancelText: {
-    textAlign: 'right',
-    marginTop: 20,
-    color: '#3d7fb5',
-    fontSize: 15,
-    fontWeight: '600',
-    marginBottom: 20,
+  buttonSpacer: {
+    height: 30,
   },
   primaryButton: {
-    backgroundColor: '#0b5e8e', 
+    backgroundColor: COLORS.error, 
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: 30,
     alignItems: 'center',
     elevation: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
+    marginBottom: 15,
   },
   buttonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: 'bold'
-  }
-});
+  },
+  secondaryButton: {
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+  secondaryButtonText: {
+    color: COLORS.textSecondary,
+    fontWeight: 'bold',
+    fontSize: 15
+  },
+});

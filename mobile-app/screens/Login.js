@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
 
 export default function Login({ navigation }) {
   
@@ -21,24 +23,16 @@ export default function Login({ navigation }) {
         })
       });
 
-      console.log("STATUS:", response.status);
-
       const data = await response.json();
-
-      console.log ("DATA:", data);
 
        if (response.ok) {
         await AsyncStorage.setItem("token", data.access_token);
-
-        console.log("TOKEN GUARDADO");
-
         navigation.navigate('Inicio'); 
       } else {
         Alert.alert("Error", data.detail || "Credenciales incorrectas");
       }
 
     } catch (error) {
-      console.log("ERROR GENERAL:", error);
       Alert.alert("Error", "No se pudo conectar con el servidor");
     }
   };
@@ -49,24 +43,20 @@ export default function Login({ navigation }) {
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Image 
-          source={require('../assets/logo.png')} 
-          style={styles.logo}
-          resizeMode="contain"
-        />
+        <Logo size="medium" style={styles.logo} />
 
         <View style={styles.headerBanner}>
           <Text style={styles.headerText}>INICIAR SESIÓN</Text>
         </View>
 
         <View style={styles.formContent}>
-          <Text style={styles.instructionText}>Ingresa tus datos</Text>
+          <Text style={styles.instructionText}>Ingresa tus datos institucional</Text>
 
           <Text style={styles.label}>Correo Electrónico</Text>
           <TextInput 
             style={styles.input} 
             placeholder="ejemplo@edu.mx" 
-            placeholderTextColor="#A9C1D1"
+            placeholderTextColor={COLORS.textSecondary}
             keyboardType="email-address"
             value={email}
             onChangeText={setEmail}
@@ -76,7 +66,7 @@ export default function Login({ navigation }) {
           <TextInput 
             style={styles.input} 
             placeholder="********" 
-            placeholderTextColor="#A9C1D1"
+            placeholderTextColor={COLORS.textSecondary}
             secureTextEntry={true}
             value={password}
             onChangeText={setPassword} 
@@ -109,7 +99,7 @@ export default function Login({ navigation }) {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#F0F6FA' 
+    backgroundColor: COLORS.background 
   }, 
   scrollContainer: { 
     flexGrow: 1, 
@@ -117,19 +107,17 @@ const styles = StyleSheet.create({
     paddingTop: 60 
   },
   logo: { 
-    width: 120, 
-    height: 120, 
     marginBottom: 30 
   },
   headerBanner: { 
-    backgroundColor: '#86ABC8', 
+    backgroundColor: COLORS.secondary, 
     width: '100%', 
     paddingVertical: 15, 
     alignItems: 'center',
     marginBottom: 20 
   },
   headerText: { 
-    color: '#003B7C', 
+    color: COLORS.accent, 
     fontWeight: 'bold', 
     fontSize: 20, 
     letterSpacing: 1 
@@ -139,41 +127,41 @@ const styles = StyleSheet.create({
     paddingHorizontal: 35 
   },
   instructionText: { 
-    color: '#6B8EAD', 
+    color: COLORS.textSecondary, 
     textAlign: 'center', 
     marginBottom: 25, 
     fontSize: 16 
   },
   label: { 
-    color: '#003B7C', 
+    color: COLORS.accent, 
     fontWeight: 'bold', 
     marginBottom: 8, 
     fontSize: 14 
   },
   input: { 
-    backgroundColor: '#E9F1F7', 
+    backgroundColor: COLORS.inputBg, 
     padding: 15, 
     borderRadius: 12, 
     marginBottom: 20,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#D1E1EB'
+    borderColor: COLORS.inputBorder
   },
   forgotPassword: { 
-    color: '#005696', 
+    color: COLORS.primary, 
     textAlign: 'right', 
     fontWeight: 'bold', 
     marginBottom: 30, 
     textDecorationLine: 'underline' 
   },
   button: { 
-    backgroundColor: '#005696', 
+    backgroundColor: COLORS.primary, 
     padding: 18, 
     borderRadius: 30, 
     alignItems: 'center',
   },
   buttonText: { 
-    color: '#fff', 
+    color: COLORS.white, 
     fontWeight: 'bold', 
     fontSize: 18 
   },
@@ -184,12 +172,13 @@ const styles = StyleSheet.create({
     marginBottom: 20 
   },
   registerText: { 
-    color: '#6B8EAD', 
-    fontSize: 15 },
+    color: COLORS.textSecondary, 
+    fontSize: 15 
+  },
   registerLink: { 
-    color: '#005696', 
+    color: COLORS.primary, 
     fontWeight: 'bold', 
     fontSize: 15, 
     textDecorationLine: 'underline' 
   }
-});
+});

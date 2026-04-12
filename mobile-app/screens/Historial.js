@@ -1,59 +1,64 @@
 import React, { useEffect, useState } from 'react';
-import {StyleSheet,Text,View,SafeAreaView,FlatList,TouchableOpacity,Image, StatusBar,} from 'react-native';
+import {StyleSheet,Text,View,SafeAreaView,FlatList,TouchableOpacity, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
-
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
 const HistorialAccesos = ({ navigation }) => { 
   const [accesos, setAccesos] = useState([]);
 
   useEffect(() => {
-
-  const obtenerAccesos = async () => {
-
-    try {
-
-      const token = await AsyncStorage.getItem("token");
-      const response = await fetch(`${API_URL}/accesos/historial`, {
-        headers: {
-          "Authorization": "Bearer " + token
+    const obtenerAccesos = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        const response = await fetch(`${API_URL}/accesos/historial`, {
+          headers: {
+            "Authorization": "Bearer " + token
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data)) {
+            const accesosFormateados = data
+              .filter(item => item && typeof item === 'object')
+              .map((item, index) => {
+                // Use real fields from backend: tipo, fecha, hora
+                const tipoFinal = item.tipo || item.tipo_movimiento || (index % 2 === 0 ? 'entrada' : 'salida');
+                return {
+                  id: index.toString(),
+                  tipo: tipoFinal,
+                  fecha: item.fecha || "Hoy",
+                  hora: item.hora || "",
+                  estado: item.estado || "Permitido",
+                  color: tipoFinal.toLowerCase() === "entrada" ? "green" : "red"
+                };
+              });
+            setAccesos(accesosFormateados);
+          } else {
+            setAccesos([]);
+          }
         }
-      });
-      const data = await response.json();
-
-      const accesosFormateados = data.map((item, index) => ({
-        id: index.toString(),
-        tipo: item.tipo_movimiento,
-        fecha: "Hoy",
-        hora: "",
-        estado: "Permitido",
-        color: item.tipo_movimiento === "entrada" ? "green" : "red"
-      }));
-
-      setAccesos(accesosFormateados);
-
-    } catch (error) {
-
-      console.log("Error:", error);
-
-    }
-
-  };
-
-  obtenerAccesos();
-
-}, []);
+      } catch (error) {
+        console.log("Error:", error);
+      }
+    };
+    obtenerAccesos();
+  }, []);
 
   const renderItem = ({ item }) => (
     <View style={styles.historyItem}>
       <View style={styles.iconContainer}>
         <Text style={[styles.iconArrow, { color: item.color === 'green' ? '#1D8348' : '#C0392B' }]}>
-          {item.color === 'green' ? '➡]' : '➡['}
+          {item.color === 'green' ? '➡]' : '[⬅'}
         </Text>
       </View>
       
       <View style={styles.textContainer}>
-        <Text style={styles.typeText}>{item.tipo}</Text>
+        <Text style={[styles.typeText, { color: item.color === 'green' ? '#1D8348' : '#C0392B' }]}>
+          {item.tipo?.toUpperCase() || 'DESCONOCIDO'}
+        </Text>
         <Text style={styles.dateTimeText}>
           {item.fecha}    {item.hora}
         </Text>
@@ -69,20 +74,9 @@ const HistorialAccesos = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={false} />
 
-      <View style={styles.logoContainer}>
-        <Image source={require('../assets/logo.png')} style={styles.logo} /> 
-      </View>
+      <Logo size="small" style={styles.logoContainer} />
       
-      <View style={styles.titleBar}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation.goBack()} 
-        >
-          <Text style={styles.backArrow}>{'❮'}</Text>
-        </TouchableOpacity>
-        <Text style={styles.titleText}>HISTORIAL DE ACCESOS</Text>
-        <View style={{ width: 30 }} />
-      </View>
+      <Header title="HISTORIAL DE ACCESOS" navigation={navigation} />
 
       <FlatList
         data={accesos}
@@ -98,45 +92,11 @@ const HistorialAccesos = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F6FA',
+    backgroundColor: COLORS.background,
   },
   logoContainer: {
-    alignItems: 'center',
     paddingTop: 30,
     paddingBottom: 15,
-    backgroundColor: '#F0F6FA',
-  },
-  logo: {
-    width: 130,
-    height: 130,
-    resizeMode: 'contain',
-  },
-  titleBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#86ABC8',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 4,
-    marginBottom: 10,
-  },
-  backButton: {
-    padding: 5,
-  },
-  backArrow: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  titleText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#004C8C',
   },
   listContainer: {
     paddingHorizontal: 20,
@@ -147,6 +107,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+    backgroundColor: COLORS.cardBg,
+    padding: 15,
+    borderRadius: 15,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
   },
   iconContainer: {
     width: 40,
@@ -165,11 +132,11 @@ const styles = StyleSheet.create({
   typeText: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#000',
+    color: COLORS.accent,
   },
   dateTimeText: {
     fontSize: 14,
-    color: '#296A91',
+    color: COLORS.textSecondary,
     marginTop: 2,
   },
   badgeContainer: {
@@ -185,4 +152,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HistorialAccesos;
+export default HistorialAccesos;

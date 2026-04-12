@@ -12,7 +12,7 @@ class User extends Authenticatable
 
     protected $table = 'administradores';
     protected $primaryKey = 'id_admin';
-    public $timestamps = false; // El modelo Administradores en FastAPI no tiene timestamps
+    public $timestamps = false; 
 
     protected $fillable = [
         'nombre',
@@ -25,21 +25,16 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * Override the password name so Auth::attempt knows which column to verify.
-     */
+    
     public function getAuthPasswordName()
     {
         return 'contraseña';
     }
 
-    /**
-     * Get the password for the user.
-     */
+    
     public function getAuthPassword()
     {
-        // Python's passlib uses $2b$ which is incompatible with PHP's default bcrypt $2y$.
-        // By replacing the prefix before verification, Laravel can successfully check the hash.
+        
         return str_replace('$2b$', '$2y$', $this->contraseña);
     }
 }

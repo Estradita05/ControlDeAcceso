@@ -11,13 +11,13 @@ from app.security.auth import verificar_token, verificar_rol_alumno
 from app.security.hashing import get_password_hash
 
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+router = APIRouter(prefix="/auth")
 
 class LoginData(BaseModel):
     email: str
     password: str
 
-@router.post("/login")
+@router.post("/login", tags=["Alumno - Autenticación"])
 def login_movil(data: LoginData, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.email == data.email).first()
     
@@ -35,7 +35,7 @@ def login_movil(data: LoginData, db: Session = Depends(get_db)):
         "token_type": "bearer"
     }
 
-@router.post("/admin/login")
+@router.post("/admin/login", tags=["Guardia - Autenticación"])
 def login_web(data: LoginData, db: Session = Depends(get_db)):
     # Note that properties match the admin model: correo instead of email, contraseña instead of password.
     # Note: verify_password works with whatever string hashing we have, but first ensure column matches (contraseña).
@@ -64,7 +64,7 @@ def login_web(data: LoginData, db: Session = Depends(get_db)):
 class RecuperarData(BaseModel):
     busqueda: str  # puede ser correo o matricula
 
-@router.post("/recuperar_contrasena")
+@router.post("/recuperar_contrasena", tags=["Alumno - Autenticación"])
 def recuperar_contrasena(data: RecuperarData, db: Session = Depends(get_db)):
     # Buscamos por correo o id (matrícula) simulando la búsqueda
     user = db.query(Usuario).filter(
@@ -93,7 +93,7 @@ class RegisterData(BaseModel):
     email: str
     password: str
 
-@router.post("/register")
+@router.post("/register", tags=["Alumno - Autenticación"])
 def register(data: RegisterData, db: Session = Depends(get_db)):
 
     existe = db.query(Usuario).filter(Usuario.email == data.email).first()
@@ -112,7 +112,7 @@ def register(data: RegisterData, db: Session = Depends(get_db)):
 
     return {"mensaje": "Usuario registrado"}
 
-@router.get("/perfil")
+@router.get("/perfil", tags=["Alumno - Perfil", "Guardia - Perfil"])
 def perfil(db: Session = Depends(get_db), token_data: dict = Depends(verificar_token)):
     rol = token_data.get("rol")
     email = token_data.get("sub")
@@ -154,7 +154,7 @@ class UpdateData(BaseModel):
     foto_perfil: Optional[str] = None
     password: Optional[str] = None
 
-@router.put("/perfil")
+@router.put("/perfil", tags=["Alumno - Perfil", "Guardia - Perfil"])
 def editar_perfil(
     data: UpdateData,
     db: Session = Depends(get_db),

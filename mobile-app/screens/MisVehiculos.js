@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, Alert, Image, SafeAreaView, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Alert, SafeAreaView, StatusBar } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
 export default function MisVehiculos({ navigation }) {
   const [vehiculos, setVehiculos] = useState([]);
@@ -18,8 +21,6 @@ export default function MisVehiculos({ navigation }) {
       });
 
       const data = await response.json();
-      console.log("TOKEN:", token);
-      console.log("VEHÍCULOS:", data);
       setVehiculos(data);
     } catch (error) {
       console.log('Error fetch:', error);
@@ -32,7 +33,22 @@ export default function MisVehiculos({ navigation }) {
     }, [])
   );
 
-  const handleEliminar = async (id) => {
+  const handleEliminar = (id) => {
+    Alert.alert(
+      "Confirmación de Baja",
+      "¿Estás seguro de que deseas eliminar este vehículo?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { 
+          text: "Confirmar eliminación", 
+          onPress: () => procesarEliminacion(id),
+          style: "destructive"
+        }
+      ]
+    );
+  };
+
+  const procesarEliminacion = async (id) => {
     try {
       const token = await AsyncStorage.getItem("token");
       const response = await fetch(`${API_URL}/vehiculos/${id}`, {
@@ -43,11 +59,13 @@ export default function MisVehiculos({ navigation }) {
       });
 
       if (response.ok) {
-        Alert.alert('Eliminado', 'Vehículo dado de baja');
+        Alert.alert('Éxito', 'Vehículo dado de baja correctamente');
         fetchVehiculos(); 
+      } else {
+        Alert.alert('Error', 'No se pudo eliminar el vehículo');
       }
     } catch (error) {
-      Alert.alert('Error', 'No se pudo eliminar');
+      Alert.alert('Error', 'Error de conexión al servidor');
     }
   };
 
@@ -87,22 +105,12 @@ export default function MisVehiculos({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" translucent={false} />
       
-      <View style={styles.logoContainer}>
-        <Image source={require('../assets/logo.png')} style={styles.logo} resizeMode="contain" />
-      </View>
+      <Logo size="small" style={styles.logoContainer} />
 
-     
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backIcon}>❮</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>MIS VEHÍCULOS</Text>
-        <View style={{ width: 30 }} />
-      </View>
+      <Header title="MIS VEHÍCULOS" navigation={navigation} />
 
-      
       <FlatList 
         data={vehiculos}
         keyExtractor={item => item.id.toString()}
@@ -131,54 +139,32 @@ export default function MisVehiculos({ navigation }) {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#F0F6FA' 
+    backgroundColor: COLORS.background 
   },
   logoContainer: { 
-    alignItems: 'center', 
-    paddingVertical: 15 
-  },
-  logo: { 
-    width: 80, 
-    height: 80 
-  },
-  header: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    backgroundColor: '#86ABC8', 
-    paddingVertical: 12, 
-    paddingHorizontal: 15 
-  },
-  backButton: { 
-    padding: 5 
-  },
-  backIcon: { 
-    fontSize: 22, 
-    fontWeight: 'bold', 
-    color: '#003B7C' 
-  },
-  headerTitle: { 
-    flex: 1, 
-    textAlign: 'center', 
-    fontSize: 18, 
-    fontWeight: 'bold', 
-    color: '#003B7C' 
+    paddingTop: 30, 
+    paddingBottom: 15 
   },
   listContainer: { 
     padding: 20 
   },
   emptyText: { 
     textAlign: 'center', 
-    color: '#6B8EAD', 
+    color: COLORS.textSecondary, 
     marginTop: 20 
   },
   card: { 
-    backgroundColor: '#EAF3F8', 
+    backgroundColor: COLORS.cardBg, 
     borderRadius: 15, 
     flexDirection: 'row', 
     padding: 15, 
     marginBottom: 15, 
     borderLeftWidth: 6, 
-    borderLeftColor: '#005696' 
+    borderLeftColor: COLORS.primary,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
   },
   cardLeft: { 
     justifyContent: 'center', 
@@ -193,12 +179,12 @@ const styles = StyleSheet.create({
   cardTitle: { 
     fontSize: 16, 
     fontWeight: 'bold', 
-    color: '#000', 
+    color: COLORS.accent, 
     marginBottom: 5 
   },
   cardText: { 
     fontSize: 13, 
-    color: '#005696', 
+    color: COLORS.text, 
     marginBottom: 2 
   },
   cardFooter: { 
@@ -229,7 +215,7 @@ const styles = StyleSheet.create({
     fontSize: 14 
   },
   deleteText: { 
-    color: '#C83232', 
+    color: COLORS.error, 
     fontWeight: 'bold', 
     fontSize: 14 
   },
@@ -238,15 +224,19 @@ const styles = StyleSheet.create({
     paddingBottom: 30 
   },
   primaryButton: { 
-    backgroundColor: '#005696', 
+    backgroundColor: COLORS.primary, 
     paddingVertical: 16, 
-    borderRadius: 10, 
+    borderRadius: 15, 
     alignItems: 'center', 
-    marginBottom: 10 
+    marginBottom: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
   },
   primaryButtonText: { 
-    color: '#fff', 
+    color: COLORS.white, 
     fontSize: 16, 
     fontWeight: 'bold' 
   }
-});
+});

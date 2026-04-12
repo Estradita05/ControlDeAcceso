@@ -7,7 +7,7 @@
 <div class="flex flex-col items-center transform transition-all duration-700 ease-in-out pb-10">
     <!-- Logo with Neon Pulse -->
     <div class="relative mb-10 group">
-        <div class="absolute inset-0 bg-blue-500 rounded-full blur-[40px] opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+        <div class="absolute inset-0 bg-blue-500 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
         <img src="{{ asset('images/logo.png') }}" class="w-28 relative z-10 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)] group-hover:scale-105 transition-transform duration-500">
     </div>
 
@@ -15,11 +15,11 @@
     <div class="w-full bg-[#0d1326]/60 backdrop-blur-2xl border border-white/5 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.8)] rounded-3xl overflow-hidden relative">
         
         <!-- Top Highlight -->
-        <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+        <div class="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-blue-500/50 to-transparent"></div>
 
         <!-- Header -->
         <div class="pt-8 pb-4 text-center px-8 relative">
-            <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-indigo-300 tracking-tight">
+            <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-white via-blue-100 to-indigo-300 tracking-tight">
                 Acceso Sistema
             </h2>
             <p class="text-slate-400 mt-2 text-sm font-medium">Control de Acceso Avanzado</p>
@@ -82,7 +82,7 @@
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="w-full relative overflow-hidden group bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transform hover:-translate-y-0.5 transition-all duration-300 border border-blue-500/50">
+                <button type="submit" class="w-full relative overflow-hidden group bg-linear-to-r from-blue-600 to-indigo-600 text-white font-bold py-3.5 px-6 rounded-2xl shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transform hover:-translate-y-0.5 transition-all duration-300 border border-blue-500/50">
                     <div class="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <span class="relative z-10 flex items-center justify-center gap-2 text-[15px] tracking-wide">
                         INICIAR SESIÓN

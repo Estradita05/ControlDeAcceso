@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, StatusBar, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, SafeAreaView, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { API_URL } from '../config';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
 export default function ResetPasswordScreen({ navigation }) { 
   
@@ -9,7 +12,7 @@ export default function ResetPasswordScreen({ navigation }) {
 
   const handleSearch = async () => {
     if (!search) {
-      alert('Por favor ingresa tu correo o matrícula');
+      Alert.alert('Error', 'Por favor ingresa tu correo o matrícula');
       return;
     }
     
@@ -25,14 +28,13 @@ export default function ResetPasswordScreen({ navigation }) {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Si el usuario existe, se enviarán instrucciones a su correo.');
+        Alert.alert('Éxito', 'Si el usuario existe, se enviarán instrucciones a su correo.');
         navigation.goBack();
       } else {
-        alert(data.detail || "Hubo un error al procesar tu solicitud.");
+        Alert.alert('Error', data.detail || "Hubo un error al procesar tu solicitud.");
       }
     } catch (error) {
-      console.log("Error:", error);
-      alert("Error al conectar con el servidor.");
+      Alert.alert('Error', "Error al conectar con el servidor.");
     }
   };
 
@@ -40,24 +42,9 @@ export default function ResetPasswordScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={false} />
 
-      <View style={styles.logoContainer}>
-        <Image
-          source={require('../assets/logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View>
+      <Logo size="small" style={styles.logoContainer} />
 
-      <View style={styles.headerBar}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backArrow}>{'❮'}</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerText}>RESTABLECER CONTRASEÑA</Text>
-        <View style={{ width: 30 }} /> 
-      </View>
+      <Header title="RESTABLECER CONTRASEÑA" navigation={navigation} />
 
       <View style={styles.content}>
         <Text style={styles.description}>
@@ -65,11 +52,11 @@ export default function ResetPasswordScreen({ navigation }) {
         </Text>
 
         <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#004C8C" style={{ marginRight: 8 }} />
+          <Ionicons name="search" size={20} color={COLORS.accent} style={{ marginRight: 8 }} />
           <TextInput
             style={styles.input}
             placeholder="Buscar usuario..."
-            placeholderTextColor="#7A9EB1"
+            placeholderTextColor={COLORS.textSecondary}
             value={search}
             onChangeText={setSearch}
             autoCapitalize="none"
@@ -87,42 +74,11 @@ export default function ResetPasswordScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#F0F6FA', 
+    backgroundColor: COLORS.background, 
   },
   logoContainer: {
-    alignItems: 'center',
     paddingTop: 30,
     paddingBottom: 15,
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    alignSelf: 'center',
-  },
-  headerBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#86ABC8',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-  },
-  backButton: {
-    padding: 5,
-  },
-  backArrow: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  headerText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#004C8C',
   },
   content: {
     paddingHorizontal: 30,
@@ -131,14 +87,14 @@ const styles = StyleSheet.create({
   description: {
     marginBottom: 30,
     fontSize: 16,
-    color: '#4F7EA8',
+    color: COLORS.textSecondary,
     textAlign: 'center',
     lineHeight: 22,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#EAF3F8',
+    backgroundColor: COLORS.cardBg,
     borderRadius: 15,
     paddingHorizontal: 15,
     paddingVertical: 12,
@@ -151,10 +107,10 @@ const styles = StyleSheet.create({
   input: { 
     flex: 1,
     fontSize: 16,
-    color: '#333',
+    color: COLORS.text,
   },
   button: { 
-    backgroundColor: '#0054A3', 
+    backgroundColor: COLORS.primary, 
     padding: 15, 
     borderRadius: 25,
     alignItems: 'center',
@@ -164,8 +120,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
   },
   buttonText: { 
-    color: '#fff', 
+    color: COLORS.white, 
     fontSize: 16,
     fontWeight: 'bold' 
   },
-});
+});

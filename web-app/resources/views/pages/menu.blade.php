@@ -6,9 +6,9 @@
 <div class="max-w-7xl mx-auto space-y-8">
 
     <!-- Welcome Section -->
-    <div class="bg-gradient-to-r from-brand-900 to-indigo-950 rounded-[2rem] p-10 text-white shadow-lg border border-brand-500/30 relative overflow-hidden group">
+    <div class="bg-linear-to-r from-brand-900 to-indigo-950 rounded-4xl p-10 text-white shadow-lg border border-brand-500/30 relative overflow-hidden group">
         <div class="relative z-10">
-            <h2 class="text-4xl font-extrabold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-white to-brand-200 tracking-tight">Bienvenido al Panel de Gestión</h2>
+            <h2 class="text-4xl font-extrabold mb-3 text-transparent bg-clip-text bg-linear-to-r from-white to-brand-200 tracking-tight">Bienvenido al Panel de Gestión</h2>
             <p class="text-brand-100/80 max-w-2xl text-lg font-light leading-relaxed">
                 Sistema de Control de Acceso institucional. Supervise flujos de entrada, gestione registros vehiculares y monitoree la seguridad desde una interfaz centralizada.
             </p>
@@ -25,7 +25,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         
         <!-- Stat card -->
-        <div class="bg-darksurface p-7 rounded-[1.5rem] shadow-md border border-white/10 flex flex-col justify-between group hover:border-brand-500/50 hover:bg-[#1f2937] transition-all duration-300 relative overflow-hidden">
+        <div class="bg-darksurface p-7 rounded-3xl shadow-md border border-white/10 flex flex-col justify-between group hover:border-brand-500/50 hover:bg-[#1f2937] transition-all duration-300 relative overflow-hidden">
             <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <svg class="w-16 h-16 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -42,7 +42,7 @@
             <p id="stat-personas" class="text-4xl font-extrabold text-white relative z-10">--</p>
         </div>
 
-        <div class="bg-darksurface p-7 rounded-[1.5rem] shadow-md border border-white/10 flex flex-col justify-between group hover:border-orange-500/50 hover:bg-[#1f2937] transition-all duration-300 relative overflow-hidden">
+        <div class="bg-darksurface p-7 rounded-3xl shadow-md border border-white/10 flex flex-col justify-between group hover:border-orange-500/50 hover:bg-[#1f2937] transition-all duration-300 relative overflow-hidden">
             <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <svg class="w-16 h-16 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -59,7 +59,7 @@
             <p id="stat-vehiculos" class="text-4xl font-extrabold text-white relative z-10">--</p>
         </div>
 
-        <div class="bg-darksurface p-7 rounded-[1.5rem] shadow-md border border-white/10 flex flex-col justify-between group hover:border-emerald-500/50 hover:bg-[#1f2937] transition-all duration-300 relative overflow-hidden">
+        <div class="bg-darksurface p-7 rounded-3xl shadow-md border border-white/10 flex flex-col justify-between group hover:border-emerald-500/50 hover:bg-[#1f2937] transition-all duration-300 relative overflow-hidden">
             <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <svg class="w-16 h-16 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -76,7 +76,7 @@
             <p id="stat-permitidos" class="text-4xl font-extrabold text-white relative z-10">--</p>
         </div>
 
-        <div class="bg-darksurface p-7 rounded-[1.5rem] shadow-md border border-white/10 flex flex-col justify-between group hover:border-rose-500/50 hover:bg-[#1f2937] transition-all duration-300 relative overflow-hidden">
+        <div class="bg-darksurface p-7 rounded-3xl shadow-md border border-white/10 flex flex-col justify-between group hover:border-rose-500/50 hover:bg-[#1f2937] transition-all duration-300 relative overflow-hidden">
             <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <svg class="w-16 h-16 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -103,8 +103,8 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
-        <a href="/historial" class="bg-darksurface rounded-[1.5rem] p-7 shadow-md border border-white/10 hover:border-brand-500/50 hover:bg-[#1f2937] transition-all duration-300 group flex flex-col items-start gap-5">
-            <div class="p-4 bg-[#090e1f] rounded-2xl text-brand-400 group-hover:bg-gradient-to-br group-hover:from-brand-500 group-hover:to-indigo-600 group-hover:text-white transition-all shadow-inner border border-white/5">
+        <a href="/historial" class="bg-darksurface rounded-3xl p-7 shadow-md border border-white/10 hover:border-brand-500/50 hover:bg-[#1f2937] transition-all duration-300 group flex flex-col items-start gap-5">
+            <div class="p-4 bg-[#090e1f] rounded-2xl text-brand-400 group-hover:bg-linear-to-br group-hover:from-brand-500 group-hover:to-indigo-600 group-hover:text-white transition-all shadow-inner border border-white/5">
                 <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
@@ -115,8 +115,8 @@
             </div>
         </a>
 
-        <a href="/vehiculos" class="bg-darksurface rounded-[1.5rem] p-7 shadow-md border border-white/10 hover:border-brand-500/50 hover:bg-[#1f2937] transition-all duration-300 group flex flex-col items-start gap-5">
-            <div class="p-4 bg-[#090e1f] rounded-2xl text-brand-400 group-hover:bg-gradient-to-br group-hover:from-brand-500 group-hover:to-indigo-600 group-hover:text-white transition-all shadow-inner border border-white/5">
+        <a href="/vehiculos" class="bg-darksurface rounded-3xl p-7 shadow-md border border-white/10 hover:border-brand-500/50 hover:bg-[#1f2937] transition-all duration-300 group flex flex-col items-start gap-5">
+            <div class="p-4 bg-[#090e1f] rounded-2xl text-brand-400 group-hover:bg-linear-to-br group-hover:from-brand-500 group-hover:to-indigo-600 group-hover:text-white transition-all shadow-inner border border-white/5">
                 <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
                 </svg>
@@ -127,8 +127,8 @@
             </div>
         </a>
 
-        <a href="/soporte" class="bg-darksurface rounded-[1.5rem] p-7 shadow-md border border-white/10 hover:border-brand-500/50 hover:bg-[#1f2937] transition-all duration-300 group flex flex-col items-start gap-5">
-            <div class="p-4 bg-[#090e1f] rounded-2xl text-brand-400 group-hover:bg-gradient-to-br group-hover:from-brand-500 group-hover:to-indigo-600 group-hover:text-white transition-all shadow-inner border border-white/5">
+        <a href="/soporte" class="bg-darksurface rounded-3xl p-7 shadow-md border border-white/10 hover:border-brand-500/50 hover:bg-[#1f2937] transition-all duration-300 group flex flex-col items-start gap-5">
+            <div class="p-4 bg-[#090e1f] rounded-2xl text-brand-400 group-hover:bg-linear-to-br group-hover:from-brand-500 group-hover:to-indigo-600 group-hover:text-white transition-all shadow-inner border border-white/5">
                 <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.77 9.77 0 01-4-.8L3 20l1.8-3.6A7.5 7.5 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                 </svg>

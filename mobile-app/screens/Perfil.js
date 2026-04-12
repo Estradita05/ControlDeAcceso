@@ -3,8 +3,11 @@ import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Image, ScrollView,
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
-export default function ProfileScreen({ navigation }) { 
+export default function ProfileScreen({ navigation }) {
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -33,7 +36,7 @@ export default function ProfileScreen({ navigation }) {
   if (loading) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color="#005696" />
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
   }
@@ -42,44 +45,29 @@ export default function ProfileScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={false} />
 
-      <View style={styles.logoContainer}>
-        <Image
-          source={require('../assets/logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View>
+      <Logo size="small" style={styles.logoContainer} />
 
-      <View style={styles.titleBar}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation?.goBack()} 
-        >
-          <Text style={styles.backArrow}>{'❮'}</Text>
-        </TouchableOpacity>
-        <Text style={styles.titleText}>PERFIL</Text>
-        <View style={{ width: 30 }} /> 
-      </View>
+      <Header title="PERFIL" navigation={navigation} />
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.profileSection}>
           <View style={styles.avatar}>
             {usuario?.foto_perfil ? (
-              <Image 
-                source={{ uri: `data:image/jpeg;base64,${usuario.foto_perfil}` }} 
-                style={{ width: 110, height: 110, borderRadius: 55 }} 
+              <Image
+                source={{ uri: `data:image/jpeg;base64,${usuario.foto_perfil}` }}
+                style={{ width: 110, height: 110, borderRadius: 55 }}
               />
             ) : (
-              <Ionicons name="person" size={65} color="#fff" />
+              <Ionicons name="person" size={65} color={COLORS.white} />
             )}
           </View>
 
           <Text style={styles.name}>{usuario?.nombre || 'Cargando...'}</Text>
           <Text style={styles.email}>{usuario?.email || 'Cargando...'}</Text>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.editButton}
-            onPress={() => navigation.navigate('EditarPerfil')} 
+            onPress={() => navigation.navigate('EditarPerfil')}
           >
             <Text style={styles.editButtonText}>Editar Perfil</Text>
           </TouchableOpacity>
@@ -104,16 +92,16 @@ export default function ProfileScreen({ navigation }) {
           </View>
         </View>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.logoutButton}
           onPress={async () => {
             await AsyncStorage.removeItem('token');
             navigation.navigate('Login');
-          }} 
+          }}
         >
           <Text style={styles.logoutText}>Cerrar sesión</Text>
         </TouchableOpacity>
-        
+
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
@@ -123,43 +111,11 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F6FA',
+    backgroundColor: COLORS.background,
   },
   logoContainer: {
-    alignItems: 'center',
     paddingTop: 30,
     paddingBottom: 15,
-    backgroundColor: '#F0F6FA',
-  },
-  logo: {
-    width: 120,
-    height: 120,
-  },
-  titleBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#86ABC8',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    marginBottom: 5,
-  },
-  backButton: {
-    padding: 5,
-  },
-  backArrow: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  titleText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#004C8C',
   },
   profileSection: {
     alignItems: 'center',
@@ -169,7 +125,7 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
     borderRadius: 55,
-    backgroundColor: '#000',
+    backgroundColor: COLORS.accent,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
@@ -181,26 +137,26 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#004C8C',
+    color: COLORS.accent,
   },
   email: {
     fontSize: 14,
-    color: '#4F7EA8',
+    color: COLORS.secondary,
     marginBottom: 15,
   },
   editButton: {
-    backgroundColor: '#0E5A8A',
+    backgroundColor: COLORS.primary,
     paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 20,
     elevation: 4,
   },
   editButtonText: {
-    color: '#fff',
+    color: COLORS.white,
     fontWeight: 'bold',
   },
   card: {
-    backgroundColor: '#EAF3F8',
+    backgroundColor: COLORS.cardBg,
     marginHorizontal: 25,
     marginTop: 25,
     padding: 20,
@@ -213,7 +169,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#004C8C',
+    color: COLORS.accent,
     marginBottom: 15,
   },
   row: {
@@ -221,22 +177,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#D1E1EB',
+    borderBottomColor: COLORS.inputBorder,
     paddingBottom: 5,
   },
   label: {
-    color: '#555',
+    color: COLORS.textSecondary,
     fontWeight: '600',
   },
   value: {
     fontWeight: '500',
-    color: '#004C8C',
+    color: COLORS.accent,
     flex: 1,
     textAlign: 'right',
     marginLeft: 10,
   },
   logoutButton: {
-    backgroundColor: '#0E5A8A',
+    backgroundColor: COLORS.primary,
     marginTop: 30,
     marginHorizontal: 40,
     paddingVertical: 14,
@@ -248,7 +204,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
   },
   logoutText: {
-    color: '#fff',
+    color: COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
   },

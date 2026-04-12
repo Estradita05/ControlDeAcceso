@@ -7,7 +7,7 @@
         <img src="{{ asset('images/login-bg.png') }}" class="w-full h-full object-cover" alt="Background">
         <!-- Overlay to ensure text readability -->
         <div class="absolute inset-0 bg-brand-900/60 mix-blend-multiply"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent"></div>
+        <div class="absolute inset-0 bg-linear-to-t from-slate-900/90 via-slate-900/40 to-transparent"></div>
     </div>
 
     <!-- Glassmorphism Card -->
@@ -29,7 +29,7 @@
             <form action="" method="POST" class="space-y-5 text-left">
                 
                 <div>
-                    <label class="block text-sm font-medium text-blue-50 mb-1.5 ml-1 flex flex-col text-center">
+                    <label class="text-sm font-medium text-blue-50 mb-1.5 ml-1 flex flex-col text-center">
                         Introduce tu correo electrónico o ID institucional:
                     </label>
                     <div class="relative mt-4">

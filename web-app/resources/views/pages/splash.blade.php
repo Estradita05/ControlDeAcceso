@@ -6,8 +6,8 @@
 <div class="fixed inset-0 bg-darkbase flex items-center justify-center overflow-hidden">
     <!-- Animated background -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute w-[500px] h-[500px] bg-brand-500/10 rounded-full blur-[120px] -top-48 -left-48 animate-pulse"></div>
-        <div class="absolute w-[400px] h-[400px] bg-indigo-500/10 rounded-full blur-[100px] -bottom-48 -right-48 animate-pulse" style="animation-delay: 1s"></div>
+        <div class="absolute w-96 h-96 bg-brand-500/10 rounded-full blur-2xl -top-48 -left-48 animate-pulse"></div>
+        <div class="absolute w-80 h-80 bg-indigo-500/10 rounded-full blur-xl -bottom-48 -right-48 animate-pulse" style="animation-delay: 1s"></div>
     </div>
 
     <!-- Content -->
@@ -21,9 +21,9 @@
                 Control de Acceso
             </h1>
             <div class="flex items-center justify-center gap-3">
-                <div class="h-px w-12 bg-gradient-to-r from-transparent to-brand-500"></div>
+                <div class="h-px w-12 bg-linear-to-r from-transparent to-brand-500"></div>
                 <p class="text-brand-300 font-medium tracking-[0.3em] uppercase text-xs">Sistema Inteligente</p>
-                <div class="h-px w-12 bg-gradient-to-l from-transparent to-brand-500"></div>
+                <div class="h-px w-12 bg-linear-to-l from-transparent to-brand-500"></div>
             </div>
         </div>
 

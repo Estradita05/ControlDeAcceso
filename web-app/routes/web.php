@@ -43,6 +43,10 @@ Route::middleware(['auth'])->group(function () {
         return view('pages.perfil');
     })->name('perfil');
 
+    Route::get('/editar-perfil', function () {
+        return view('pages.editar-perfil');
+    })->name('editar-perfil');
+
     Route::get('/ajustes', function () {
         return view('pages.ajustes');
     })->name('ajustes');

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
 export default function AgregarVehiculo({ navigation }) {
   const [placas, setPlacas] = useState('');
   const [modelo, setModelo] = useState('');
   const [color, setColor] = useState('');
+
   const handleGuardar = async () => {
     if (!placas || !modelo || !color) {
       Alert.alert('Error', 'Por favor, llena todos los campos');
@@ -46,19 +50,11 @@ export default function AgregarVehiculo({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Image source={require('../assets/logo.png')} 
-        style={styles.logo} resizeMode="contain" />
-      </View>
+      <StatusBar barStyle="dark-content" translucent={false} />
+      
+      <Logo size="small" style={styles.logoContainer} />
 
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} 
-        style={styles.backButton}>
-          <Text style={styles.backIcon}>❮</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>AGREGAR VEHÍCULO</Text>
-        <View style={{ width: 30 }} />
-      </View>
+      <Header title="AGREGAR VEHÍCULO" navigation={navigation} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.formContainer}>
         
@@ -66,6 +62,7 @@ export default function AgregarVehiculo({ navigation }) {
         <TextInput 
           style={styles.input} 
           placeholder="Ej: ABC-123-A" 
+          placeholderTextColor={COLORS.textSecondary}
           value={placas} 
           onChangeText={setPlacas} 
         />
@@ -74,6 +71,7 @@ export default function AgregarVehiculo({ navigation }) {
         <TextInput 
           style={styles.input} 
           placeholder="Ej: Nissan Sentra" 
+          placeholderTextColor={COLORS.textSecondary}
           value={modelo} 
           onChangeText={setModelo} 
         />
@@ -82,16 +80,19 @@ export default function AgregarVehiculo({ navigation }) {
         <TextInput 
           style={styles.input} 
           placeholder="Ej: Blanco" 
+          placeholderTextColor={COLORS.textSecondary}
           value={color} 
           onChangeText={setColor} 
         />
 
-        <TouchableOpacity style={styles.cancelarButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.cancelarText}>Cancelar</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonSpacer} />
 
         <TouchableOpacity style={styles.primaryButton} onPress={handleGuardar}>
           <Text style={styles.primaryButtonText}>Guardar vehículo</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.secondaryButtonText}>Cancelar</Text>
         </TouchableOpacity>
 
       </ScrollView>
@@ -102,37 +103,11 @@ export default function AgregarVehiculo({ navigation }) {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#F0F6FA' 
+    backgroundColor: COLORS.background 
   },
-  logoContainer: 
-  { alignItems: 'center', 
-    paddingVertical: 15 
-  },
-  logo: { 
-    width: 80, 
-    height: 80 
-  },
-  header: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    backgroundColor: '#86ABC8', 
-    paddingVertical: 12, 
-    paddingHorizontal: 15 
-  },
-  backButton: { 
-    padding: 5 
-  },
-  backIcon: { 
-    fontSize: 22, 
-    fontWeight: 'bold', 
-    color: '#003B7C' 
-  },
-  headerTitle: { 
-    flex: 1, 
-    textAlign: 'center', 
-    fontSize: 18, 
-    fontWeight: 'bold', 
-    color: '#003B7C' 
+  logoContainer: { 
+    paddingTop: 30, 
+    paddingBottom: 15 
   },
   formContainer: { 
     paddingHorizontal: 25, 
@@ -140,38 +115,49 @@ const styles = StyleSheet.create({
     paddingBottom: 40 
   },
   label: { 
-    color: '#003B7C', 
+    color: COLORS.accent, 
     fontWeight: 'bold', 
-    marginBottom: 5, 
+    marginBottom: 8, 
     marginLeft: 5, 
     fontSize: 15 
   },
   input: { 
-    backgroundColor: '#EAF3F8', 
+    backgroundColor: COLORS.cardBg, 
     paddingVertical: 14, 
     paddingHorizontal: 20, 
+    borderRadius: 15, 
+    marginBottom: 20,
+    fontSize: 14,
+    color: COLORS.text,
+    borderWidth: 1,
+    borderColor: COLORS.inputBorder,
+  },
+  buttonSpacer: {
+    height: 20,
+  },
+  primaryButton: { 
+    backgroundColor: COLORS.primary, 
+    paddingVertical: 16, 
     borderRadius: 30, 
-    marginBottom: 15 
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    marginBottom: 15,
+  }, 
+  primaryButtonText: { 
+    color: COLORS.white, 
+    fontSize: 16, 
+    fontWeight: 'bold' 
   },
-  cancelarButton: { 
-    alignItems: 'flex-end', 
-    marginBottom: 15, 
-    marginRight: 10 
+  secondaryButton: { 
+    alignItems: 'center', 
+    paddingVertical: 10,
   },
-  cancelarText: { 
-    color: '#005696', 
+  secondaryButtonText: { 
+    color: COLORS.textSecondary, 
     fontWeight: 'bold', 
     fontSize: 15 
   },
-  primaryButton: { 
-    backgroundColor: '#005696', 
-    paddingVertical: 16, 
-    borderRadius: 30, 
-    alignItems: 'center' 
-  }, 
-  primaryButtonText: { 
-    color: '#fff', 
-    fontSize: 16, 
-    fontWeight: 'bold' 
-  }
-});
+});

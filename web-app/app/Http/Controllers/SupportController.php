@@ -25,10 +25,7 @@ class SupportController extends Controller
                 'fecha' => now()->toDateTimeString()
             ];
 
-            // In a real app, we would use a Mailable:
-            // Mail::to('soporte@controlacceso.com')->send(new SupportTicket($data));
             
-            // For now, let's log it or send a simple raw email (if driver is log, it goes to storage/logs/laravel.log)
             Mail::raw("Nuevo Ticket de Soporte:\n\nAsunto: {$data['asunto']}\nPrioridad: {$data['prioridad']}\nMensaje: {$data['mensaje']}\nFecha: {$data['fecha']}", function ($message) use ($data) {
                 $message->to('soporte@controlacceso.com')
                         ->subject("NUEVO TICKET: " . $data['asunto']);

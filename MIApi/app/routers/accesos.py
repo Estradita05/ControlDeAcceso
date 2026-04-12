@@ -8,7 +8,7 @@ from app.models.vehiculo import Vehiculo
 from pydantic import BaseModel
 from datetime import datetime
 from app.websockets_manager import manager
-router = APIRouter(prefix="/accesos", tags=["Accesos"])
+router = APIRouter(prefix="/accesos", tags=["Alumno - Accesos"])
 
 class AccesoData(BaseModel):
     tipo: str
@@ -24,9 +24,24 @@ def get_current_user_id(db: Session, email: str):
 async def registrar(data: AccesoData, user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
     user_id = get_current_user_id(db, user["sub"])
 
+    # Validar el último acceso del usuario
+    ultimo_acceso = db.query(Acceso).filter(Acceso.usuario_id == user_id).order_by(Acceso.id.desc()).first()
+    tipo_solicitado = data.tipo.strip().lower()
+
+    if tipo_solicitado == "entrada":
+        # Evitar entrada doble: El último registro no puede ser de tipo 'entrada'
+        if ultimo_acceso and ultimo_acceso.tipo.lower() == "entrada":
+            raise HTTPException(status_code=400, detail="Inconsistencia: Ya existe una entrada activa. Debes registrar tu salida primero.")
+    elif tipo_solicitado == "salida":
+        # Evitar salida sin entrada: Debe existir un registro previo y además debe ser de tipo 'entrada'
+        if not ultimo_acceso or ultimo_acceso.tipo.lower() == "salida":
+            raise HTTPException(status_code=400, detail="Inconsistencia: No puedes registrar la salida sin una entrada previa activa.")
+    else:
+        raise HTTPException(status_code=400, detail="Tipo de acceso inválido. Debe ser 'Entrada' o 'Salida'.")
+
     nuevo_acceso = Acceso(
         usuario_id=user_id,
-        tipo=data.tipo,
+        tipo=data.tipo.capitalize(), # Guarda con mayúscula inicial
         fecha=datetime.now().strftime("%d/%m/%Y"),
         hora=datetime.now().strftime("%H:%M:%S"),
         estado="Permitido"
@@ -110,47 +125,4 @@ def registrar_provisional(data: AccesoProvisionalData, user=Depends(verificar_ro
         "id": nuevo_provisional.id
     }
 
-# ==========================================
-# RUTAS PARA GUARDIAS / ADMINISTRADORES
-# ==========================================
-
-# Historial global de todos los usuarios
-@router.get("/web/historial")
-def historial_global(user=Depends(verificar_rol_guardia), db: Session = Depends(get_db)):
-    # Devuelve los accesos más recientes
-    accesos = db.query(Acceso).order_by(Acceso.id.desc()).limit(100).all()
-    return accesos
-
-# Ver accesos provisionales pendientes
-@router.get("/web/provisionales/pendientes")
-def provisionales_pendientes(user=Depends(verificar_rol_guardia), db: Session = Depends(get_db)):
-    pendientes = db.query(AccesoProvisional).filter(AccesoProvisional.estado == "Pendiente").all()
-    return pendientes
-
-class AprobarProvisionalData(BaseModel):
-    estado: str # "Aprobado" o "Rechazado"
-
-@router.put("/web/provisionales/{id}")
-def actualizar_provisional(id: int, data: AprobarProvisionalData, user=Depends(verificar_rol_guardia), db: Session = Depends(get_db)):
-    prov = db.query(AccesoProvisional).filter(AccesoProvisional.id == id).first()
-    if not prov:
-        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
-    
-    prov.estado = data.estado
-    db.commit()
-    db.refresh(prov)
-    return {"mensaje": f"Acceso {data.estado.lower()}"}
-
-@router.get("/web/dashboard/estadisticas")
-def dashboard_estadisticas(user=Depends(verificar_rol_guardia), db: Session = Depends(get_db)):
-    total_personas = db.query(Usuario).count()
-    total_vehiculos = db.query(Vehiculo).count()
-    accesos_permitidos = db.query(Acceso).filter(Acceso.estado == "Permitido").count()
-    accesos_denegados = db.query(Acceso).filter(Acceso.estado == "Denegado").count()
-
-    return {
-        "total_personas": total_personas,
-        "total_vehiculos": total_vehiculos,
-        "accesos_permitidos": accesos_permitidos,
-        "accesos_denegados": accesos_denegados
-    }
+

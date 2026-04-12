@@ -59,7 +59,7 @@
             background: rgba(255, 255, 255, 0.2);
         }
         body {
-            background-color: theme('colors.darkbase');
+            background-color: #030712;
             background-image: radial-gradient(at 100% 0%, rgba(79, 70, 229, 0.08) 0, transparent 40%),
                               radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.08) 0, transparent 40%);
             background-attachment: fixed;
@@ -74,7 +74,7 @@
         <div class="h-20 flex items-center px-6 border-b border-darkborder relative">
             <div class="absolute inset-0 bg-brand-500/10 blur-xl rounded-t-3xl"></div>
             <img src="{{ asset('images/logo.png') }}" class="h-9 w-auto mr-3 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] relative z-10" alt="Logo">
-            <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-wider relative z-10">Control De Acceso</span>
+            <span class="text-xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-white to-slate-400 tracking-wider relative z-10">Control De Acceso</span>
         </div>
 
         <!-- Navigation Links -->
@@ -166,7 +166,7 @@
                     </svg>
                 </a>
                 <div class="flex items-center gap-3 pl-3 border-l border-darkborder">
-                    <a href="/perfil" class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-400 to-indigo-600 flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border border-white/20 hover:scale-110 transition-transform">
+                    <a href="/perfil" class="w-10 h-10 rounded-full bg-linear-to-br from-brand-400 to-indigo-600 flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border border-white/20 hover:scale-110 transition-transform">
                         A
                     </a>
                 </div>

@@ -8,7 +8,7 @@
     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden mt-8">
         
         <!-- Cover Photo area -->
-        <div class="h-32 bg-gradient-to-r from-brand-500 to-brand-700 w-full relative"></div>
+        <div class="h-32 bg-linear-to-r from-brand-500 to-brand-700 w-full relative"></div>
 
         <div class="px-8 pb-8">
             <!-- Avatar Header -->

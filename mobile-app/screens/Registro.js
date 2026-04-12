@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, SafeAreaView, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { API_URL } from '../config';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
 export default function Registro({ navigation }) { 
   const [nombre, setNombre] = useState('');
@@ -47,7 +50,6 @@ export default function Registro({ navigation }) {
         Alert.alert("Error", data.detail || "No se pudo registrar el usuario");
       }
     } catch (error) {
-      console.log("ERROR REGISTER:", error);
       Alert.alert("Error", "No se pudo conectar con el servidor");
     }
   };
@@ -55,25 +57,9 @@ export default function Registro({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       
-      <View style={styles.logoContainer}>
-        <Image 
-          source={require('../assets/logo.png')} 
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View>
+      <Logo size="small" style={styles.logoContainer} />
 
-      <View style={styles.titleBar}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation.goBack()} 
-        >
-          <Text style={styles.backArrow}>{'❮'}</Text>
-        </TouchableOpacity>
-
-        <Text style={styles.titleText}>REGISTRAR USUARIO</Text>
-        <View style={{ width: 30 }} />
-      </View>
+      <Header title="REGISTRAR USUARIO" navigation={navigation} />
 
       <ScrollView 
         showsVerticalScrollIndicator={false} 
@@ -85,6 +71,7 @@ export default function Registro({ navigation }) {
           <TextInput 
             style={styles.input} 
             placeholder="Ej. Alexis Hernández" 
+            placeholderTextColor={COLORS.textSecondary}
             value={nombre}
             onChangeText={setNombre}
           />
@@ -93,6 +80,7 @@ export default function Registro({ navigation }) {
           <TextInput 
             style={styles.input} 
             placeholder="1240XXXXX" 
+            placeholderTextColor={COLORS.textSecondary}
             keyboardType="numeric" 
             value={matricula}
             onChangeText={setMatricula}
@@ -102,6 +90,7 @@ export default function Registro({ navigation }) {
           <TextInput 
             style={styles.input} 
             placeholder="usuario@edu.mx" 
+            placeholderTextColor={COLORS.textSecondary}
             keyboardType="email-address" 
             value={email}
             onChangeText={setEmail}
@@ -112,6 +101,7 @@ export default function Registro({ navigation }) {
           <TextInput 
             style={styles.input} 
             placeholder="********" 
+            placeholderTextColor={COLORS.textSecondary}
             secureTextEntry={true} 
             value={password}
             onChangeText={setPassword}
@@ -136,86 +126,48 @@ export default function Registro({ navigation }) {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#F0F6FA' 
+    backgroundColor: COLORS.background 
   },
-
   logoContainer: { 
-    alignItems: 'center', 
     paddingTop: 30, 
     paddingBottom: 15 
   },
-
-  logo: { 
-    width: 90, 
-    height: 90 
-  },
-
-  titleBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#86ABC8',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-  },
-
-  backButton: { 
-    padding: 5 
-  },
-
-  backArrow: { 
-    fontSize: 22, 
-    fontWeight: 'bold', 
-    color: '#003B7C' 
-  },
-
-  titleText: { 
-    flex: 1, 
-    textAlign: 'center', 
-    fontSize: 18, 
-    fontWeight: 'bold', 
-    color: '#003B7C' 
-  },
-
   scrollContent: { 
     paddingHorizontal: 25, 
     paddingTop: 20 
   },
-
   card: {
-    backgroundColor: '#EAF3F8',
+    backgroundColor: COLORS.cardBg,
     padding: 20,
     borderRadius: 20, 
     elevation: 3,
     borderLeftWidth: 6, 
-    borderLeftColor: '#0054A3'
+    borderLeftColor: COLORS.primary
   },
-
   label: { 
-    color: '#003B7C', 
+    color: COLORS.accent, 
     fontWeight: 'bold', 
     marginBottom: 5, 
     marginTop: 10 
   },
-
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.white,
     padding: 12,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#D1E1EB',
+    borderColor: COLORS.inputBorder,
+    color: COLORS.text
   },
-
   registerButton: {
-    backgroundColor: '#005696', 
+    backgroundColor: COLORS.primary, 
     marginTop: 30,
     paddingVertical: 16,
     borderRadius: 30, 
     alignItems: 'center',
   },
-
   registerText: { 
-    color: '#fff', 
+    color: COLORS.white, 
     fontSize: 16, 
     fontWeight: 'bold' 
   },
-});
+});

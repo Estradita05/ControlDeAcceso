@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, Switch, StyleSheet, TouchableOpacity, StatusBar, Image, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, Switch, StyleSheet, TouchableOpacity, StatusBar, ScrollView, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
 export default function SettingsScreen({ navigation }) {
   const [notifications, setNotifications] = useState(true);
@@ -9,24 +12,9 @@ export default function SettingsScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={false} />
 
-      <View style={styles.logoContainer}>
-        <Image
-          source={require('../assets/logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </View>
+      <Logo size="small" style={styles.logoContainer} />
 
-      <View style={styles.titleBar}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation.navigate('Menu')}
-        >
-          <Text style={styles.backArrow}>{'❮'}</Text>
-        </TouchableOpacity>
-        <Text style={styles.titleText}>AJUSTES</Text>
-        <View style={{ width: 30 }} /> 
-      </View>
+      <Header title="AJUSTES" navigation={navigation} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
         
@@ -36,7 +24,7 @@ export default function SettingsScreen({ navigation }) {
             <Text style={styles.label}>Idioma</Text>
             <View style={styles.selectBox}>
               <Text style={styles.value}>Español</Text>
-              <Icon name="chevron-down" size={16} color="#004C8C" />
+              <Icon name="chevron-down" size={16} color={COLORS.accent} />
             </View>
           </View>
         </View>
@@ -55,7 +43,7 @@ export default function SettingsScreen({ navigation }) {
             <Text style={styles.label}>Historial de acceso</Text>
             <View style={styles.selectBox}>
               <Text style={styles.value}>Activo</Text>
-              <Icon name="chevron-down" size={16} color="#004C8C" />
+              <Icon name="chevron-down" size={16} color={COLORS.accent} />
             </View>
           </View>
         </View>
@@ -67,8 +55,8 @@ export default function SettingsScreen({ navigation }) {
             <Switch 
               value={notifications} 
               onValueChange={(val) => setNotifications(val)} 
-              trackColor={{ false: '#D1D1D1', true: '#86ABC8' }}
-              thumbColor={notifications ? '#004C8C' : '#F4F4F4'}
+              trackColor={{ false: '#D1D1D1', true: COLORS.secondary }}
+              thumbColor={notifications ? COLORS.primary : '#F4F4F4'}
             />
           </View>
         </View>
@@ -81,52 +69,28 @@ export default function SettingsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#F0F6FA' 
+    backgroundColor: COLORS.background 
   },
   logoContainer: { 
-    alignItems: 'center', 
     paddingTop: 30, 
     paddingBottom: 15 
   },
-  logo: { 
-    width: 120, 
-    height: 120 
-  },
-  titleBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#86ABC8',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    elevation: 4,
-  },
-  backButton: { 
-    padding: 5 
-  },
-  backArrow: { 
-    fontSize: 22, 
-    fontWeight: 'bold', 
-    color: '#000' 
-  },
-  titleText: { 
-    fontSize: 20, 
-    fontWeight: 'bold', 
-    color: '#004C8C' 
-  },
   sectionCard: { 
-    backgroundColor: '#EAF3F8', 
+    backgroundColor: COLORS.cardBg, 
     marginHorizontal: 20,
     marginTop: 20, 
     padding: 20, 
     borderRadius: 20, 
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
   },
   sectionTitle: { 
     fontSize: 16, 
     fontWeight: 'bold', 
     marginBottom: 15, 
-    color: '#004C8C' 
+    color: COLORS.accent 
   },
   row: { 
     flexDirection: 'row', 
@@ -135,23 +99,23 @@ const styles = StyleSheet.create({
   },
   label: { 
     fontSize: 15, 
-    color: '#333', 
+    color: COLORS.text, 
     fontWeight: '600'
   },
   selectBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.white,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#D1E1EB',
+    borderColor: COLORS.inputBorder,
   },
   value: { 
     marginRight: 8, 
     fontSize: 14, 
-    color: '#004C8C', 
+    color: COLORS.accent, 
     fontWeight: '500' 
   },
   badgeContainer: { 
@@ -165,4 +129,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', 
     fontSize: 13 
   },
-});
+});

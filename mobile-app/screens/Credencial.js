@@ -3,6 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, SafeAreaVi
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
+import { COLORS, FONTS, SIZES } from '../theme';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
 
 export default function DigitalCredential({ navigation }) { 
   const [usuario, setUsuario] = useState(null);
@@ -29,9 +32,22 @@ export default function DigitalCredential({ navigation }) {
         });
         if (histRes.ok) {
           const histData = await histRes.json();
-          // Sort descending based on ID and get top 2
-          const recientes = histData.sort((a, b) => b.id - a.id).slice(0, 2);
-          setHistorial(recientes);
+          if (Array.isArray(histData)) {
+            // Sort descending based on ID and get top 2
+            const recientes = histData
+              .sort((a, b) => (b.id || 0) - (a.id || 0))
+              .slice(0, 2)
+              .map((item, index) => {
+                const tipoFinal = item.tipo || item.tipo_movimiento || (index % 2 === 0 ? 'entrada' : 'salida');
+                return {
+                  ...item,
+                  tipo: tipoFinal,
+                  fecha: item.fecha || 'Reciente',
+                  hora: item.hora || ''
+                };
+              });
+            setHistorial(recientes);
+          }
         }
 
       } catch (error) {
@@ -48,28 +64,20 @@ export default function DigitalCredential({ navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={false} />
       
-      <View style={styles.logoContainer}>
-        <Image source={require('../assets/logo.png')} style={styles.logo} />
-      </View>
+      <Logo size="small" style={styles.logoContainer} />
 
-      <View style={styles.titleBar}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backArrow}>{'❮'}</Text>
-        </TouchableOpacity>
-        <Text style={styles.titleText}>CREDENCIAL DIGITAL</Text>
-        <View style={{ width: 30 }} /> 
-      </View>
+      <Header title="CREDENCIAL DIGITAL" navigation={navigation} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {loading ? (
-          <ActivityIndicator size="large" color="#005696" style={{ marginTop: 50 }} />
+          <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 50 }} />
         ) : (
           <View style={styles.body}>
             <Text style={styles.sectionTitle}>Tu tarjeta digital</Text>
 
             <View style={styles.cardWrapper}>
               <View style={styles.cardHeader}>
-                <Ionicons name="school" size={24} color="#FFF" style={{marginRight: 10}} />
+                <Ionicons name="school" size={24} color={COLORS.white} style={{marginRight: 10}} />
                 <Text style={styles.cardUniversity}>UNIVERSIDAD POLITECNICA DE QUERETARO</Text>
               </View>
               <View style={styles.cardBody}>
@@ -81,7 +89,7 @@ export default function DigitalCredential({ navigation }) {
                       resizeMode="cover"
                     />
                   ) : (
-                    <Ionicons name="person" size={70} color="#004C8C" />
+                    <Ionicons name="person" size={70} color={COLORS.accent} />
                   )}
                 </View>
                 <View style={styles.cardInfoContainer}>
@@ -99,7 +107,7 @@ export default function DigitalCredential({ navigation }) {
                     resizeMode="contain"
                   />
                 ) : (
-                  <ActivityIndicator size="small" color="#005696" />
+                  <ActivityIndicator size="small" color={COLORS.primary} />
                 )}
               </View>
               <View style={styles.cardFooter}>
@@ -109,14 +117,14 @@ export default function DigitalCredential({ navigation }) {
 
             <View style={styles.historyContainer}>
               <View style={styles.historyHeader}>
-                <Text style={styles.sectionTitleHistory}>Historial de Accesos</Text>
+                <Text style={styles.sectionTitleHistory}>Historial Reciente</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Historial')}>
                   <Text style={styles.linkText}>Ver Todos</Text>
                 </TouchableOpacity>
               </View>
 
               {historial.length === 0 ? (
-                <Text style={{ textAlign: 'center', color: '#666', marginTop: 10 }}>No hay accesos recientes.</Text>
+                <Text style={{ textAlign: 'center', color: COLORS.textSecondary, marginTop: 10 }}>No hay accesos recientes.</Text>
               ) : (
                 historial.map((item, index) => (
                   <View key={index} style={styles.historyItem}>
@@ -124,10 +132,10 @@ export default function DigitalCredential({ navigation }) {
                       {item.tipo.toLowerCase() === 'entrada' ? '🟢' : '🔴'}
                     </Text>
                     <View style={styles.historyTextInfo}>
-                      <Text style={styles.historyType}>
-                        {item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)}
+                      <Text style={[styles.historyType, { color: item.tipo?.toLowerCase() === 'entrada' ? '#1D8348' : '#C0392B' }]}>
+                        {item.tipo ? (item.tipo.charAt(0).toUpperCase() + item.tipo.slice(1)) : 'Desconocido'}
                       </Text>
-                      <Text style={styles.historyDate}>{item.fecha}  {item.hora}</Text>
+                      <Text style={styles.historyDate}>{item.fecha || 'Reciente'}  {item.hora || ''}</Text>
                     </View>
                     <View style={styles.badgeContainer}>
                       <Text style={styles.badgeText}>{item.estado || 'Permitido'}</Text>
@@ -147,43 +155,11 @@ export default function DigitalCredential({ navigation }) {
 const styles = StyleSheet.create({
   container: { 
     flex: 1, 
-    backgroundColor: '#F0F6FA' 
+    backgroundColor: COLORS.background 
   },
   logoContainer: {
-    alignItems: 'center',
     paddingTop: 30,
     paddingBottom: 15,
-    backgroundColor: '#F0F6FA',
-  },
-  logo: { 
-    width: 120, 
-    height: 120, 
-    resizeMode: 'contain' 
-  },
-  titleBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#86ABC8',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-  },
-  backButton: {
-    padding: 5,
-  },
-  backArrow: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  titleText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#004C8C',
   },
   scrollContent: {
     paddingBottom: 20,
@@ -195,12 +171,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', 
     fontSize: 18, 
     marginBottom: 15,
-    color: '#004C8C',
+    color: COLORS.accent,
   },
   sectionTitleHistory: {
     fontWeight: 'bold', 
     fontSize: 16, 
-    color: '#004C8C',
+    color: COLORS.accent,
   },
   cardWrapper: {
     width: '100%',
@@ -211,20 +187,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.white,
     overflow: 'hidden',
   },
   cardHeader: {
-    backgroundColor: '#003B7C',
+    backgroundColor: COLORS.primary,
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
   },
   cardUniversity: {
-    color: '#FFF',
-    fontSize: 16,
+    color: COLORS.white,
+    fontSize: 14, // Slightly smaller to fit Better
     fontWeight: 'bold',
     letterSpacing: 1,
+    flex: 1,
   },
   cardBody: {
     flexDirection: 'row',
@@ -234,12 +211,12 @@ const styles = StyleSheet.create({
   cardPhotoContainer: {
     width: 85,
     height: 105,
-    backgroundColor: '#F0F6FA',
+    backgroundColor: COLORS.background,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: '#004C8C',
+    borderColor: COLORS.accent,
   },
   cardInfoContainer: {
     flex: 1,
@@ -248,33 +225,33 @@ const styles = StyleSheet.create({
   cardName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#003B7C',
+    color: COLORS.accent,
     textTransform: 'uppercase',
   },
   cardCareer: {
     fontSize: 13,
-    color: '#86ABC8',
+    color: COLORS.secondary,
     fontWeight: 'bold',
     marginTop: 5,
   },
   cardCareerSubtitle: {
     fontSize: 12,
-    color: '#333',
+    color: COLORS.text,
     marginBottom: 5,
   },
   cardId: {
     fontSize: 14,
-    color: '#000',
+    color: COLORS.text,
     fontWeight: 'bold',
     marginTop: 8,
   },
   cardFooter: {
-    backgroundColor: '#86ABC8',
+    backgroundColor: COLORS.secondary,
     padding: 8,
     alignItems: 'center',
   },
   cardFooterText: {
-    color: '#FFF',
+    color: COLORS.white,
     fontSize: 12,
     fontWeight: 'bold',
     letterSpacing: 1,
@@ -282,14 +259,14 @@ const styles = StyleSheet.create({
   barcodeContainer: {
     alignItems: 'center',
     paddingVertical: 15,
-    backgroundColor: '#FFF',
+    backgroundColor: COLORS.white,
   },
   barcodeImage: {
     width: '95%',
     height: 90,
   },
   historyContainer: { 
-    backgroundColor: '#EAF3F8', 
+    backgroundColor: COLORS.cardBg, 
     borderRadius: 20, 
     padding: 20,
     elevation: 3,
@@ -304,7 +281,7 @@ const styles = StyleSheet.create({
     marginBottom: 20 
   },
   linkText: { 
-    color: '#0084FF', 
+    color: COLORS.primary, 
     fontWeight: 'bold' 
   },
   historyItem: { 
@@ -322,11 +299,11 @@ const styles = StyleSheet.create({
   historyType: { 
     fontWeight: 'bold', 
     fontSize: 14,
-    color: '#000',
+    color: COLORS.text,
   },
   historyDate: { 
     fontSize: 12, 
-    color: '#4F7EA8',
+    color: COLORS.textSecondary,
     marginTop: 3 
   },
   badgeContainer: { 
@@ -340,4 +317,4 @@ const styles = StyleSheet.create({
     fontSize: 11, 
     fontWeight: 'bold' 
   },
-});
+});
