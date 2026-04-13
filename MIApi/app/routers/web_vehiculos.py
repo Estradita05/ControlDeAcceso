@@ -21,13 +21,13 @@ class VehiculoAdminCreate(BaseModel):
 async def registrar_vehiculo_admin(data: VehiculoAdminCreate, user=Depends(verificar_rol_guardia), db: Session = Depends(get_db)):
     # Buscar el ID interno del usuario por su matrícula
     alumno = db.query(Usuario).filter(Usuario.matricula == data.usuario_id).first()
-    
+
     if not alumno:
         raise HTTPException(
-            status_code=404, 
+            status_code=404,
             detail=f"No se encontró ningún alumno con la matrícula {data.usuario_id}"
         )
-    
+
     try:
         nuevo_vehiculo = Vehiculo(
             placa=data.placa,
@@ -38,7 +38,7 @@ async def registrar_vehiculo_admin(data: VehiculoAdminCreate, user=Depends(verif
         db.add(nuevo_vehiculo)
         db.commit()
         db.refresh(nuevo_vehiculo)
-        
+
         # Notificar vía WebSocket si es necesario
         await manager.broadcast({
             "event": "nuevo_vehiculo",
@@ -48,7 +48,7 @@ async def registrar_vehiculo_admin(data: VehiculoAdminCreate, user=Depends(verif
                 "usuario_id": data.usuario_id
             }
         })
-        
+
         return {
             "mensaje": "Vehículo registrado exitosamente",
             "vehiculo": {
@@ -61,11 +61,25 @@ async def registrar_vehiculo_admin(data: VehiculoAdminCreate, user=Depends(verif
         db.rollback()
         raise HTTPException(status_code=400, detail="La placa ya está registrada en el sistema")
 
-# Ver todos los vehículos (Global)
+# Ver todos los vehículos (Global) — enriquecido con matrícula del propietario
 @router.get("/todos")
 def ver_todos_vehiculos(user=Depends(verificar_rol_guardia), db: Session = Depends(get_db)):
     vehiculos = db.query(Vehiculo).all()
-    return vehiculos
+
+    resultado = []
+    for v in vehiculos:
+        propietario = db.query(Usuario).filter(Usuario.id == v.usuario_id).first()
+        resultado.append({
+            "id": v.id,
+            "placa": v.placa,
+            "modelo": v.modelo,
+            "color": v.color,
+            "usuario_id": v.usuario_id,
+            "matricula": propietario.matricula if propietario else "N/A",
+            "nombre_propietario": propietario.nombre if propietario else "Desconocido",
+        })
+
+    return resultado
 
 class MotivoData(BaseModel):
     motivo: str
@@ -75,14 +89,14 @@ def eliminar_vehiculo(id: int, data: MotivoData, user=Depends(verificar_rol_guar
     vehiculo = db.query(Vehiculo).filter(Vehiculo.id == id).first()
     if not vehiculo:
         raise HTTPException(status_code=404, detail="Vehículo no encontrado")
-        
+
     if not data.motivo or not data.motivo.strip():
         raise HTTPException(status_code=400, detail="El motivo de eliminación es obligatorio")
-        
+
     print(f"[AUDITORÍA] El guardia {user.get('sub')} eliminó el vehículo con placas {vehiculo.placa}. Motivo: {data.motivo}")
-    
+
     # Delete real
     db.delete(vehiculo)
     db.commit()
-    
+
     return {"mensaje": "Vehículo eliminado correctamente"}

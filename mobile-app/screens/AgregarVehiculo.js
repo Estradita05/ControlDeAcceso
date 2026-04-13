@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, ScrollView, SafeAreaView, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
-import { COLORS, FONTS, SIZES } from '../theme';
+import { FONTS, SIZES } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 
 export default function AgregarVehiculo({ navigation }) {
+  const { COLORS, isDark } = useTheme();
   const [placas, setPlacas] = useState('');
   const [modelo, setModelo] = useState('');
   const [color, setColor] = useState('');
@@ -48,51 +50,53 @@ export default function AgregarVehiculo({ navigation }) {
     }
   };
 
+  const st = makeStyles(COLORS);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent={false} />
+    <SafeAreaView style={st.container}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={COLORS.background} />
       
-      <Logo size="small" style={styles.logoContainer} />
+      <Logo size="small" style={st.logoContainer} />
 
       <Header title="AGREGAR VEHÍCULO" navigation={navigation} />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.formContainer}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={st.formContainer}>
         
-        <Text style={styles.label}>Placa del vehículo</Text>
+        <Text style={st.label}>Placa del vehículo</Text>
         <TextInput 
-          style={styles.input} 
+          style={st.input} 
           placeholder="Ej: ABC-123-A" 
           placeholderTextColor={COLORS.textSecondary}
           value={placas} 
           onChangeText={setPlacas} 
         />
 
-        <Text style={styles.label}>Marca / Modelo</Text>
+        <Text style={st.label}>Marca / Modelo</Text>
         <TextInput 
-          style={styles.input} 
+          style={st.input} 
           placeholder="Ej: Nissan Sentra" 
           placeholderTextColor={COLORS.textSecondary}
           value={modelo} 
           onChangeText={setModelo} 
         />
 
-        <Text style={styles.label}>Color</Text>
+        <Text style={st.label}>Color</Text>
         <TextInput 
-          style={styles.input} 
+          style={st.input} 
           placeholder="Ej: Blanco" 
           placeholderTextColor={COLORS.textSecondary}
           value={color} 
           onChangeText={setColor} 
         />
 
-        <View style={styles.buttonSpacer} />
+        <View style={st.buttonSpacer} />
 
-        <TouchableOpacity style={styles.primaryButton} onPress={handleGuardar}>
-          <Text style={styles.primaryButtonText}>Guardar vehículo</Text>
+        <TouchableOpacity style={st.primaryButton} onPress={handleGuardar}>
+          <Text style={st.primaryButtonText}>Guardar vehículo</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.secondaryButtonText}>Cancelar</Text>
+        <TouchableOpacity style={st.secondaryButton} onPress={() => navigation.goBack()}>
+          <Text style={st.secondaryButtonText}>Cancelar</Text>
         </TouchableOpacity>
 
       </ScrollView>
@@ -100,7 +104,7 @@ export default function AgregarVehiculo({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS) => StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: COLORS.background 

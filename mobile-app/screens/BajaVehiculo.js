@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, StatusBar, SafeAreaView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
-import { COLORS, FONTS, SIZES } from '../theme';
+import { FONTS, SIZES } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 
 export default function BajaVehiculoScreen({ navigation }) {
+  const { COLORS, isDark } = useTheme();
   const [matricula, setMatricula] = useState('');
   const [placas, setPlacas] = useState('');
 
@@ -54,42 +56,44 @@ export default function BajaVehiculoScreen({ navigation }) {
     }
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent={false} />
+  const st = makeStyles(COLORS);
 
-      <Logo size="small" style={styles.logoContainer} />
+  return (
+    <SafeAreaView style={st.container}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={COLORS.background} />
+
+      <Logo size="small" style={st.logoContainer} />
 
       <Header title="DAR DE BAJA VEHÍCULO" navigation={navigation} />
 
-      <ScrollView contentContainerStyle={styles.formContainer} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={st.formContainer} showsVerticalScrollIndicator={false}>
         
-        <Text style={styles.label}>Matrícula del usuario</Text>
+        <Text style={st.label}>Matrícula del usuario</Text>
         <TextInput
-          style={styles.input}
+          style={st.input}
           value={matricula}
           onChangeText={setMatricula}
           placeholder="Ingresa la matrícula"
           placeholderTextColor={COLORS.textSecondary}
         />
 
-        <Text style={styles.label}>Placas del vehículo</Text>
+        <Text style={st.label}>Placas del vehículo</Text>
         <TextInput
-          style={styles.input}
+          style={st.input}
           value={placas}
           onChangeText={setPlacas}
           placeholder="Ingresa las placas"
           placeholderTextColor={COLORS.textSecondary}
         />
 
-        <View style={styles.buttonSpacer} />
+        <View style={st.buttonSpacer} />
 
-        <TouchableOpacity style={styles.primaryButton} onPress={handleConfirmar}>
-          <Text style={styles.buttonText}>Confirmar baja</Text>
+        <TouchableOpacity style={st.primaryButton} onPress={handleConfirmar}>
+          <Text style={st.buttonText}>Confirmar baja</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.secondaryButtonText}>Cancelar</Text>
+        <TouchableOpacity style={st.secondaryButton} onPress={() => navigation.goBack()}>
+          <Text style={st.secondaryButtonText}>Cancelar</Text>
         </TouchableOpacity>
         
       </ScrollView>
@@ -97,7 +101,7 @@ export default function BajaVehiculoScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,

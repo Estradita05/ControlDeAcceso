@@ -16,6 +16,8 @@ class UsuarioUpdate(BaseModel):
     email: Optional[str] = None
     password: Optional[str] = None
     foto_perfil: Optional[str] = None
+    carrera: Optional[str] = None
+    matricula: Optional[str] = None
 
 
 @router.get("/perfil")
@@ -31,7 +33,8 @@ def perfil(user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
             "matricula": db_user.matricula,
             "nombre": db_user.nombre,
             "email": db_user.email,
-            "foto_perfil": db_user.foto_perfil
+            "foto_perfil": db_user.foto_perfil,
+            "carrera": db_user.carrera
         }
     }
 
@@ -54,6 +57,10 @@ def actualizar_perfil(data: UsuarioUpdate, user=Depends(verificar_rol_alumno), d
         db_user.password = get_password_hash(data.password)
     if data.foto_perfil is not None:
         db_user.foto_perfil = data.foto_perfil
+    if data.carrera is not None:
+        db_user.carrera = data.carrera
+    if data.matricula is not None:
+        db_user.matricula = data.matricula
         
     db.commit()
     db.refresh(db_user)

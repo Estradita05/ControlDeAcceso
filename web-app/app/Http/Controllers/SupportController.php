@@ -3,38 +3,55 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SupportController extends Controller
 {
     public function sendTicket(Request $request)
     {
         $request->validate([
-            'asunto' => 'required|string|max:255',
-            'mensaje' => 'required|string',
-            'prioridad' => 'required|string'
+            'asunto'    => 'required|string|max:255',
+            'mensaje'   => 'required|string',
+            'prioridad' => 'required|string|in:Baja,Media,Alta,Crítica',
         ]);
 
+        $ticket = [
+            'id'        => uniqid('TKT-'),
+            'asunto'    => $request->asunto,
+            'mensaje'   => $request->mensaje,
+            'prioridad' => $request->prioridad,
+            'fecha'     => now()->toDateTimeString(),
+            'usuario'   => auth()->check() ? auth()->user()->email : 'Anónimo',
+        ];
+
         try {
-            // Data to send
-            $data = [
-                'asunto' => $request->asunto,
-                'mensaje' => $request->mensaje,
-                'prioridad' => $request->prioridad,
-                'fecha' => now()->toDateTimeString()
-            ];
+            // Persistir en archivo JSON en storage/app/tickets.json
+            $ticketsPath = 'tickets.json';
+            $existing = [];
 
-            
-            Mail::raw("Nuevo Ticket de Soporte:\n\nAsunto: {$data['asunto']}\nPrioridad: {$data['prioridad']}\nMensaje: {$data['mensaje']}\nFecha: {$data['fecha']}", function ($message) use ($data) {
-                $message->to('soporte@controlacceso.com')
-                        ->subject("NUEVO TICKET: " . $data['asunto']);
-            });
+            if (Storage::exists($ticketsPath)) {
+                $existing = json_decode(Storage::get($ticketsPath), true) ?? [];
+            }
 
-            return response()->json(['mensaje' => 'Ticket enviado exitosamente. Nos pondremos en contacto pronto.']);
+            $existing[] = $ticket;
+            Storage::put($ticketsPath, json_encode($existing, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+            // Log informativo
+            Log::info("Ticket de soporte creado: [{$ticket['id']}] {$ticket['asunto']} (Prioridad: {$ticket['prioridad']})");
+
+            return response()->json([
+                'ok'      => true,
+                'mensaje' => "Ticket #{$ticket['id']} creado correctamente. El equipo de soporte lo atenderá a la brevedad.",
+                'ticket_id' => $ticket['id'],
+            ]);
+
         } catch (\Exception $e) {
-            Log::error("Error enviando ticket: " . $e->getMessage());
-            return response()->json(['error' => 'Hubo un problema al enviar el ticket. Por favor intente más tarde.'], 500);
+            Log::error("Error al guardar ticket de soporte: " . $e->getMessage());
+            return response()->json([
+                'ok'    => false,
+                'error' => 'No se pudo registrar el ticket. Por favor intente más tarde.',
+            ], 500);
         }
     }
 }

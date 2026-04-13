@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from app.jobs import auto_checkout_entradas
-from app.routers import auth, usuarios, vehiculos, accesos, web_accesos, web_usuarios, web_vehiculos
+from app.routers import auth, usuarios, vehiculos, accesos, web_accesos, web_usuarios, web_vehiculos, reportes, solicitudes, notificaciones_router
 from app.database import engine, Base
-from app.models import usuario, vehiculo, acceso, acceso_provisional
+from app.models import usuario, vehiculo, acceso, acceso_provisional, reset_token, verificacion_email, solicitud_acceso, notificacion
 
 
 Base.metadata.create_all(bind=engine)
@@ -39,6 +39,9 @@ app.include_router(accesos.router)
 app.include_router(web_accesos.router)
 app.include_router(web_usuarios.router)
 app.include_router(web_vehiculos.router)
+app.include_router(reportes.router)
+app.include_router(solicitudes.router)
+app.include_router(notificaciones_router.router)
 
 @app.get("/")
 def inicio():

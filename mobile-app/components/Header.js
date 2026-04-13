@@ -1,59 +1,70 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { COLORS, FONTS, SIZES } from '../theme';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+import { FONTS, SIZES, SHADOWS } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 
-export default function Header({ title, navigation, showBack = true }) {
+/**
+ * Header reutilizable — responde al tema oscuro/claro.
+ * Props:
+ *  - title: string
+ *  - navigation: objeto de navegación
+ *  - showBack: bool (default true)
+ *  - rightAction: JSX opcional
+ */
+export default function Header({ title, navigation, showBack = true, rightAction }) {
+  const { COLORS } = useTheme();
+
   return (
-    <View style={styles.container}>
-      {showBack && navigation ? (
-        <TouchableOpacity 
-          style={styles.backButton} 
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backArrow}>❮</Text>
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.spacer} />
-      )}
-      
-      <Text style={styles.titleText}>{title.toUpperCase()}</Text>
-      
-      <View style={styles.spacer} />
-    </View>
+    <LinearGradient colors={COLORS.gradientHeader} style={styles.container}>
+      <View style={styles.inner}>
+        {showBack && navigation ? (
+          <TouchableOpacity
+            style={[styles.backButton, { backgroundColor: 'rgba(255,255,255,0.06)' }]}
+            onPress={() => navigation.goBack()}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons name="chevron-back" size={24} color={COLORS.accent} />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.spacer} />
+        )}
+
+        <Text style={[styles.title, { color: COLORS.text }]} numberOfLines={1}>
+          {title}
+        </Text>
+
+        {rightAction ? (
+          <View style={styles.rightAction}>{rightAction}</View>
+        ) : (
+          <View style={styles.spacer} />
+        )}
+      </View>
+      <View style={[styles.bottomLine, { backgroundColor: COLORS.inputBorder }]} />
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container: { paddingTop: 2, ...SHADOWS.sm },
+  inner: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: COLORS.secondary,
     height: SIZES.headerHeight,
-    paddingHorizontal: 15,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    paddingHorizontal: 12,
   },
   backButton: {
-    padding: 10,
-    width: 40,
+    width: 40, height: 40, borderRadius: 20,
+    alignItems: 'center', justifyContent: 'center',
   },
-  backArrow: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: COLORS.accent,
+  title: {
+    ...FONTS.h3,
+    flex: 1, textAlign: 'center',
+    letterSpacing: 1.5, textTransform: 'uppercase',
   },
-  titleText: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: COLORS.accent,
-    letterSpacing: 1,
-  },
-  spacer: {
-    width: 40,
-  },
+  spacer: { width: 40 },
+  rightAction: { width: 40, alignItems: 'center' },
+  bottomLine: { height: 1, opacity: 0.5 },
 });

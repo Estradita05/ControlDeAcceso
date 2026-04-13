@@ -1,20 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, StatusBar, ScrollView, SafeAreaView, Alert, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
 import * as ImagePicker from 'expo-image-picker';
-import { COLORS, FONTS, SIZES } from '../theme';
+import { FONTS, SIZES, SHADOWS } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 
 export default function EditarPerfil({ navigation }) {
+  const { COLORS, isDark } = useTheme();
   const [nombre, setNombre] = useState('');
   const [correo, setCorreo] = useState('');
   const [passwordActual, setPasswordActual] = useState('');
   const [passwordNueva, setPasswordNueva] = useState('');
   const [confirmarPassword, setConfirmarPassword] = useState('');
   const [fotoPerfil, setFotoPerfil] = useState(null);
+  const [carrera, setCarrera] = useState('');
+  const [matricula, setMatricula] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPerfil = async () => {
+      try {
+        const token = await AsyncStorage.getItem("token");
+        const response = await fetch(`${API_URL}/usuarios/perfil`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setNombre(data.usuario.nombre || '');
+          setCorreo(data.usuario.email || '');
+          setCarrera(data.usuario.carrera || '');
+          setMatricula(data.usuario.matricula || '');
+          setFotoPerfil(data.usuario.foto_perfil || null);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPerfil();
+  }, []);
 
   const seleccionarImagen = () => {
     Alert.alert(
@@ -65,7 +94,6 @@ export default function EditarPerfil({ navigation }) {
   };
 
   const handleSave = async () => {
-
     if (!nombre) {
       Alert.alert("Error", "El nombre es obligatorio");
       return;
@@ -107,6 +135,14 @@ export default function EditarPerfil({ navigation }) {
       payload.foto_perfil = fotoPerfil;
     }
 
+    if (carrera) {
+      payload.carrera = carrera;
+    }
+
+    if (matricula) {
+      payload.matricula = matricula;
+    }
+
     try {
       const token = await AsyncStorage.getItem("token");
       
@@ -140,99 +176,113 @@ export default function EditarPerfil({ navigation }) {
       } else {
         Alert.alert("Error", data.detail || "Error al actualizar");
       }
-
     } catch (error) {
       Alert.alert("Error", "Error de conexión al servidor");
     }
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent={false} />
-      
-      <Logo size="small" style={styles.logoContainer} />
+  const st = makeStyles(COLORS);
 
+  return (
+    <SafeAreaView style={st.container}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={COLORS.background} />
+      <Logo size="small" style={st.logoContainer} />
       <Header title="EDITAR PERFIL" navigation={navigation} />
 
-      <ScrollView showsVerticalScrollIndicator={false} 
-      contentContainerStyle={{ paddingBottom: 30 }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
         
-        <View style={styles.imageContainer}>
-          <TouchableOpacity style={styles.avatarCircle} onPress={seleccionarImagen}>
+        <View style={st.imageContainer}>
+          <TouchableOpacity style={st.avatarCircle} onPress={seleccionarImagen}>
             {fotoPerfil ? (
               <Image 
                 source={{ uri: `data:image/jpeg;base64,${fotoPerfil}` }} 
                 style={{ width: 100, height: 100, borderRadius: 50 }} 
               />
             ) : (
-              <Icon name="person" size={60} color={COLORS.white} />
+              <Ionicons name="person" size={60} color={COLORS.white} />
             )}
           </TouchableOpacity>
           <TouchableOpacity onPress={seleccionarImagen}>
-            <Text style={styles.changePhoto}>Cambiar foto de perfil</Text>
+            <Text style={st.changePhoto}>Cambiar foto de perfil</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.form}>
-          <Text style={styles.label}>Nombre</Text>
+        <View style={st.form}>
+          <Text style={st.label}>Nombre</Text>
           <TextInput
             placeholder="Usuario Ejemplo"
             placeholderTextColor={COLORS.textSecondary}
-            style={styles.input}
+            style={st.input}
             value={nombre}
             onChangeText={setNombre}
           />
 
-          <Text style={styles.label}>Correo electrónico</Text>
+          <Text style={st.label}>Correo electrónico</Text>
           <TextInput
             placeholder="Usuario.ejemplo@gmail.com"
             placeholderTextColor={COLORS.textSecondary}
-            style={styles.input}
+            style={st.input}
             value={correo}
             onChangeText={setCorreo}
             keyboardType="email-address"
             autoCapitalize="none"
           />
 
-          <View style={styles.divider} />
+          <Text style={st.label}>Carrera</Text>
+          <TextInput
+            placeholder="Ej. Ing. en Tecnologías de la Información"
+            placeholderTextColor={COLORS.textSecondary}
+            style={st.input}
+            value={carrera}
+            onChangeText={setCarrera}
+          />
 
-          <Text style={styles.sectionTitle}>Cambiar contraseña</Text>
+          <Text style={st.label}>Matrícula / ID</Text>
+          <TextInput
+            placeholder="Ej. 124050XXX"
+            placeholderTextColor={COLORS.textSecondary}
+            style={st.input}
+            value={matricula}
+            onChangeText={setMatricula}
+            keyboardType="default"
+          />
 
-          <Text style={styles.label}>Contraseña Actual</Text>
+          <View style={st.divider} />
+
+          <Text style={st.sectionTitle}>Cambiar contraseña</Text>
+
+          <Text style={st.label}>Contraseña Actual</Text>
           <TextInput
             secureTextEntry={true}
             placeholder="********"
             placeholderTextColor={COLORS.textSecondary}
-            style={styles.input}
+            style={st.input}
             value={passwordActual}
             onChangeText={setPasswordActual}
           />
 
-          <Text style={styles.label}>Nueva Contraseña</Text>
+          <Text style={st.label}>Nueva Contraseña</Text>
           <TextInput
             secureTextEntry={true}
             placeholder="********"
             placeholderTextColor={COLORS.textSecondary}
-            style={styles.input}
+            style={st.input}
             value={passwordNueva}
             onChangeText={setPasswordNueva}
           />
 
-          <Text style={styles.label}>Confirmar Contraseña Nueva</Text>
+          <Text style={st.label}>Confirmar Contraseña Nueva</Text>
           <TextInput
             secureTextEntry={true}
             placeholder="********"
             placeholderTextColor={COLORS.textSecondary}
-            style={styles.input}
+            style={st.input}
             value={confirmarPassword}
             onChangeText={setConfirmarPassword}
           />
 
-          <TouchableOpacity 
-            style={styles.primaryButton}
-            onPress={handleSave}
-          >
-            <Text style={styles.buttonText}>Guardar cambios</Text>
+          <TouchableOpacity style={st.primaryButton} onPress={handleSave}>
+            <Text style={st.buttonText}>Guardar cambios</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -240,87 +290,38 @@ export default function EditarPerfil({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: COLORS.background 
-  },
-  logoContainer: { 
-    paddingTop: 30, 
-    paddingBottom: 15, 
-  },
-  imageContainer: { 
-    alignItems: 'center', 
-    marginTop: 20 
-  },
+const makeStyles = (COLORS) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: COLORS.background },
+  logoContainer: { paddingTop: 30, paddingBottom: 15 },
+  imageContainer: { alignItems: 'center', marginTop: 20 },
   avatarCircle: {
-    width: 100, 
-    height: 100, 
-    borderRadius: 50,
+    width: 100, height: 100, borderRadius: 50,
     backgroundColor: COLORS.accent, 
-    justifyContent: 'center',
-    alignItems: 'center', 
-    elevation: 5,
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
+    justifyContent: 'center', alignItems: 'center', 
+    elevation: 5, ...SHADOWS.sm,
   },
   changePhoto: { 
-    marginTop: 12, 
-    fontWeight: '700', 
-    fontSize: 15, 
-    color: COLORS.accent, 
-    textDecorationLine: 'underline' 
+    marginTop: 12, fontWeight: '700', fontSize: 15, 
+    color: COLORS.accent, textDecorationLine: 'underline' 
   },
-  form: { 
-    paddingHorizontal: 30, 
-    marginTop: 10 
-  },
-  label: { 
-    marginTop: 15, 
-    fontWeight: '700', 
-    fontSize: 14, 
-    color: COLORS.accent 
-  },
+  form: { paddingHorizontal: 30, marginTop: 10 },
+  label: { marginTop: 15, fontWeight: '700', fontSize: 14, color: COLORS.accent },
   input: {
-    backgroundColor: COLORS.cardBg, 
-    borderRadius: 15,
-    paddingHorizontal: 15, 
-    paddingVertical: 12,
-    marginTop: 5, 
-    fontSize: 14, 
-    color: COLORS.text,
-    elevation: 3, 
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    backgroundColor: COLORS.cardBg, borderRadius: 15,
+    paddingHorizontal: 15, paddingVertical: 12,
+    marginTop: 5, fontSize: 14, color: COLORS.text,
+    elevation: 3, ...SHADOWS.sm,
+    borderWidth: 1, borderColor: COLORS.border,
   },
   divider: { 
-    height: 1.5, 
-    backgroundColor: COLORS.secondary, 
-    marginVertical: 25, 
-    opacity: 0.5 
+    height: 1.5, backgroundColor: COLORS.border, 
+    marginVertical: 25, opacity: 0.5 
   },
-  sectionTitle: { 
-    fontWeight: 'bold', 
-    fontSize: 16, 
-    color: COLORS.accent, 
-    marginBottom: 5 
-  },
+  sectionTitle: { fontWeight: 'bold', fontSize: 16, color: COLORS.accent, marginBottom: 5 },
   primaryButton: {
-    marginTop: 35, 
-    backgroundColor: COLORS.primary,
-    padding: 15, 
-    borderRadius: 12, 
-    alignItems: 'center',
-    elevation: 5, 
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
+    marginTop: 35, backgroundColor: COLORS.primary,
+    padding: 15, borderRadius: 12, alignItems: 'center',
+    elevation: 5, ...SHADOWS.md,
   },
-  buttonText: { 
-    color: COLORS.white, 
-    fontWeight: 'bold', 
-    fontSize: 16 
-  },
-});
+  buttonText: { color: COLORS.white, fontWeight: 'bold', fontSize: 16 },
+});

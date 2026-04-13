@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, StatusBar } from 'react-native';
-import { COLORS, FONTS, SIZES } from '../theme';
+import { FONTS, SIZES } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 import Logo from '../components/Logo';
 
 export default function Inicio({ navigation }) {
+  const { COLORS, isDark } = useTheme();
   
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -13,21 +15,23 @@ export default function Inicio({ navigation }) {
     return () => clearTimeout(timer); 
   }, [navigation]);
 
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent={false} />
-      
-      <Logo size="large" style={styles.logo} />
+  const st = makeStyles(COLORS);
 
-      <View style={styles.textContainer}>
-        <Text style={styles.welcomeText}>¡Bienvenido!</Text>
-        <Text style={styles.subText}>Accesos seguros, comunidad protegida.</Text>
+  return (
+    <View style={st.container}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={COLORS.background} />
+      
+      <Logo size="large" style={st.logo} />
+
+      <View style={st.textContainer}>
+        <Text style={st.welcomeText}>¡Bienvenido!</Text>
+        <Text style={st.subText}>Accesos seguros, comunidad protegida.</Text>
       </View>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS) => StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: COLORS.background, 
@@ -53,4 +57,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 40
   }
-});
+});

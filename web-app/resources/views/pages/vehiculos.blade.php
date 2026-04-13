@@ -187,10 +187,12 @@
                             </div>
 
                             <div class="flex items-center gap-4 pt-5 border-t border-white/5">
-                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs">UT</div>
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs shrink-0">
+                                    ${(v.nombre_propietario || 'U').charAt(0).toUpperCase()}
+                                </div>
                                 <div>
-                                    <p class="text-sm font-bold text-slate-200">Matrícula: ${v.usuario_id}</p>
-                                    <p class="text-xs font-medium text-slate-500 mt-0.5">Móvil Vinculado</p>
+                                    <p class="text-sm font-bold text-slate-200 font-mono">${v.matricula || 'N/A'}</p>
+                                    <p class="text-xs font-medium text-slate-500 mt-0.5">${v.nombre_propietario || 'Propietario'}</p>
                                 </div>
                             </div>
                         </div>

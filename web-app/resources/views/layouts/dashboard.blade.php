@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es" class="dark" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Acceso</title>
-    
+    <title>Control de Acceso — @yield('title', 'Panel')</title>
+
     <!-- Google Fonts: Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script>
@@ -22,7 +22,7 @@
                     },
                     colors: {
                         brand: {
-                            50: '#eef2ff',
+                            50:  '#eef2ff',
                             100: '#e0e7ff',
                             200: '#c7d2fe',
                             300: '#a5b4fc',
@@ -34,47 +34,79 @@
                             900: '#312e81',
                             950: '#1e1b4b',
                         },
-                        darkbase: '#030712', // Deeper, sharper dark (slate-950)
-                        darksurface: '#111827', // Crisper gray-900 instead of indigo blur
-                        darkborder: 'rgba(255, 255, 255, 0.1)', // Sharper borders
+                        darkbase:    '#030712',
+                        darksurface: '#111827',
+                        darkborder:  'rgba(255, 255, 255, 0.1)',
                     }
                 }
             }
         }
-    </script>
-    <style>
-        /* Custom Scrollbar for Dark Layout */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+    </script>    <style>
+        /* ── Theme variables ── */
+        :root {
+            --bg-base:    #030712;
+            --bg-surface: #111827;
+            --bg-sidebar: #0a0f1c;
+            --text-main:  #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-col: rgba(255,255,255,0.1);
+            --header-text: #ffffff;
         }
-        ::-webkit-scrollbar-track {
-            background: transparent;
+
+        html.light {
+            --bg-base:    #f1f5f9;
+            --bg-surface: #ffffff;
+            --bg-sidebar: #0f172a; /* Keep sidebar dark even in light mode for professional look */
+            --text-main:  #1e293b;
+            --text-muted: #475569;
+            --border-col: rgba(0,0,0,0.1);
+            --header-text: #0f172a;
         }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
+
         body {
-            background-color: #030712;
-            background-image: radial-gradient(at 100% 0%, rgba(79, 70, 229, 0.08) 0, transparent 40%),
-                              radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.08) 0, transparent 40%);
-            background-attachment: fixed;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+
+        /* Essential resets to override low-level Tailwind if theme changes */
+        html.light .bg-darksurface { background-color: var(--bg-surface) !important; color: var(--text-main) !important; }
+        html.light .text-white { color: var(--text-main); }
+        html.light .text-slate-400 { color: var(--text-muted); }
+        
+        /* Force Sidebar to stay dark and legible */
+        aside { background-color: var(--bg-sidebar) !important; }
+        aside .text-white { color: #ffffff !important; }
+        aside .text-slate-400 { color: #94a3b8 !important; }
+        aside .sidebar-title { color: #ffffff !important; }
+        aside .border-darkborder { border-color: rgba(255,255,255,0.1) !important; }
+
+        /* Fix Header (Bienvenido titles if they use text-white) */
+        header h1 { color: var(--header-text) !important; }
+
+        /* Form elements */
+        html.light input, html.light select, html.light textarea {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        /* Stats cards specific fix */
+        html.light .stat-value { color: #0f172a !important; }
+
+        /* Animation */
+        #theme-toggle svg { transition: transform 0.4s ease, opacity 0.3s ease; }
     </style>
 </head>
-<body class="font-sans text-slate-300 antialiased selection:bg-brand-500/30 selection:text-brand-100 h-screen overflow-hidden flex">
+<body class="font-sans antialiased selection:bg-brand-500/30 selection:text-brand-100 h-screen overflow-hidden flex" id="app-body">
 
     <!-- Floating Sidebar -->
-    <aside class="w-64 bg-[#0a0f1c] border-r border-[#1e293b] flex flex-col z-20 m-4 rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+    <aside class="w-64 border-r border-[#1e293b] flex flex-col z-20 m-4 rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.5)]">
         <!-- Logo Area -->
         <div class="h-20 flex items-center px-6 border-b border-darkborder relative">
             <div class="absolute inset-0 bg-brand-500/10 blur-xl rounded-t-3xl"></div>
             <img src="{{ asset('images/logo.png') }}" class="h-9 w-auto mr-3 drop-shadow-[0_0_10px_rgba(99,102,241,0.5)] relative z-10" alt="Logo">
-            <span class="text-xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-white to-slate-400 tracking-wider relative z-10">Control De Acceso</span>
+            <span class="text-xl font-extrabold text-white sidebar-title tracking-wider relative z-10">Control De Acceso</span>
         </div>
 
         <!-- Navigation Links -->
@@ -106,6 +138,17 @@
                 </svg>
                 Vehículos
             </a>
+            <a href="/solicitudes" class="group flex items-center gap-3 px-4 py-3 rounded-2xl font-medium transition-all duration-300 relative {{ request()->is('solicitudes') ? 'bg-amber-600/10 text-white border border-amber-500/20 shadow-[inset_0_0_20px_rgba(245,158,11,0.15)]' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                @if(request()->is('solicitudes'))
+                    <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-amber-500 rounded-r-full shadow-[0_0_10px_rgba(245,158,11,0.8)]"></div>
+                @endif
+                <svg class="h-5 w-5 transition-transform group-hover:scale-110 {{ request()->is('solicitudes') ? 'text-amber-400' : '' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                </svg>
+                Solicitudes
+                <span id="badge-solicitudes" class="ml-auto hidden bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full"></span>
+            </a>
+
             <a href="/perfil" class="group flex items-center gap-3 px-4 py-3 rounded-2xl font-medium transition-all duration-300 relative {{ request()->is('perfil*') ? 'bg-brand-600/10 text-white border border-brand-500/20 shadow-[inset_0_0_20px_rgba(79,70,229,0.15)]' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
                 @if(request()->is('perfil*'))
                     <div class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-8 bg-brand-500 rounded-r-full shadow-[0_0_10px_rgba(99,102,241,0.8)]"></div>
@@ -138,7 +181,7 @@
 
         <!-- Bottom Logout Area -->
         <div class="p-4 border-t border-darkborder">
-            <a href="/logout" onclick="localStorage.removeItem('token')" class="group flex items-center gap-3 px-4 py-3 text-red-500 font-bold hover:bg-red-500/10 hover:text-red-400 transition-colors">
+            <a href="/logout" onclick="localStorage.removeItem('token')" class="group flex items-center gap-3 px-4 py-3 text-red-500 font-bold hover:bg-red-500/10 hover:text-red-400 transition-colors rounded-xl">
                 <svg class="h-5 w-5 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                 </svg>
@@ -149,7 +192,7 @@
 
     <!-- Main Content Area -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        
+
         <!-- Top Navbar -->
         <header class="h-20 bg-transparent flex items-center justify-between px-8 shrink-0 z-10 pt-4">
             <div class="flex items-center">
@@ -157,14 +200,32 @@
                     @yield('title', 'Panel de Control')
                 </h1>
             </div>
-            
-            <div class="flex items-center gap-5">
+
+            <div class="flex items-center gap-3">
+                <!-- Dark / Light Mode Toggle -->
+                <button id="theme-toggle"
+                    title="Cambiar tema"
+                    class="relative p-2.5 rounded-full border border-darkborder bg-darksurface/50 backdrop-blur-md text-slate-400 hover:text-white hover:border-brand-500/50 hover:shadow-[0_0_15px_rgba(79,70,229,0.3)] transition-all duration-300">
+                    <!-- Sun icon (visible in dark mode) -->
+                    <svg id="icon-sun" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 3v1m0 16v1m8.66-9h-1M4.34 12H3m15.36-5.66l-.71.71M6.34 17.66l-.71.71M17.66 17.66l-.71-.71M6.34 6.34l-.71-.71M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                    <!-- Moon icon (visible in light mode, hidden by default) -->
+                    <svg id="icon-moon" class="w-5 h-5 absolute inset-2.5 opacity-0 scale-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </button>
+
+                <!-- Notifications -->
                 <a href="/historial" class="relative p-2 text-slate-400 hover:text-white transition-colors bg-darksurface/50 backdrop-blur-md rounded-full border border-darkborder hover:border-brand-500/50 hover:shadow-[0_0_15px_rgba(79,70,229,0.3)]">
                     <div class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#090e1f]"></div>
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                     </svg>
                 </a>
+
                 <div class="flex items-center gap-3 pl-3 border-l border-darkborder">
                     <a href="/perfil" class="w-10 h-10 rounded-full bg-linear-to-br from-brand-400 to-indigo-600 flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border border-white/20 hover:scale-110 transition-transform">
                         A
@@ -177,22 +238,55 @@
         <div class="flex-1 overflow-y-auto p-8 relative z-0">
             @yield('content')
         </div>
-        
+
     </main>
 
     <script>
-        // Accessibility Applier
+        // ── Theme Manager ─────────────────────────────────────────────
+        const html       = document.getElementById('html-root');
+        const toggleBtn  = document.getElementById('theme-toggle');
+        const iconSun    = document.getElementById('icon-sun');
+        const iconMoon   = document.getElementById('icon-moon');
+
+        const applyTheme = (theme) => {
+            if (theme === 'light') {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                // show moon, hide sun
+                iconSun.style.opacity  = '0';
+                iconSun.style.transform = 'scale(0.5)';
+                iconMoon.style.opacity  = '1';
+                iconMoon.style.transform = 'scale(1)';
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                // show sun, hide moon
+                iconSun.style.opacity  = '1';
+                iconSun.style.transform = 'scale(1)';
+                iconMoon.style.opacity  = '0';
+                iconMoon.style.transform = 'scale(0.5)';
+            }
+        };
+
+        const savedTheme = localStorage.getItem('pref-theme') || 'dark';
+        applyTheme(savedTheme);
+
+        toggleBtn.addEventListener('click', () => {
+            const current = html.classList.contains('light') ? 'light' : 'dark';
+            const next    = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('pref-theme', next);
+            applyTheme(next);
+        });
+
+        // ── Accessibility Applier ─────────────────────────────────────
         const applyAccessibility = () => {
-            const fontSize = localStorage.getItem('pref-font-size') || 'normal';
+            const fontSize    = localStorage.getItem('pref-font-size') || 'normal';
             const highContrast = localStorage.getItem('pref-high-contrast') === 'true';
-            
-            // Apply Font Size
-            const html = document.documentElement;
+
             html.classList.remove('text-large', 'text-extralarge');
-            if (fontSize === 'grande') html.classList.add('text-large');
+            if (fontSize === 'grande')     html.classList.add('text-large');
             if (fontSize === 'extragrande') html.classList.add('text-extralarge');
-            
-            // Apply High Contrast
+
             if (highContrast) {
                 document.body.classList.add('high-contrast');
             } else {
@@ -201,7 +295,10 @@
         };
 
         document.addEventListener('DOMContentLoaded', applyAccessibility);
-        window.addEventListener('storage', applyAccessibility); // Sync between tabs
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'pref-theme') applyTheme(e.newValue);
+            applyAccessibility();
+        });
     </script>
 </body>
 </html>

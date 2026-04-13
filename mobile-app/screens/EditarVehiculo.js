@@ -5,14 +5,16 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
-import { COLORS, FONTS, SIZES } from '../theme';
+import { FONTS, SIZES } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 
 export default function EditarVehiculo({ route, navigation }) {
+  const { COLORS, isDark } = useTheme();
   const { vehiculo } = route.params;
 
-  const [placas, setPlacas] = useState(vehiculo.placa); // Note: file showed vehiculo.placas but MisVehiculos used item.placa. Checking...
+  const [placas, setPlacas] = useState(vehiculo.placa);
   const [modelo, setModelo] = useState(vehiculo.modelo);
   const [color, setColor] = useState(vehiculo.color);
 
@@ -44,51 +46,53 @@ export default function EditarVehiculo({ route, navigation }) {
     }
   };
 
+  const st = makeStyles(COLORS);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent={false} />
+    <SafeAreaView style={st.container}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={COLORS.background} />
       
-      <Logo size="small" style={styles.logoContainer} />
+      <Logo size="small" style={st.logoContainer} />
 
       <Header title="EDITAR VEHÍCULO" navigation={navigation} />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.formContainer}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={st.formContainer}>
         
-        <Text style={styles.label}>Placa del vehículo</Text>
+        <Text style={st.label}>Placa del vehículo</Text>
         <TextInput 
-          style={styles.input} 
+          style={st.input} 
           value={placas} 
           onChangeText={setPlacas} 
           placeholder="Ej: ABC-1234"
           placeholderTextColor={COLORS.textSecondary}
         />
 
-        <Text style={styles.label}>Marca / Modelo</Text>
+        <Text style={st.label}>Marca / Modelo</Text>
         <TextInput 
-          style={styles.input} 
+          style={st.input} 
           value={modelo} 
           onChangeText={setModelo} 
           placeholder="Ej: Nissan Sentra"
           placeholderTextColor={COLORS.textSecondary}
         />
 
-        <Text style={styles.label}>Color</Text>
+        <Text style={st.label}>Color</Text>
         <TextInput 
-          style={styles.input} 
+          style={st.input} 
           value={color} 
           onChangeText={setColor} 
           placeholder="Ej: Rojo"
           placeholderTextColor={COLORS.textSecondary}
         />
 
-        <View style={styles.buttonSpacer} />
+        <View style={st.buttonSpacer} />
 
-        <TouchableOpacity style={styles.primaryButton} onPress={handleActualizar}>
-          <Text style={styles.primaryButtonText}>Actualizar vehículo</Text>
+        <TouchableOpacity style={st.primaryButton} onPress={handleActualizar}>
+          <Text style={st.primaryButtonText}>Actualizar vehículo</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.secondaryButtonText}>Cancelar</Text>
+        <TouchableOpacity style={st.secondaryButton} onPress={() => navigation.goBack()}>
+          <Text style={st.secondaryButtonText}>Cancelar</Text>
         </TouchableOpacity>
 
       </ScrollView>
@@ -96,7 +100,7 @@ export default function EditarVehiculo({ route, navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS) => StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: COLORS.background 
@@ -132,7 +136,7 @@ const styles = StyleSheet.create({
     height: 20,
   },
   primaryButton: { 
-    backgroundColor: '#E5A900', // Institutional yellow for edit? I'll keep it or use primary blue. MisVehiculos has primary blue buttons too.
+    backgroundColor: COLORS.primary, 
     paddingVertical: 16,
     borderRadius: 30, 
     alignItems: 'center',
@@ -156,4 +160,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold', 
     fontSize: 15 
   },
-});
+});

@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import {StyleSheet,Text,View,SafeAreaView,FlatList,TouchableOpacity, StatusBar } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
-import { COLORS, FONTS, SIZES } from '../theme';
+import { FONTS, SIZES } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 
 const HistorialAccesos = ({ navigation }) => { 
+  const { COLORS, isDark } = useTheme();
   const [accesos, setAccesos] = useState([]);
 
   useEffect(() => {
@@ -48,33 +50,35 @@ const HistorialAccesos = ({ navigation }) => {
   }, []);
 
   const renderItem = ({ item }) => (
-    <View style={styles.historyItem}>
-      <View style={styles.iconContainer}>
-        <Text style={[styles.iconArrow, { color: item.color === 'green' ? '#1D8348' : '#C0392B' }]}>
-          {item.color === 'green' ? '➡]' : '[⬅'}
+    <View style={st.historyItem}>
+      <View style={st.iconContainer}>
+        <Text style={[st.iconArrow, { color: item.color === 'green' ? '#1D8348' : '#C0392B' }]}>
+          {item.color === 'green' ? '➡' : '⬅'}
         </Text>
       </View>
       
-      <View style={styles.textContainer}>
-        <Text style={[styles.typeText, { color: item.color === 'green' ? '#1D8348' : '#C0392B' }]}>
+      <View style={st.textContainer}>
+        <Text style={[st.typeText, { color: item.color === 'green' ? '#1D8348' : '#C0392B' }]}>
           {item.tipo?.toUpperCase() || 'DESCONOCIDO'}
         </Text>
-        <Text style={styles.dateTimeText}>
+        <Text style={st.dateTimeText}>
           {item.fecha}    {item.hora}
         </Text>
       </View>
       
-      <View style={styles.badgeContainer}>
-        <Text style={styles.badgeText}>{item.estado}</Text>
+      <View style={st.badgeContainer}>
+        <Text style={st.badgeText}>{item.estado}</Text>
       </View>
     </View>
   );
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent={false} />
+  const st = makeStyles(COLORS);
 
-      <Logo size="small" style={styles.logoContainer} />
+  return (
+    <SafeAreaView style={st.container}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={COLORS.background} />
+
+      <Logo size="small" style={st.logoContainer} />
       
       <Header title="HISTORIAL DE ACCESOS" navigation={navigation} />
 
@@ -82,14 +86,14 @@ const HistorialAccesos = ({ navigation }) => {
         data={accesos}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
-        contentContainerStyle={styles.listContainer}
+        contentContainerStyle={st.listContainer}
         showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,

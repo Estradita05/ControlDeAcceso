@@ -11,6 +11,10 @@ services:
     restart: always
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/control_acceso
+      - GMAIL_USER=124050385@upq.edu.mx
+      - GMAIL_APP_PASSWORD=jgjtnqwsoodoqpeh
+    volumes:
+      - ./MIApi/app:/app/app
 
   db:
     image: postgres:15
@@ -49,6 +53,10 @@ services:
       - DB_DATABASE=control_acceso
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
+    volumes:
+      - ./web-app/resources:/var/www/html/resources
+      - ./web-app/app:/var/www/html/app
+      - ./web-app/routes:/var/www/html/routes
 
 volumes:
   db_data:

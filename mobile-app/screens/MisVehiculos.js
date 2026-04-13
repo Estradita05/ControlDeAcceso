@@ -3,11 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet, FlatList, Alert, SafeAreaView
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
-import { COLORS, FONTS, SIZES } from '../theme';
-import Logo from '../components/Logo';
+import { FONTS, SIZES, SHADOWS } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 import Header from '../components/Header';
 
 export default function MisVehiculos({ navigation }) {
+  const { COLORS, isDark } = useTheme();
   const [vehiculos, setVehiculos] = useState([]);
 
   const fetchVehiculos = async () => {
@@ -69,33 +70,35 @@ export default function MisVehiculos({ navigation }) {
     }
   };
 
+  const st = makeStyles(COLORS);
+
   const renderItem = ({ item, index }) => (
-    <View style={styles.card}>
-      <View style={styles.cardLeft}>
-        <Text style={styles.carIcon}>🚗</Text>
+    <View style={st.card}>
+      <View style={st.cardLeft}>
+        <Text style={st.carIcon}>🚗</Text>
       </View>
       
-      <View style={styles.cardRight}>
-        <Text style={styles.cardTitle}>Vehículo {index + 1}</Text>
-        <Text style={styles.cardText}>Marca / Modelo: {item.modelo}</Text>
-        <Text style={styles.cardText}>Color: {item.color}</Text>
-        <Text style={styles.cardText}>Placa: {item.placa}</Text>
+      <View style={st.cardRight}>
+        <Text style={st.cardTitle}>Vehículo {index + 1}</Text>
+        <Text style={st.cardText}>Marca / Modelo: {item.modelo}</Text>
+        <Text style={st.cardText}>Color: {item.color}</Text>
+        <Text style={st.cardText}>Placa: {item.placa}</Text>
         
-        <View style={styles.cardFooter}>
-          <View style={styles.badgeActivo}>
-            <Text style={styles.badgeTextActivo}>Activo</Text>
+        <View style={st.cardFooter}>
+          <View style={st.badgeActivo}>
+            <Text style={st.badgeTextActivo}>Activo</Text>
           </View>
           
-          <View style={styles.actionButtons}>
+          <View style={st.actionButtons}>
             <TouchableOpacity 
               onPress={() => navigation.navigate('EditarVehiculo', { vehiculo: item })}
-              style={styles.editButton}
+              style={st.editButton}
             >
-              <Text style={styles.editText}>Editar</Text>
+              <Text style={st.editText}>Editar</Text>
             </TouchableOpacity>
             
             <TouchableOpacity onPress={() => handleEliminar(item.id)}>
-              <Text style={styles.deleteText}>Eliminar</Text>
+              <Text style={st.deleteText}>Eliminar</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -104,46 +107,44 @@ export default function MisVehiculos({ navigation }) {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent={false} />
-      
-      <Logo size="small" style={styles.logoContainer} />
-
-      <Header title="MIS VEHÍCULOS" navigation={navigation} />
+    <SafeAreaView style={st.container}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={COLORS.background} />
+      <Header title="Mis Vehículos" navigation={navigation} />
 
       <FlatList 
         data={vehiculos}
         keyExtractor={item => item.id.toString()}
         renderItem={renderItem}
-        contentContainerStyle={styles.listContainer}
-        ListEmptyComponent={<Text style={styles.emptyText}>No hay vehículos registrados</Text>}
+        contentContainerStyle={st.listContainer}
+        ListEmptyComponent={<Text style={st.emptyText}>No hay vehículos registrados</Text>}
       />
 
       {/* Botones Inferiores */}
-      <View style={styles.bottomButtons}>
-        <TouchableOpacity style={styles.primaryButton} onPress={() => navigation.navigate('AgregarVehiculo')}>
-          <Text style={styles.primaryButtonText}>Agregar vehículo</Text>
+      <View style={st.bottomButtons}>
+        <TouchableOpacity style={st.primaryButton} onPress={() => navigation.navigate('AgregarVehiculo')}>
+          <Text style={st.primaryButtonText}>+ Agregar vehículo</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.primaryButton} 
-          onPress={() => navigation.navigate('AccesoProvisional')}
+        <TouchableOpacity
+          style={[st.primaryButton, { backgroundColor: '#B45309' }]}
+          onPress={() => navigation.navigate('SolicitudAcceso')}
         >
-          <Text style={styles.primaryButtonText}>Solicitar acceso provisional</Text>
+          <Text style={st.primaryButtonText}>Solicitar acceso provisional</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={st.secondaryButton}
+          onPress={() => navigation.navigate('MisSolicitudes')}
+        >
+          <Text style={st.secondaryButtonText}>Ver mis solicitudes</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS) => StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: COLORS.background 
-  },
-  logoContainer: { 
-    paddingTop: 30, 
-    paddingBottom: 15 
   },
   listContainer: { 
     padding: 20 
@@ -224,7 +225,7 @@ const styles = StyleSheet.create({
     paddingBottom: 30 
   },
   primaryButton: { 
-    backgroundColor: COLORS.primary, 
+    backgroundColor: COLORS.primary,
     paddingVertical: 16, 
     borderRadius: 15, 
     alignItems: 'center', 
@@ -235,8 +236,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
   },
   primaryButtonText: { 
-    color: COLORS.white, 
+    color: '#FFFFFF', 
     fontSize: 16, 
     fontWeight: 'bold' 
-  }
-});
+  },
+  secondaryButton: {
+    paddingVertical: 14,
+    borderRadius: 15,
+    alignItems: 'center',
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  secondaryButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: COLORS.textSecondary,
+  },
+});

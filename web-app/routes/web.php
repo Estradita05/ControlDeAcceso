@@ -57,6 +57,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/soporte/enviar', [SupportController::class, 'sendTicket'])->name('soporte.enviar');
 
+    Route::get('/solicitudes', function () {
+        return view('pages.solicitudes');
+    })->name('solicitudes');
+
     
     Route::resource('access', AccessController::class);
     Route::resource('users', UserController::class);

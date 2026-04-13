@@ -1,127 +1,129 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, SafeAreaView, Alert } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  View, Text, StyleSheet, SafeAreaView, StatusBar, Animated, Alert,
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { API_URL } from '../config';
-import { COLORS, FONTS, SIZES } from '../theme';
-import Logo from '../components/Logo';
+import { FONTS, SIZES, SHADOWS } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 import Header from '../components/Header';
+import GradientButton from '../components/GradientButton';
+import InputField from '../components/InputField';
 
-export default function ResetPasswordScreen({ navigation }) { 
-  
-  const [search, setSearch] = useState('');
+export default function RecuperarContrasena({ navigation }) {
+  const { COLORS, isDark } = useTheme();
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const handleSearch = async () => {
-    if (!search) {
-      Alert.alert('Error', 'Por favor ingresa tu correo o matrícula');
+  useEffect(() => {
+    Animated.timing(fadeAnim, { toValue: 1, duration: 500, useNativeDriver: true }).start();
+  }, []);
+
+  const handleSolicitar = async () => {
+    setError('');
+    if (!email.trim()) {
+      setError('Por favor ingresa tu correo electrónico');
       return;
     }
-    
-    try {
-      const response = await fetch(`${API_URL}/auth/recuperar_contrasena`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ busqueda: search })
-      });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Ingresa un correo válido');
+      return;
+    }
 
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/auth/solicitar-reset`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
       const data = await response.json();
 
       if (response.ok) {
-        Alert.alert('Éxito', 'Si el usuario existe, se enviarán instrucciones a su correo.');
-        navigation.goBack();
+        // Ir a la pantalla de verificación, pasar el email
+        navigation.navigate('VerificarCodigo', { email });
       } else {
-        Alert.alert('Error', data.detail || "Hubo un error al procesar tu solicitud.");
+        setError(data.detail || 'No se encontró ese correo en el sistema.');
       }
-    } catch (error) {
-      Alert.alert('Error', "Error al conectar con el servidor.");
+    } catch {
+      setError('No se pudo conectar con el servidor.');
+    } finally {
+      setLoading(false);
     }
   };
 
+  const st = makeStyles(COLORS);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent={false} />
+    <SafeAreaView style={st.container}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={COLORS.background} />
+      <Header title="Recuperar Contraseña" navigation={navigation} />
 
-      <Logo size="small" style={styles.logoContainer} />
+      <Animated.View style={[st.content, { opacity: fadeAnim }]}>
+        {/* Ícono ilustrativo */}
+        <LinearGradient colors={COLORS.gradientPrimary} style={st.iconCircle}>
+          <Ionicons name="key-outline" size={40} color={COLORS.white} />
+        </LinearGradient>
 
-      <Header title="RESTABLECER CONTRASEÑA" navigation={navigation} />
-
-      <View style={styles.content}>
-        <Text style={styles.description}>
-          Ingresa tu correo o matrícula para buscar tu cuenta.
+        <Text style={st.title}>¿Olvidaste tu contraseña?</Text>
+        <Text style={st.subtitle}>
+          Ingresa el correo con el que te registraste y te enviaremos un código de 6 dígitos para restablecerla.
         </Text>
 
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color={COLORS.accent} style={{ marginRight: 8 }} />
-          <TextInput
-            style={styles.input}
-            placeholder="Buscar usuario..."
-            placeholderTextColor={COLORS.textSecondary}
-            value={search}
-            onChangeText={setSearch}
+        <View style={st.card}>
+          <InputField
+            label="Correo Electrónico"
+            iconName="mail-outline"
+            value={email}
+            onChangeText={(v) => { setEmail(v); setError(''); }}
+            keyboardType="email-address"
+            placeholder="tu@correo.edu.mx"
             autoCapitalize="none"
+            error={error}
+          />
+
+          <GradientButton
+            title="Enviar Código"
+            onPress={handleSolicitar}
+            loading={loading}
           />
         </View>
-
-        <TouchableOpacity style={styles.button} onPress={handleSearch}>
-          <Text style={styles.buttonText}>Buscar</Text>
-        </TouchableOpacity>
-      </View>
+      </Animated.View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: COLORS.background, 
+const makeStyles = (COLORS) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: COLORS.background },
+  content: { flex: 1, padding: 24, alignItems: 'center', justifyContent: 'center' },
+
+  iconCircle: {
+    width: 90, height: 90, borderRadius: 45,
+    alignItems: 'center', justifyContent: 'center',
+    marginBottom: 24,
+    ...SHADOWS.glow,
   },
-  logoContainer: {
-    paddingTop: 30,
-    paddingBottom: 15,
-  },
-  content: {
-    paddingHorizontal: 30,
-    paddingTop: 40,
-  },
-  description: {
-    marginBottom: 30,
-    fontSize: 16,
+
+  title: { ...FONTS.h2, color: COLORS.text, textAlign: 'center', marginBottom: 12 },
+  subtitle: {
+    ...FONTS.body,
     color: COLORS.textSecondary,
     textAlign: 'center',
     lineHeight: 22,
+    marginBottom: 32,
+    paddingHorizontal: 8,
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+
+  card: {
+    width: '100%',
     backgroundColor: COLORS.cardBg,
-    borderRadius: 15,
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    marginBottom: 25,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    borderRadius: SIZES.borderRadiusLg,
+    padding: 22,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    ...SHADOWS.sm,
   },
-  input: { 
-    flex: 1,
-    fontSize: 16,
-    color: COLORS.text,
-  },
-  button: { 
-    backgroundColor: COLORS.primary, 
-    padding: 15, 
-    borderRadius: 25,
-    alignItems: 'center',
-    elevation: 6,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
-  },
-  buttonText: { 
-    color: COLORS.white, 
-    fontSize: 16,
-    fontWeight: 'bold' 
-  },
-});
+});

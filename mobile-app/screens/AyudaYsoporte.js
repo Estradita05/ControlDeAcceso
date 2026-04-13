@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar, ScrollView, SafeAreaView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config';
-import { COLORS, FONTS, SIZES } from '../theme';
+import { FONTS, SIZES } from '../theme';
+import { useTheme } from '../context/ThemeContext';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 
 export default function HelpScreen({ navigation }) { 
+  const { COLORS, isDark } = useTheme();
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
 
@@ -45,31 +47,33 @@ export default function HelpScreen({ navigation }) {
     }
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent={false} />
+  const st = makeStyles(COLORS);
 
-      <Logo size="small" style={styles.logoContainer} />
+  return (
+    <SafeAreaView style={st.container}>
+      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={COLORS.background} />
+
+      <Logo size="small" style={st.logoContainer} />
 
       <Header title="AYUDA Y SOPORTE" navigation={navigation} />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={st.scrollContent}>
         
-        <Text style={styles.mainTitle}>¿Cómo podemos ayudarte?</Text>
-        <Text style={styles.subtitle}>Envíanos tus dudas o comentarios</Text>
+        <Text style={st.mainTitle}>¿Cómo podemos ayudarte?</Text>
+        <Text style={st.subtitle}>Envíanos tus dudas o comentarios</Text>
 
-        <Text style={styles.label}>Asunto</Text>
+        <Text style={st.label}>Asunto</Text>
         <TextInput
-          style={styles.input}
+          style={st.input}
           value={subject}
           onChangeText={setSubject}
           placeholder="Ej. Error en mi registro"
           placeholderTextColor={COLORS.textSecondary}
         />
 
-        <Text style={[styles.label, { marginTop: 20 }]}>Mensaje</Text>
+        <Text style={[st.label, { marginTop: 20 }]}>Mensaje</Text>
         <TextInput
-          style={styles.textArea}
+          style={st.textArea}
           placeholder="Describe tu problema con detalle..."
           placeholderTextColor={COLORS.textSecondary}
           value={message}
@@ -77,12 +81,12 @@ export default function HelpScreen({ navigation }) {
           multiline
         />
 
-        <TouchableOpacity style={styles.primaryButton} onPress={handleSend}>
-          <Text style={styles.buttonText}>Enviar Mensaje</Text>
+        <TouchableOpacity style={st.primaryButton} onPress={handleSend}>
+          <Text style={st.buttonText}>Enviar Mensaje</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.secondaryButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.secondaryButtonText}>Cancelar</Text>
+        <TouchableOpacity style={st.secondaryButton} onPress={() => navigation.goBack()}>
+          <Text style={st.secondaryButtonText}>Cancelar</Text>
         </TouchableOpacity>
 
         <View style={{ height: 40 }} />
@@ -91,7 +95,7 @@ export default function HelpScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
@@ -177,4 +181,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
   },
-});
+});

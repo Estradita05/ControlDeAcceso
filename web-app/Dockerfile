@@ -18,7 +18,8 @@ WORKDIR /var/www/html
 COPY . .
 
 RUN composer install --no-interaction --optimize-autoloader
-RUN npm install && npm run build
+RUN npm install --prefer-offline --no-audit --no-fund || true
+RUN npm run build --if-present || true
 
 RUN cp .env.example .env
 RUN php artisan key:generate
