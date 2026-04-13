@@ -5,12 +5,9 @@ services:
     container_name: fastapi_server
     ports:
       - "5050:5050"
-    depends_on:
-      db:
-        condition: service_healthy
     restart: always
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/control_acceso
+      - DATABASE_URL=postgresql://neondb_owner:npg_y7RvXL4DMeHo@ep-dry-field-an7ram0t-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require
       - GMAIL_USER=124050385@upq.edu.mx
       - GMAIL_APP_PASSWORD=jgjtnqwsoodoqpeh
     volumes:
@@ -41,18 +38,13 @@ services:
     container_name: laravel_web
     ports:
       - "8000:8000"
-    depends_on:
-      api:
-        condition: service_started
-      db:
-        condition: service_healthy
     environment:
       - DB_CONNECTION=pgsql
-      - DB_HOST=db
+      - DB_HOST=ep-dry-field-an7ram0t-pooler.c-6.us-east-1.aws.neon.tech
       - DB_PORT=5432
-      - DB_DATABASE=control_acceso
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres
+      - DB_DATABASE=neondb
+      - DB_USERNAME=neondb_owner
+      - DB_PASSWORD=npg_y7RvXL4DMeHo
     volumes:
       - ./web-app/resources:/var/www/html/resources
       - ./web-app/app:/var/www/html/app

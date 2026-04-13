@@ -22,7 +22,7 @@
             <h2 class="text-3xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-white via-blue-100 to-indigo-300 tracking-tight">
                 Acceso Sistema
             </h2>
-            <p class="text-slate-400 mt-2 text-sm font-medium">Control de Acceso Avanzado</p>
+            <p class="text-slate-400 mt-2 text-sm font-medium">Control de Acceso</p>
         </div>
 
         <div class="px-8 pb-8 pt-2">
@@ -76,7 +76,7 @@
                         <input type="checkbox" class="mr-2 rounded-md border-white/10 text-blue-500 bg-[#080c17] focus:ring-offset-0 focus:ring-blue-500/30 w-4 h-4 transition-all">
                         Recordarme
                     </label>
-                    <a href="/reset" class="text-sm font-medium text-blue-400 hover:text-blue-300 hover:underline transition-all">
+                    <a href="#" onclick="alert('Función de recuperación en desarrollo. Contacta a soporte técnico.')" class="text-sm font-medium text-blue-400 hover:text-blue-300 hover:underline transition-all">
                         ¿Problemas?
                     </a>
                 </div>
