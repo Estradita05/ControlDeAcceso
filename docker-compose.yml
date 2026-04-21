@@ -10,6 +10,7 @@ services:
       - DATABASE_URL=postgresql://neondb_owner:npg_y7RvXL4DMeHo@ep-dry-field-an7ram0t-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require
       - GMAIL_USER=124050385@upq.edu.mx
       - GMAIL_APP_PASSWORD=jgjtnqwsoodoqpeh
+      - TZ=America/Mexico_City
     volumes:
       - ./MIApi/app:/app/app
 
@@ -45,10 +46,13 @@ services:
       - DB_DATABASE=neondb
       - DB_USERNAME=neondb_owner
       - DB_PASSWORD=npg_y7RvXL4DMeHo
+      - TZ=America/Mexico_City
     volumes:
       - ./web-app/resources:/var/www/html/resources
       - ./web-app/app:/var/www/html/app
       - ./web-app/routes:/var/www/html/routes
+      - ./web-app/storage:/var/www/html/storage
+      - ./web-app/.env:/var/www/html/.env
 
 volumes:
   db_data:

@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         try {
             // Obtenemos el token JWT del backend de FastAPI
-            const response = await fetch("http://127.0.0.1:5050/auth/admin/login", {
+            const response = await fetch("http://10.165.238.244:5050/auth/admin/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })

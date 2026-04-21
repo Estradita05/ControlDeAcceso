@@ -26,30 +26,7 @@ def buscar_usuario_web(matricula: str, user=Depends(verificar_rol_guardia), db: 
         "foto_perfil": db_user.foto_perfil
     }
 
-class UsuarioCreate(BaseModel):
-    matricula: str
-    nombre: str
-    email: str
-    password: str
 
-@router.post("/nuevo", status_code=status.HTTP_201_CREATED)
-def registrar_usuario(user_data: UsuarioCreate, user=Depends(verificar_rol_guardia), db: Session = Depends(get_db)):
-    existing_user = db.query(Usuario).filter(Usuario.email == user_data.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="El email ya está registrado")
-    
-    hashed_password = get_password_hash(user_data.password)
-    nuevo_usuario = Usuario(
-        matricula=user_data.matricula,
-        nombre=user_data.nombre,
-        email=user_data.email,
-        password=hashed_password
-    )
-    db.add(nuevo_usuario)
-    db.commit()
-    db.refresh(nuevo_usuario)
-    
-    return {"mensaje": "Usuario registrado exitosamente", "id": nuevo_usuario.id}
 
 class GuardiaCreate(BaseModel):
     nombre: str

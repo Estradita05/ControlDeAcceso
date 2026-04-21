@@ -10,7 +10,7 @@ from app.models.notificacion import Notificacion
 from app.models.usuario import Usuario
 from app.models.vehiculo import Vehiculo
 
-router = APIRouter(prefix="/solicitudes", tags=["Solicitudes de Acceso"])
+router = APIRouter(prefix="/solicitudes")
 
 
 class SolicitudData(BaseModel):
@@ -32,12 +32,14 @@ def _crear_notificacion(db, usuario_id: int, titulo: str, mensaje: str, tipo: st
 
 # ── ALUMNO: crear solicitud ──────────────────────────────────────────────────
 
-@router.post("", status_code=201)
+@router.post("", status_code=201, tags=["Usuario - Solicitudes"])
 def crear_solicitud(
     data: SolicitudData,
     db: Session = Depends(get_db),
     token_data: dict = Depends(verificar_token),
 ):
+    if token_data.get("rol") != "alumno":
+        raise HTTPException(status_code=403, detail="No tienes permisos, esta acción es exclusiva para la app móvil")
     email = token_data.get("sub")
     user = db.query(Usuario).filter(Usuario.email == email).first()
     if not user:
@@ -70,11 +72,13 @@ def crear_solicitud(
 
 # ── ALUMNO: mis solicitudes ──────────────────────────────────────────────────
 
-@router.get("/mis-solicitudes")
+@router.get("/mis-solicitudes", tags=["Usuario - Solicitudes"])
 def mis_solicitudes(
     db: Session = Depends(get_db),
     token_data: dict = Depends(verificar_token),
 ):
+    if token_data.get("rol") != "alumno":
+        raise HTTPException(status_code=403, detail="No tienes permisos, esta acción es exclusiva para la app móvil")
     email = token_data.get("sub")
     user = db.query(Usuario).filter(Usuario.email == email).first()
     if not user:
@@ -105,7 +109,7 @@ def mis_solicitudes(
 
 # ── GUARDIA: ver todas las solicitudes ──────────────────────────────────────
 
-@router.get("")
+@router.get("", tags=["Guardia - Solicitudes"])
 def todas_solicitudes(
     estado: Optional[str] = None,
     db: Session = Depends(get_db),
@@ -142,7 +146,7 @@ def todas_solicitudes(
 
 # ── GUARDIA: aprobar solicitud ───────────────────────────────────────────────
 
-@router.put("/{solicitud_id}/aprobar")
+@router.put("/{solicitud_id}/aprobar", tags=["Guardia - Solicitudes"])
 def aprobar_solicitud(
     solicitud_id: int,
     db: Session = Depends(get_db),
@@ -184,7 +188,7 @@ def aprobar_solicitud(
 
 # ── GUARDIA: rechazar solicitud ──────────────────────────────────────────────
 
-@router.put("/{solicitud_id}/rechazar")
+@router.put("/{solicitud_id}/rechazar", tags=["Guardia - Solicitudes"])
 def rechazar_solicitud(
     solicitud_id: int,
     data: RechazarData,

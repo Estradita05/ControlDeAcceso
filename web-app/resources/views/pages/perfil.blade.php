@@ -75,7 +75,7 @@
 
             // Note: Since this is the Web Dashboard, we might need a dedicated endpoint for guard profile 
             // but the usuarios/perfil works for the current user session.
-            const response = await fetch("http://127.0.0.1:5050/auth/perfil", {
+            const response = await fetch("http://10.165.238.244:5050/auth/perfil", {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

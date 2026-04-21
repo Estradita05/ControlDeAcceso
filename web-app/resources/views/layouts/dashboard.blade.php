@@ -56,7 +56,7 @@
         html.light {
             --bg-base:    #f1f5f9;
             --bg-surface: #ffffff;
-            --bg-sidebar: #0f172a; /* Keep sidebar dark even in light mode for professional look */
+            --bg-sidebar: #0f172a;
             --text-main:  #1e293b;
             --text-muted: #475569;
             --border-col: rgba(0,0,0,0.1);
@@ -69,30 +69,90 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Essential resets to override low-level Tailwind if theme changes */
-        html.light .bg-darksurface { background-color: var(--bg-surface) !important; color: var(--text-main) !important; }
-        html.light .text-white { color: var(--text-main); }
-        html.light .text-slate-400 { color: var(--text-muted); }
-        
-        /* Force Sidebar to stay dark and legible */
-        aside { background-color: var(--bg-sidebar) !important; }
-        aside .text-white { color: #ffffff !important; }
-        aside .text-slate-400 { color: #94a3b8 !important; }
-        aside .sidebar-title { color: #ffffff !important; }
-        aside .border-darkborder { border-color: rgba(255,255,255,0.1) !important; }
+        /* ── Light mode overrides ── */
+        html.light .bg-darksurface {
+            background-color: var(--bg-surface) !important;
+            color: var(--text-main) !important;
+        }
+        /* All text-white in content becomes dark in light mode */
+        html.light main .text-white,
+        html.light main h2.text-white,
+        html.light main h3.text-white,
+        html.light main h4.text-white,
+        html.light main p.text-white {
+            color: var(--text-main) !important;
+        }
+        html.light main .text-slate-400 { color: #334155 !important; }
+        html.light main .text-slate-500 { color: #475569 !important; }
 
-        /* Fix Header (Bienvenido titles if they use text-white) */
-        header h1 { color: var(--header-text) !important; }
+        /* Stat numbers */
+        html.light main [id^="stat-"] { color: #1e293b !important; }
 
-        /* Form elements */
+        /* Welcome banner in light mode: keep it dark themed since it uses indigo-900 */
+        html.light .bg-indigo-900 { background-color: #312e81 !important; }
+        html.light .bg-indigo-900 .text-white,
+        html.light .bg-indigo-900 h2,
+        html.light .bg-indigo-900 p { color: #ffffff !important; }
+
+        /* Quick stats hover bg */
+        html.light main .hover\:bg-\[\#1f2937\]:hover { background-color: #f0f4ff !important; }
+
+        /* Card borders in light mode */
+        html.light main .border-white\/10 { border-color: rgba(0,0,0,0.12) !important; }
+        html.light main .border-white\/5 { border-color: rgba(0,0,0,0.07) !important; }
+
+        /* Dark inner bg in cards becomes light */
+        html.light main .bg-\[\#090e1f\],
+        html.light main .bg-\[\#090e1f\]\/80,
+        html.light main .bg-\[\#0f172a\] {
+            background-color: #f8fafc !important;
+            border-color: rgba(0,0,0,0.1) !important;
+        }
+
+        /* Tables and historial */
+        html.light main table thead th,
+        html.light main .text-slate-300 { color: #1e293b !important; }
+        html.light main td { color: #334155 !important; }
+
+        /* Status badges text is already colored, keep it */
+        html.light main .text-emerald-400 { color: #059669 !important; }
+        html.light main .text-rose-400 { color: #dc2626 !important; }
+        html.light main .text-yellow-400 { color: #d97706 !important; }
+        html.light main .text-brand-300 { color: #4338ca !important; }
+        html.light main .text-brand-400 { color: #4f46e5 !important; }
+
+        /* Modal / support backgrounds */
+        html.light .bg-darksurface .text-white { color: #1e293b !important; }
+        html.light .bg-darksurface input,
+        html.light .bg-darksurface select,
+        html.light .bg-darksurface textarea {
+            background-color: #f1f5f9 !important;
+            color: #1e293b !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light .bg-darksurface .text-slate-400 { color: #475569 !important; }
+        html.light .bg-darksurface .text-slate-500 { color: #64748b !important; }
+        html.light .bg-darksurface .border-white\/10 { border-color: rgba(0,0,0,0.1) !important; }
+
+        /* FAQ details/summary in soporte.blade */
+        html.light main details summary .text-white { color: #1e293b !important; }
+
+        /* Form inputs (global) */
         html.light input, html.light select, html.light textarea {
             background-color: #ffffff !important;
             color: #0f172a !important;
             border-color: #cbd5e1 !important;
         }
 
-        /* Stats cards specific fix */
-        html.light .stat-value { color: #0f172a !important; }
+        /* Force Sidebar to stay dark */
+        aside { background-color: var(--bg-sidebar) !important; }
+        aside .text-white { color: #ffffff !important; }
+        aside .text-slate-400 { color: #94a3b8 !important; }
+        aside .sidebar-title { color: #ffffff !important; }
+        aside .border-darkborder { border-color: rgba(255,255,255,0.1) !important; }
+
+        /* Header */
+        header h1 { color: var(--header-text) !important; }
 
         /* Animation */
         #theme-toggle svg { transition: transform 0.4s ease, opacity 0.3s ease; }
@@ -227,7 +287,7 @@
                 </a>
 
                 <div class="flex items-center gap-3 pl-3 border-l border-darkborder">
-                    <a href="/perfil" class="w-10 h-10 rounded-full bg-linear-to-br from-brand-400 to-indigo-600 flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border border-white/20 hover:scale-110 transition-transform">
+                    <a href="/perfil" id="header-avatar" class="w-10 h-10 rounded-full bg-linear-to-br from-brand-400 to-indigo-600 flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(79,70,229,0.4)] border border-white/20 hover:scale-110 transition-transform overflow-hidden">
                         A
                     </a>
                 </div>
@@ -294,7 +354,33 @@
             }
         };
 
-        document.addEventListener('DOMContentLoaded', applyAccessibility);
+        const loadHeaderAvatar = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) return;
+                const response = await fetch("http://10.165.238.244:5050/auth/perfil", {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    const u = data.usuario;
+                    const avatarEl = document.getElementById('header-avatar');
+                    if (u && u.foto_perfil) {
+                        avatarEl.innerHTML = `<img src="${u.foto_perfil}" class="w-full h-full object-cover">`;
+                    } else if (u && u.nombre) {
+                        avatarEl.innerText = u.nombre.charAt(0).toUpperCase();
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching header avatar:", error);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyAccessibility();
+            loadHeaderAvatar();
+        });
         window.addEventListener('storage', (e) => {
             if (e.key === 'pref-theme') applyTheme(e.newValue);
             applyAccessibility();

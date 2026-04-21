@@ -153,7 +153,7 @@
             }
 
             // Endpoint backend
-            const response = await fetch("http://127.0.0.1:5050/accesos/web/dashboard/estadisticas", {
+            const response = await fetch("http://10.165.238.244:5050/accesos/web/dashboard/estadisticas", {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -170,7 +170,7 @@
                 console.error("Error al cargar estadisticas");
             }
             // Conexión WebSockets para actualizaciones en tiempo real
-            const ws = new WebSocket("ws://127.0.0.1:5050/ws/dashboard");
+            const ws = new WebSocket("ws://10.165.238.244:5050/ws/dashboard");
             
             ws.onopen = () => {
                 console.log("Conectado a FastAPI WebSockets (Dashboard)");

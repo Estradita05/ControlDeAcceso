@@ -38,7 +38,7 @@ export default function DigitalCredential({ navigation }) {
       try {
         const token = await AsyncStorage.getItem('token');
 
-        const userRes = await fetch(`${API_URL}/usuarios/perfil`, {
+        const userRes = await fetch(`${API_URL}/auth/perfil`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (userRes.ok) {

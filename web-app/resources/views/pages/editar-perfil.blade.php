@@ -106,7 +106,7 @@
 
         // Load current data
         try {
-            const response = await fetch("http://127.0.0.1:5050/auth/perfil", {
+            const response = await fetch("http://10.165.238.244:5050/auth/perfil", {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -169,7 +169,7 @@
             if (password) data.password = password;
 
             try {
-                const updateRes = await fetch("http://127.0.0.1:5050/auth/perfil", {
+                const updateRes = await fetch("http://10.165.238.244:5050/auth/perfil", {
                     method: 'PUT',
                     headers: { 
                         'Authorization': `Bearer ${token}`,
@@ -180,6 +180,10 @@
 
 
                 if (updateRes.ok) {
+                    const resJson = await updateRes.json();
+                    if (resJson.token) {
+                        localStorage.setItem("token", resJson.token);
+                    }
                     window.location.href = "/perfil";
                 } else {
                     const err = await updateRes.json();

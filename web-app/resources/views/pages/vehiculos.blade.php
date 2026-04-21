@@ -40,8 +40,11 @@
 
         <form id="vehicle-form" class="space-y-4">
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Matrícula del Alumno</label>
-                <input type="text" id="v-matricula" required placeholder="Ej: 124050XXX" class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-white/10 text-white outline-none focus:border-brand-500 transition-all">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Matrícula del Alumno <span class="text-slate-600">(9 dígitos)</span></label>
+                <input type="text" id="v-matricula" required inputmode="numeric" placeholder="Ej: 123456789"
+                    maxlength="9"
+                    class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-white/10 text-white outline-none focus:border-brand-500 transition-all">
+                <p id="v-matricula-error" class="hidden text-rose-400 text-xs mt-1 font-medium"></p>
             </div>
             <div>
                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Modelo / Marca</label>
@@ -49,8 +52,10 @@
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Placa</label>
-                    <input type="text" id="v-placa" required placeholder="ABC-1234" class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-white/10 text-white outline-none focus:border-brand-500 transition-all">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Placa <span class="text-slate-600">(ABC-111-A)</span></label>
+                    <input type="text" id="v-placa" required placeholder="ABC-111-A" maxlength="9"
+                        class="w-full px-4 py-3 rounded-xl bg-[#0f172a] border border-white/10 text-white outline-none focus:border-brand-500 transition-all uppercase">
+                    <p id="v-placa-error" class="hidden text-rose-400 text-xs mt-1 font-medium"></p>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Color</label>
@@ -65,7 +70,7 @@
     </div>
 </div>
 
-<!-- Delete Vehicle Modal -->
+
 <div id="delete-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
     <div class="bg-darksurface w-full max-w-md rounded-4xl border border-white/10 shadow-2xl p-8 transform transition-all">
         <div class="flex justify-between items-center mb-6">
@@ -122,7 +127,55 @@
     const closeModal = () => {
         modal.classList.remove('flex');
         modal.classList.add('hidden');
+        // Clear errors on close
+        showFieldError('v-placa-error', '');
+        showFieldError('v-matricula-error', '');
     };
+
+    // ── Helper: show/hide inline error ─────────────────────────────────────
+    const showFieldError = (id, msg) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (msg) {
+            el.textContent = msg;
+            el.classList.remove('hidden');
+        } else {
+            el.textContent = '';
+            el.classList.add('hidden');
+        }
+    };
+
+    // ── Placa auto-format: ABC-111-A ────────────────────────────────────────
+    const formatPlaca = (raw) => {
+        const clean = raw.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+        let result = '';
+        for (let i = 0; i < clean.length && i < 7; i++) {
+            if (i < 3) {
+                if (/[A-Z]/.test(clean[i])) result += clean[i];
+            } else if (i < 6) {
+                if (/[0-9]/.test(clean[i])) result += clean[i];
+            } else {
+                if (/[A-Z]/.test(clean[i])) result += clean[i];
+            }
+        }
+        if (result.length > 3) result = result.slice(0, 3) + '-' + result.slice(3);
+        if (result.length > 7) result = result.slice(0, 7) + '-' + result.slice(7);
+        return result;
+    };
+    const isValidPlaca = (p) => /^[A-Z]{3}-[0-9]{3}-[A-Z]$/.test(p);
+
+    // Bind placa input live formatting
+    document.getElementById('v-placa').addEventListener('input', function () {
+        const pos = this.selectionStart;
+        this.value = formatPlaca(this.value);
+        showFieldError('v-placa-error', '');
+    });
+
+    // Bind matrícula: only digits allowed
+    document.getElementById('v-matricula').addEventListener('input', function () {
+        this.value = this.value.replace(/[^0-9]/g, '');
+        showFieldError('v-matricula-error', '');
+    });
 
     const openDeleteModal = (id) => {
         document.getElementById('d-vehiculo-id').value = id;
@@ -140,7 +193,7 @@
             const token = localStorage.getItem("token");
             if (!token) return;
 
-            const response = await fetch("http://127.0.0.1:5050/vehiculos/web/todos", {
+            const response = await fetch("http://10.165.238.244:5050/vehiculos/web/todos", {
                 method: 'GET',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -208,16 +261,38 @@
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        // ── Validations ──
+        const matriculaVal = document.getElementById('v-matricula').value.trim();
+        const placaVal = document.getElementById('v-placa').value.trim();
+        let valid = true;
+
+        if (!/^\d{9}$/.test(matriculaVal)) {
+            showFieldError('v-matricula-error', 'La matrícula debe tener exactamente 9 dígitos');
+            valid = false;
+        } else {
+            showFieldError('v-matricula-error', '');
+        }
+
+        if (!isValidPlaca(placaVal)) {
+            showFieldError('v-placa-error', 'Formato inválido. Usa: ABC-111-A (3 letras - 3 números - 1 letra)');
+            valid = false;
+        } else {
+            showFieldError('v-placa-error', '');
+        }
+
+        if (!valid) return;
+
         const data = {
-            usuario_id: document.getElementById('v-matricula').value,
+            usuario_id: matriculaVal,
             modelo: document.getElementById('v-modelo').value,
             color: document.getElementById('v-color').value,
-            placa: document.getElementById('v-placa').value
+            placa: placaVal
         };
 
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch("http://127.0.0.1:5050/vehiculos/web/nuevo", {
+            const response = await fetch("http://10.165.238.244:5050/vehiculos/web/nuevo", {
                 method: 'POST',
                 headers: { 
                     'Authorization': `Bearer ${token}`,
@@ -229,7 +304,7 @@
             if (response.ok) {
                 closeModal();
                 form.reset();
-                loadVehiculos(); // Refresh list immediately
+                loadVehiculos();
             } else {
                 const err = await response.json();
                 alert("Error: " + (err.detail || "No se pudo registrar el vehículo"));
@@ -253,7 +328,7 @@
 
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch(`http://127.0.0.1:5050/vehiculos/web/${id}`, {
+            const response = await fetch(`http://10.165.238.244:5050/vehiculos/web/${id}`, {
                 method: 'DELETE',
                 headers: { 
                     'Authorization': `Bearer ${token}`,

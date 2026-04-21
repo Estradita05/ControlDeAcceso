@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from app.jobs import auto_checkout_entradas
 from app.routers import auth, usuarios, vehiculos, accesos, web_accesos, web_usuarios, web_vehiculos, reportes, solicitudes, notificaciones_router
+from app.security.auth import verificar_token_ws
 from app.database import engine, Base
 from app.models import usuario, vehiculo, acceso, acceso_provisional, reset_token, verificacion_email, solicitud_acceso, notificacion
 
@@ -51,11 +52,26 @@ from app.websockets_manager import manager
 from fastapi import WebSocket, WebSocketDisconnect
 
 @app.websocket("/ws/dashboard")
-async def websocket_dashboard(websocket: WebSocket):
+async def websocket_dashboard(websocket: WebSocket, token: str = None):
+    # Intentamos conectar primero para poder enviar el mensaje de error si falla
     await manager.connect(websocket)
+    
+    if not token:
+        await websocket.send_json({"event": "error", "message": "Falta token de autenticación"})
+        await websocket.close(code=1008)
+        manager.disconnect(websocket)
+        return
+
+    payload = verificar_token_ws(token)
+    if not payload or payload.get("rol") != "guardia":
+        await websocket.send_json({"event": "error", "message": "No autorizado. Se requiere perfil de guardia."})
+        await websocket.close(code=1008)
+        manager.disconnect(websocket)
+        return
+
     try:
         while True:
-            
+            # Mantener la conexión abierta
             data = await websocket.receive_text()
     except WebSocketDisconnect:
         manager.disconnect(websocket)

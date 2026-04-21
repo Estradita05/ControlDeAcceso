@@ -7,7 +7,7 @@ from app.models.usuario import Usuario
 from app.models.vehiculo import Vehiculo
 from pydantic import BaseModel
 from app.websockets_manager import manager
-router = APIRouter(prefix="/vehiculos", tags=["Alumno - Vehículos"])
+router = APIRouter(prefix="/vehiculos", tags=["Usuario - Vehículos"])
 
 class VehiculoData(BaseModel):
     placa: str

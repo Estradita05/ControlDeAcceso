@@ -226,7 +226,7 @@
                 const token = localStorage.getItem("token");
                 if (!token) return;
 
-                const response = await fetch("http://127.0.0.1:5050/accesos/web/historial", {
+                const response = await fetch("http://10.165.238.244:5050/accesos/web/historial", {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
@@ -329,7 +329,7 @@
 
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch("http://127.0.0.1:5050/accesos/web/denegado", {
+            const response = await fetch("http://10.165.238.244:5050/accesos/web/denegado", {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

@@ -5,7 +5,7 @@ from app.security.auth import verificar_token
 from app.models.notificacion import Notificacion
 from app.models.usuario import Usuario
 
-router = APIRouter(prefix="/notificaciones", tags=["Notificaciones"])
+router = APIRouter(prefix="/notificaciones", tags=["Usuario - Notificaciones"])
 
 
 @router.get("")
@@ -13,6 +13,8 @@ def mis_notificaciones(
     db: Session = Depends(get_db),
     token_data: dict = Depends(verificar_token),
 ):
+    if token_data.get("rol") != "alumno":
+        raise HTTPException(status_code=403, detail="No tienes permisos, esta acción es exclusiva para la app móvil")
     email = token_data.get("sub")
     user = db.query(Usuario).filter(Usuario.email == email).first()
     if not user:
@@ -45,6 +47,8 @@ def marcar_leida(
     db: Session = Depends(get_db),
     token_data: dict = Depends(verificar_token),
 ):
+    if token_data.get("rol") != "alumno":
+        raise HTTPException(status_code=403, detail="No tienes permisos, esta acción es exclusiva para la app móvil")
     email = token_data.get("sub")
     user = db.query(Usuario).filter(Usuario.email == email).first()
     if not user:
@@ -67,6 +71,8 @@ def marcar_todas_leidas(
     db: Session = Depends(get_db),
     token_data: dict = Depends(verificar_token),
 ):
+    if token_data.get("rol") != "alumno":
+        raise HTTPException(status_code=403, detail="No tienes permisos, esta acción es exclusiva para la app móvil")
     email = token_data.get("sub")
     user = db.query(Usuario).filter(Usuario.email == email).first()
     if not user:

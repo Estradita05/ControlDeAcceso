@@ -20,6 +20,14 @@ def verificar_token(credentials: HTTPAuthorizationCredentials = Depends(security
         raise HTTPException(status_code=401, detail="Token expirado")
     except jwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail="Token inválido")
+
+def verificar_token_ws(token: str):
+    """Versión simplificada para WebSockets que recibe el string directamente."""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except:
+        return None
         
 def verificar_rol_guardia(payload: dict = Depends(verificar_token)):
     if payload.get("rol") != "guardia":

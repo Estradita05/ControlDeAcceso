@@ -78,7 +78,7 @@ export default function Menu({ navigation }) {
           </View>
           <View style={styles.headerText}>
             <Text style={styles.greeting}>
-              {primerNombre ? `¡Hola, ${primerNombre}! 👋` : 'Bienvenido 👋'}
+              {primerNombre ? `¡Hola, ${primerNombre}!` : 'Bienvenido'}
             </Text>
             <Text style={styles.headerSub}>Menú Principal</Text>
           </View>

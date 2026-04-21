@@ -110,7 +110,7 @@ export default function ReporteProblema({ navigation }) {
 
           {/* Info */}
           <LinearGradient colors={['rgba(37,99,235,0.15)', 'rgba(37,99,235,0.03)']} style={st.infoBanner}>
-            <Ionicons name="headset-outline" size={20} color={COLORS.accent} />
+            <Ionicons name="information-circle-outline" size={20} color={COLORS.accent} />
             <Text style={st.infoText}>
               Tu reporte nos ayuda a mejorar el sistema. Descríbelo con el mayor detalle posible.
             </Text>

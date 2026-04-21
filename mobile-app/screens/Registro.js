@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, SafeAreaView,
   StatusBar, Alert, Animated, TouchableOpacity,
+  Modal, FlatList, Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,6 +20,191 @@ const ROLES = [
   { id: 'servicios',  label: 'Servicios',  icon: 'storefront-outline', desc: 'Cafetería, OXXO, limpieza, etc.' },
 ];
 
+// ── Carreras disponibles ───────────────────────────────────────────────────
+const CARRERAS = [
+  'Ingeniería Mecatrónica',
+  'Ingeniería en Tecnologías de la Información e Innovación Digital',
+  'Ingeniería en Tecnología Automotriz',
+  'Ingeniería en Manufactura Avanzada',
+  'Ingeniería en Datos e Inteligencia Artificial',
+  'Licenciatura en Administración',
+  'Licenciatura en Comercio Internacional y Aduanas',
+];
+
+// ── Selector de carrera personalizado ─────────────────────────────────────
+function CarreraSelector({ value, onChange, error, COLORS, isDark }) {
+  const [visible, setVisible] = useState(false);
+
+  const handleSelect = (carrera) => {
+    onChange(carrera);
+    setVisible(false);          // ← cierra automáticamente al seleccionar
+  };
+
+  return (
+    <>
+      {/* Botón que abre el modal */}
+      <TouchableOpacity
+        onPress={() => setVisible(true)}
+        activeOpacity={0.8}
+        style={[
+          styles.selectorBtn,
+          {
+            backgroundColor: COLORS.inputBg,
+            borderColor: error ? COLORS.error : COLORS.inputBorder,
+          },
+        ]}
+      >
+        <Ionicons name="briefcase-outline" size={18} color={COLORS.textMuted} />
+        <Text
+          style={[
+            styles.selectorText,
+            { color: value ? COLORS.text : COLORS.textMuted },
+          ]}
+          numberOfLines={1}
+        >
+          {value || 'Selecciona tu carrera'}
+        </Text>
+        <Ionicons name="chevron-down-outline" size={18} color={COLORS.textMuted} />
+      </TouchableOpacity>
+
+      {/* Modal con la lista */}
+      <Modal
+        visible={visible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setVisible(false)}
+        >
+          <View
+            style={[
+              styles.modalSheet,
+              { backgroundColor: isDark ? '#1A2540' : '#FFFFFF' },
+            ]}
+          >
+            {/* Header del modal */}
+            <View style={[styles.modalHeader, { borderBottomColor: COLORS.border }]}>
+              <Text style={[styles.modalTitle, { color: COLORS.text }]}>
+                Selecciona tu Carrera
+              </Text>
+              <TouchableOpacity onPress={() => setVisible(false)} style={styles.modalClose}>
+                <Ionicons name="close" size={22} color={COLORS.textMuted} />
+              </TouchableOpacity>
+            </View>
+
+            {/* Lista de opciones */}
+            <FlatList
+              data={CARRERAS}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => {
+                const selected = item === value;
+                return (
+                  <TouchableOpacity
+                    onPress={() => handleSelect(item)}
+                    activeOpacity={0.7}
+                    style={[
+                      styles.optionRow,
+                      {
+                        backgroundColor: selected
+                          ? (isDark ? 'rgba(37,99,235,0.15)' : '#EFF6FF')
+                          : 'transparent',
+                        borderBottomColor: COLORS.border,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.optionText,
+                        {
+                          color: selected ? COLORS.accent : COLORS.text,
+                          fontWeight: selected ? '700' : '400',
+                        },
+                      ]}
+                    >
+                      {item}
+                    </Text>
+                    {selected && (
+                      <Ionicons name="checkmark-circle" size={20} color={COLORS.accent} />
+                    )}
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  selectorBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+    borderWidth: 1.5,
+    borderRadius: SIZES.borderRadius,
+    marginBottom: 16,
+  },
+  selectorText: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    justifyContent: 'flex-end',
+  },
+  modalSheet: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    maxHeight: '70%',
+    paddingBottom: Platform.OS === 'ios' ? 30 : 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+  },
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 0.3,
+  },
+  modalClose: {
+    padding: 4,
+  },
+  optionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    gap: 12,
+  },
+  optionText: {
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+});
+
+// ══════════════════════════════════════════════════════════════════
 export default function Registro({ navigation }) {
   const { COLORS, isDark } = useTheme();
   const [nombre,    setNombre]    = useState('');
@@ -27,7 +213,7 @@ export default function Registro({ navigation }) {
   const [password,  setPassword]  = useState('');
   const [confirmar, setConfirmar] = useState('');
   const [carrera,   setCarrera]   = useState('');
-  const [rol,       setRol]       = useState('estudiante'); // default
+  const [rol,       setRol]       = useState('estudiante');
   const [showPass,  setShowPass]  = useState(false);
   const [showConf,  setShowConf]  = useState(false);
   const [loading,   setLoading]   = useState(false);
@@ -38,10 +224,36 @@ export default function Registro({ navigation }) {
     Animated.timing(fadeAnim, { toValue: 1, duration: 500, useNativeDriver: true }).start();
   }, []);
 
+  // Al cambiar de rol, reiniciar carrera
+  useEffect(() => {
+    setCarrera('');
+  }, [rol]);
+
+  // ── Matrícula: solo dígitos, máx 9 ────────────────────────────
+  const handleMatricula = (v) => {
+    const onlyDigits = v.replace(/[^0-9]/g, '');
+    if (onlyDigits.length <= 9) {
+      setMatricula(onlyDigits);
+      setErrors(e => ({ ...e, matricula: null }));
+    }
+  };
+
+  // ── Contraseña: máx 15 chars ───────────────────────────────────
+  const handlePassword = (v) => {
+    if (v.length <= 15) {
+      setPassword(v);
+      setErrors(e => ({ ...e, password: null }));
+    }
+  };
+
   const validate = () => {
     const e = {};
     if (!nombre.trim())    e.nombre = 'El nombre es obligatorio';
-    if (!matricula.trim()) e.matricula = 'La matrícula / ID es obligatorio';
+    if (!matricula.trim()) {
+      e.matricula = 'La matrícula / ID es obligatoria';
+    } else if (rol === 'estudiante' && !/^\d{9}$/.test(matricula)) {
+      e.matricula = 'La matrícula debe tener exactamente 9 dígitos';
+    }
     if (!email.trim()) {
       e.email = 'El correo es obligatorio';
     } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.edu\.mx$/i.test(email)) {
@@ -53,7 +265,7 @@ export default function Registro({ navigation }) {
       e.password = 'Mín. 6 caracteres, 1 mayúscula y 1 especial';
     }
     if (password !== confirmar) e.confirmar = 'Las contraseñas no coinciden';
-    if (!carrera.trim())   e.carrera = 'Este campo es obligatorio';
+    if (!carrera.trim())   e.carrera = 'Selecciona una carrera';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -69,7 +281,6 @@ export default function Registro({ navigation }) {
       });
       const data = await response.json();
       if (response.status === 201) {
-        // Redirigir a verificación de correo en lugar del login
         navigation.navigate('VerificarEmail', { email });
       } else {
         Alert.alert('Error', data.detail || 'No se pudo crear la cuenta');
@@ -83,13 +294,13 @@ export default function Registro({ navigation }) {
 
   const st = makeStyles(COLORS);
 
-  // Etiqueta dinámica para "carrera" según el rol
-  const carreraLabel = rol === 'maestro' ? 'Departamento / Materia'
-    : rol === 'servicios' ? 'Servicio o área (ej. Cafetería, Limpieza)'
+  const carreraLabel = rol === 'maestro'   ? 'Departamento / Materia'
+    : rol === 'servicios' ? 'Servicio o área'
     : 'Carrera';
-  const carreraPlaceholder = rol === 'maestro' ? 'Ej. Matemáticas / Ing. de Software'
+
+  const carreraPlaceholder = rol === 'maestro'   ? 'Ej. Matemáticas / Ing. de Software'
     : rol === 'servicios' ? 'Ej. OXXO, Cafetería, Intendencia'
-    : 'Ej. Ing. en Tecnologías de la Información';
+    : '';
 
   return (
     <SafeAreaView style={st.container}>
@@ -114,11 +325,7 @@ export default function Registro({ navigation }) {
                   {active && (
                     <LinearGradient colors={COLORS.gradientPrimary} style={st.roleCardBg} />
                   )}
-                  <Ionicons
-                    name={r.icon}
-                    size={22}
-                    color={active ? '#FFFFFF' : COLORS.textSecondary}
-                  />
+                  <Ionicons name={r.icon} size={22} color={active ? '#FFFFFF' : COLORS.textSecondary} />
                   <Text style={[st.roleLabel, active && st.roleLabelActive]}>{r.label}</Text>
                   <Text style={[st.roleDesc, active && st.roleDescActive]} numberOfLines={2}>{r.desc}</Text>
                   {active && (
@@ -145,10 +352,11 @@ export default function Registro({ navigation }) {
               label="Matrícula / ID"
               iconName="id-card-outline"
               value={matricula}
-              onChangeText={v => { setMatricula(v); setErrors(e => ({ ...e, matricula: null })); }}
-              keyboardType="default"
-              placeholder="Ej. 1240XXXXX"
+              onChangeText={handleMatricula}
+              keyboardType="numeric"
+              placeholder={rol === 'estudiante' ? 'Ej. 123456789 (9 dígitos)' : 'ID de empleado'}
               error={errors.matricula}
+              maxLength={9}
             />
             <InputField
               label="Correo institucional"
@@ -160,22 +368,44 @@ export default function Registro({ navigation }) {
               autoCapitalize="none"
               error={errors.email}
             />
-            <InputField
-              label={carreraLabel}
-              iconName="briefcase-outline"
-              value={carrera}
-              onChangeText={v => { setCarrera(v); setErrors(e => ({ ...e, carrera: null })); }}
-              placeholder={carreraPlaceholder}
-              error={errors.carrera}
-            />
+
+            {/* ── Carrera ── */}
+            <Text style={st.fieldLabel}>{carreraLabel}</Text>
+            {rol === 'estudiante' ? (
+              <>
+                <CarreraSelector
+                  value={carrera}
+                  onChange={(v) => { setCarrera(v); setErrors(e => ({ ...e, carrera: null })); }}
+                  error={errors.carrera}
+                  COLORS={COLORS}
+                  isDark={isDark}
+                />
+                {errors.carrera && (
+                  <View style={st.errorRow}>
+                    <Ionicons name="alert-circle-outline" size={13} color={COLORS.error} />
+                    <Text style={[st.errorText, { color: COLORS.error }]}>{errors.carrera}</Text>
+                  </View>
+                )}
+              </>
+            ) : (
+              <InputField
+                iconName="briefcase-outline"
+                value={carrera}
+                onChangeText={v => { setCarrera(v); setErrors(e => ({ ...e, carrera: null })); }}
+                placeholder={carreraPlaceholder}
+                error={errors.carrera}
+              />
+            )}
+
             <InputField
               label="Contraseña"
               iconName="lock-closed-outline"
               value={password}
-              onChangeText={v => { setPassword(v); setErrors(e => ({ ...e, password: null })); }}
+              onChangeText={handlePassword}
               secureTextEntry={!showPass}
-              placeholder="Mín. 6 caracteres"
+              placeholder="Mín. 6 caracteres, máx. 15"
               autoCapitalize="none"
+              maxLength={15}
               error={errors.password}
               rightIcon={
                 <Ionicons
@@ -193,6 +423,7 @@ export default function Registro({ navigation }) {
               secureTextEntry={!showConf}
               placeholder="Repite tu contraseña"
               autoCapitalize="none"
+              maxLength={15}
               error={errors.confirmar}
               rightIcon={
                 <Ionicons
@@ -248,4 +479,18 @@ const makeStyles = (COLORS) => StyleSheet.create({
     marginBottom: 20,
     ...SHADOWS.sm,
   },
+
+  fieldLabel: {
+    ...FONTS.label,
+    color: COLORS.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+    marginBottom: 8,
+  },
+
+  errorRow: {
+    flexDirection: 'row', alignItems: 'center', gap: 4,
+    marginTop: -12, marginBottom: 12,
+  },
+  errorText: { ...FONTS.caption, fontSize: 12 },
 });

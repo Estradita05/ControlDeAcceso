@@ -70,6 +70,19 @@ export default function ProfileScreen({ navigation }) {
     { label: 'Carrera', value: usuario?.carrera || 'No registrada', icon: 'book-outline' },
   ];
 
+  const getRoleInfo = (rolId) => {
+    switch (rolId) {
+      case 'maestro':
+        return { label: 'Maestro', icon: 'book-outline' };
+      case 'servicios':
+        return { label: 'Servicios', icon: 'storefront-outline' };
+      default:
+        return { label: 'Estudiante', icon: 'school-outline' };
+    }
+  };
+
+  const roleInfo = getRoleInfo(usuario?.rol);
+
 
   return (
     <SafeAreaView style={st.container}>
@@ -97,8 +110,8 @@ export default function ProfileScreen({ navigation }) {
           <Text style={st.name}>{usuario?.nombre || 'Usuario'}</Text>
           <View style={st.badgeWrap}>
             <LinearGradient colors={['rgba(37,99,235,0.3)', 'rgba(59,130,246,0.1)']} style={st.badge}>
-              <Ionicons name="school-outline" size={13} color={COLORS.accent} />
-              <Text style={st.badgeText}>Estudiante</Text>
+              <Ionicons name={roleInfo.icon} size={13} color={COLORS.accent} />
+              <Text style={st.badgeText}>{roleInfo.label}</Text>
             </LinearGradient>
           </View>
         </LinearGradient>

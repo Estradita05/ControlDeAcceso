@@ -13,7 +13,7 @@
         </div>
         <div class="flex gap-3">
             <button onclick="filtrarEstado('PENDIENTE')" id="btn-pend" class="px-4 py-2 rounded-xl text-sm font-bold border border-yellow-500/40 bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 transition-all">
-                ⏳ Pendientes
+                Pendientes
             </button>
             <button onclick="filtrarEstado('')" id="btn-all" class="px-4 py-2 rounded-xl text-sm font-bold border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition-all">
                 Ver todas
@@ -72,15 +72,15 @@
 </div>
 
 <script>
-const API = "http://127.0.0.1:5050";
+const API = "http://10.165.238.244:5050";
 const grid = document.getElementById('grid-solicitudes');
 const loader = document.getElementById('loader');
 let currentEstado = 'PENDIENTE';
 
 const ESTADO_STYLE = {
-    PENDIENTE: { bg: 'bg-yellow-500/10', text: 'text-yellow-400', border: 'border-yellow-500/30', label: '⏳ Pendiente' },
-    APROBADA:  { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/30', label: '✅ Aprobada' },
-    RECHAZADA: { bg: 'bg-rose-500/10', text: 'text-rose-400', border: 'border-rose-500/30', label: '❌ Rechazada' },
+    PENDIENTE: { bg: 'bg-yellow-500/10', text: 'text-yellow-400', border: 'border-yellow-500/30', label: 'Pendiente' },
+    APROBADA:  { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/30', label: 'Aprobada' },
+    RECHAZADA: { bg: 'bg-rose-500/10', text: 'text-rose-400', border: 'border-rose-500/30', label: 'Rechazada' },
 };
 
 function filtrarEstado(estado) {

@@ -25,7 +25,7 @@ ALGORITHM = "HS256"
 router = APIRouter(prefix="/auth")
 
 
-@router.get("/qr-token", tags=["Alumno - QR"])
+@router.get("/qr-token", tags=["Usuario - QR"])
 def generar_qr_token(
     db: Session = Depends(get_db),
     token_data: dict = Depends(verificar_token)
@@ -35,7 +35,7 @@ def generar_qr_token(
     Este token es independiente del token de sesión y solo sirve para identificar al alumno.
     """
     if token_data.get("rol") != "alumno":
-        raise HTTPException(status_code=403, detail="Solo los alumnos pueden generar un QR")
+        raise HTTPException(status_code=403, detail="No tienes permisos, esta acción es exclusiva para la app móvil")
 
     email = token_data.get("sub")
     user = db.query(Usuario).filter(Usuario.email == email).first()
@@ -58,7 +58,7 @@ class LoginData(BaseModel):
     email: str
     password: str
 
-@router.post("/login", tags=["Alumno - Autenticación"])
+@router.post("/login", tags=["Usuario - Autenticación"])
 def login_movil(data: LoginData, db: Session = Depends(get_db)):
     user = db.query(Usuario).filter(Usuario.email == data.email).first()
     
@@ -108,32 +108,6 @@ def login_web(data: LoginData, db: Session = Depends(get_db)):
         "token_type": "bearer"
     }
 
-class RecuperarData(BaseModel):
-    busqueda: str  # puede ser correo o matricula
-
-@router.post("/recuperar_contrasena", tags=["Alumno - Autenticación"])
-def recuperar_contrasena(data: RecuperarData, db: Session = Depends(get_db)):
-    # Buscamos por correo o id (matrícula) simulando la búsqueda
-    user = db.query(Usuario).filter(
-        (Usuario.email == data.busqueda) | (Usuario.id == (int(data.busqueda) if data.busqueda.isdigit() else 0))
-    ).first()
-
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="Usuario no encontrado"
-        )
-    
-    # Simulación de envío de correo
-    print(f"--- SIMULACIÓN SMTP ---")
-    print(f"Enviando correo a: {user.email}")
-    print(f"Asunto: Recuperación de contraseña")
-    print(f"Cuerpo: Hola {user.nombre}, recibimos una solicitud para restablecer tu cuenta.")
-    print(f"-----------------------")
-
-    return {
-        "mensaje": "Si el usuario existe, se enviarán instrucciones a su correo."
-    }
 
 class RegisterData(BaseModel):
     nombre: str
@@ -143,7 +117,7 @@ class RegisterData(BaseModel):
     carrera: Optional[str] = None
     rol: Optional[str] = "estudiante"  # estudiante | maestro | servicios
 
-@router.post("/register", tags=["Alumno - Autenticación"], status_code=201)
+@router.post("/register", tags=["Usuario - Autenticación"], status_code=201)
 def register(data: RegisterData, db: Session = Depends(get_db)):
 
     existe = db.query(Usuario).filter(Usuario.email == data.email).first()
@@ -185,7 +159,7 @@ def register(data: RegisterData, db: Session = Depends(get_db)):
 
     return {"mensaje": "Usuario registrado. Revisa tu correo para verificar tu cuenta."}
 
-@router.get("/perfil", tags=["Alumno - Perfil", "Guardia - Perfil"])
+@router.get("/perfil", tags=["Perfil Universal"])
 def perfil(db: Session = Depends(get_db), token_data: dict = Depends(verificar_token)):
     rol = token_data.get("rol")
     email = token_data.get("sub")
@@ -201,7 +175,7 @@ def perfil(db: Session = Depends(get_db), token_data: dict = Depends(verificar_t
                 "nombre": admin.nombre,
                 "email": admin.correo,
                 "matricula": "ADMIN",  # Placeholder for frontend consistency
-                "foto_perfil": None # Admins don't have this in model yet, but we avoid error
+                "foto_perfil": getattr(admin, "foto_perfil", None)
             }
         }
     
@@ -217,20 +191,21 @@ def perfil(db: Session = Depends(get_db), token_data: dict = Depends(verificar_t
             "matricula": user.matricula,
             "nombre": user.nombre,
             "email": user.email,
+            "rol": user.rol,
             "foto_perfil": user.foto_perfil,
             "carrera": user.carrera
         }
     }
 
 class UpdateData(BaseModel):
-    nombre: str
-    email: str
+    nombre: Optional[str] = None
+    email: Optional[str] = None
     foto_perfil: Optional[str] = None
     password: Optional[str] = None
     carrera: Optional[str] = None
     matricula: Optional[str] = None
 
-@router.put("/perfil", tags=["Alumno - Perfil", "Guardia - Perfil"])
+@router.put("/perfil", tags=["Perfil Universal"])
 def editar_perfil(
     data: UpdateData,
     db: Session = Depends(get_db),
@@ -246,10 +221,13 @@ def editar_perfil(
         
         admin.nombre = data.nombre
         admin.correo = data.email
+        if data.foto_perfil is not None:
+            admin.foto_perfil = data.foto_perfil
         if data.password:
             admin.contraseña = get_password_hash(data.password)
         db.commit()
-        return {"mensaje": "Perfil de administrador actualizado"}
+        new_token = crear_token({"sub": admin.correo, "rol": "guardia"})
+        return {"mensaje": "Perfil de administrador actualizado", "token": new_token}
 
     # Alumno
     user = db.query(Usuario).filter(Usuario.email == email).first()
@@ -268,7 +246,8 @@ def editar_perfil(
         user.password = get_password_hash(data.password)
 
     db.commit()
-    return {"mensaje": "Perfil actualizado"}
+    new_token = crear_token({"sub": user.email, "rol": rol})
+    return {"mensaje": "Perfil actualizado", "token": new_token}
 
 
 # ================================================================
@@ -319,7 +298,7 @@ def enviar_correo_otp(destinatario: str, nombre: str, codigo: str):
 class SolicitarResetData(BaseModel):
     email: str
 
-@router.post("/solicitar-reset", tags=["Alumno - Autenticación"])
+@router.post("/solicitar-reset", tags=["Usuario - Autenticación"])
 def solicitar_reset(data: SolicitarResetData, db: Session = Depends(get_db)):
     """Genera un OTP de 6 dígitos y lo envía al correo del usuario."""
     user = db.query(Usuario).filter(Usuario.email == data.email).first()
@@ -359,7 +338,7 @@ class VerificarCodigoData(BaseModel):
     email: str
     codigo: str
 
-@router.post("/verificar-codigo", tags=["Alumno - Autenticación"])
+@router.post("/verificar-codigo", tags=["Usuario - Autenticación"])
 def verificar_codigo(data: VerificarCodigoData, db: Session = Depends(get_db)):
     """Valida el OTP y retorna un token temporal para cambiar la contraseña."""
     user = db.query(Usuario).filter(Usuario.email == data.email).first()
@@ -392,7 +371,7 @@ class NuevaContrasenaData(BaseModel):
     reset_token: str
     nueva_contrasena: str
 
-@router.post("/nueva-contrasena", tags=["Alumno - Autenticación"])
+@router.post("/nueva-contrasena", tags=["Usuario - Autenticación"])
 def nueva_contrasena(data: NuevaContrasenaData, db: Session = Depends(get_db)):
     """Valida el token temporal y actualiza la contraseña con hash."""
     try:
@@ -465,7 +444,7 @@ class VerificarEmailData(BaseModel):
 
 MAX_INTENTOS = 5
 
-@router.post("/verificar-email", tags=["Alumno - Autenticación"])
+@router.post("/verificar-email", tags=["Usuario - Autenticación"])
 def verificar_email(data: VerificarEmailData, db: Session = Depends(get_db)):
     """Valida el OTP de verificación de correo. Máximo 5 intentos."""
     user = db.query(Usuario).filter(Usuario.email == data.email).first()
@@ -510,7 +489,7 @@ def verificar_email(data: VerificarEmailData, db: Session = Depends(get_db)):
 class ReenviarVerificacionData(BaseModel):
     email: str
 
-@router.post("/reenviar-verificacion", tags=["Alumno - Autenticación"])
+@router.post("/reenviar-verificacion", tags=["Usuario - Autenticación"])
 def reenviar_verificacion(data: ReenviarVerificacionData, db: Session = Depends(get_db)):
     """Genera y reenvía un nuevo OTP de verificación."""
     user = db.query(Usuario).filter(Usuario.email == data.email).first()

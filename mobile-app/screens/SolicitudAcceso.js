@@ -13,6 +13,26 @@ import Header from '../components/Header';
 import GradientButton from '../components/GradientButton';
 import InputField from '../components/InputField';
 
+// ── Placa format: ABC-111-A ─────────────────────────────────────────────
+const formatPlaca = (raw) => {
+  const clean = raw.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  let result = '';
+  for (let i = 0; i < clean.length && i < 7; i++) {
+    if (i < 3) {
+      if (/[A-Z]/.test(clean[i])) result += clean[i];
+    } else if (i < 6) {
+      if (/[0-9]/.test(clean[i])) result += clean[i];
+    } else {
+      if (/[A-Z]/.test(clean[i])) result += clean[i];
+    }
+  }
+  if (result.length > 3) result = result.slice(0, 3) + '-' + result.slice(3);
+  if (result.length > 7) result = result.slice(0, 7) + '-' + result.slice(7);
+  return result;
+};
+
+const isValidPlaca = (p) => /^[A-Z]{3}-[0-9]{3}-[A-Z]$/.test(p);
+
 export default function SolicitudAcceso({ navigation }) {
   const { COLORS, isDark } = useTheme();
   const [placa,   setPlaca]   = useState('');
@@ -30,7 +50,11 @@ export default function SolicitudAcceso({ navigation }) {
 
   const validate = () => {
     const e = {};
-    if (!placa.trim())  e.placa  = 'La placa es obligatoria';
+    if (!placa.trim()) {
+      e.placa = 'La placa es obligatoria';
+    } else if (!isValidPlaca(placa)) {
+      e.placa = 'Formato inválido. Usa: ABC-111-A';
+    }
     if (!motivo.trim()) e.motivo = 'El motivo es obligatorio';
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -90,13 +114,19 @@ export default function SolicitudAcceso({ navigation }) {
             <Text style={st.sectionLabel}>Datos del Vehículo</Text>
             <InputField
               label="Placa *" iconName="car-outline"
-              value={placa} onChangeText={v => { setPlaca(v); setErrors(e => ({ ...e, placa: null })); }}
-              placeholder="Ej. ABC-1234" autoCapitalize="characters" error={errors.placa}
+              value={placa}
+              onChangeText={v => {
+                const formatted = formatPlaca(v);
+                setPlaca(formatted);
+                setErrors(e => ({ ...e, placa: null }));
+              }}
+              placeholder="ABC-111-A" autoCapitalize="characters"
+              maxLength={9}
+              error={errors.placa}
             />
             <InputField label="Marca" iconName="business-outline" value={marca} onChangeText={setMarca} placeholder="Ej. Nissan, Toyota" />
             <InputField label="Modelo" iconName="car-sport-outline" value={modelo} onChangeText={setModelo} placeholder="Ej. Sentra, Corolla" />
             <InputField label="Color" iconName="color-palette-outline" value={color} onChangeText={setColor} placeholder="Ej. Gris metálico" />
-            <Text style={[st.sectionLabel, { marginTop: 8 }]}>Motivo de la Solicitud</Text>
             <InputField
               label="Motivo *" iconName="create-outline"
               value={motivo} onChangeText={v => { setMotivo(v); setErrors(e => ({ ...e, motivo: null })); }}
@@ -116,11 +146,20 @@ const makeStyles = (COLORS) => StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   scroll: { padding: 20 },
   infoBanner: {
-    flexDirection: 'row', alignItems: 'flex-start', gap: 10,
-    padding: 14, borderRadius: SIZES.borderRadius,
-    borderWidth: 1, borderColor: 'rgba(245,158,11,0.3)', marginBottom: 20,
+    flexDirection: 'row', 
+    alignItems: 'flex-start', 
+    gap: 10,
+    padding: 14, 
+    borderRadius: SIZES.borderRadius,
+    borderWidth: 1, 
+    borderColor: 'rgba(245,158,11,0.3)', 
+    marginBottom: 20,
   },
-  infoText: { ...FONTS.subText, color: COLORS.textSecondary, flex: 1, lineHeight: 20 },
+  infoText: { 
+    ...FONTS.subText, 
+    color: COLORS.textSecondary, 
+    flex: 1, 
+    lineHeight: 20 },
   card: {
     backgroundColor: COLORS.cardBg, borderRadius: SIZES.borderRadiusLg,
     padding: 20, borderWidth: 1, borderColor: COLORS.border, marginBottom: 20, ...SHADOWS.sm,

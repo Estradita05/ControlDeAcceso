@@ -8,7 +8,7 @@ from app.models.vehiculo import Vehiculo
 from pydantic import BaseModel
 from datetime import datetime
 from app.websockets_manager import manager
-router = APIRouter(prefix="/accesos", tags=["Alumno - Accesos"])
+router = APIRouter(prefix="/accesos", tags=["Usuario - Accesos"])
 
 class AccesoData(BaseModel):
     tipo: str
@@ -93,36 +93,6 @@ def estado_actual(user=Depends(verificar_rol_alumno), db: Session = Depends(get_
         "ultimo_registro": ultimo_acceso
     }
 
-from app.models.acceso_provisional import AccesoProvisional
 
-class AccesoProvisionalData(BaseModel):
-    matricula: str
-    placas: str
-    motivo: str
-    fechaInicio: str
-    fechaFin: str
-
-@router.post("/provisional")
-def registrar_provisional(data: AccesoProvisionalData, user=Depends(verificar_rol_alumno), db: Session = Depends(get_db)):
-    user_id = get_current_user_id(db, user["sub"])
-
-    nuevo_provisional = AccesoProvisional(
-        matricula=data.matricula,
-        placas=data.placas,
-        motivo=data.motivo,
-        fecha_inicio=data.fechaInicio,
-        fecha_fin=data.fechaFin,
-        estado="Pendiente",
-        usuario_id=user_id
-    )
-
-    db.add(nuevo_provisional)
-    db.commit()
-    db.refresh(nuevo_provisional)
-
-    return {
-        "mensaje": "Acceso provisional solicitado correctamente",
-        "id": nuevo_provisional.id
-    }
 
 

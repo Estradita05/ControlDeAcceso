@@ -7,7 +7,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libpq-dev \
     nodejs \
-    npm
+    npm \
+    tzdata
 
 RUN docker-php-ext-install pdo pdo_pgsql
 
@@ -21,7 +22,8 @@ RUN composer install --no-interaction --optimize-autoloader
 RUN npm install --prefer-offline --no-audit --no-fund || true
 RUN npm run build --if-present || true
 
-RUN cp .env.example .env
-RUN php artisan key:generate
+# RUN cp .env.example .env
+# RUN php artisan key:generate
+RUN chmod -R 775 storage bootstrap/cache
 
 CMD sleep 5 && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000

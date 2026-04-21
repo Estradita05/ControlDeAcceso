@@ -25,7 +25,7 @@ export default function EditarPerfil({ navigation }) {
     const fetchPerfil = async () => {
       try {
         const token = await AsyncStorage.getItem("token");
-        const response = await fetch(`${API_URL}/usuarios/perfil`, {
+        const response = await fetch(`${API_URL}/auth/perfil`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
@@ -146,7 +146,7 @@ export default function EditarPerfil({ navigation }) {
     try {
       const token = await AsyncStorage.getItem("token");
       
-      const response = await fetch(`${API_URL}/usuarios/perfil`, {
+      const response = await fetch(`${API_URL}/auth/perfil`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
